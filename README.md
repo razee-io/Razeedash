@@ -1,2 +1,1 @@
-# razeedash
-Dashboard for Razee
+# Razeedash

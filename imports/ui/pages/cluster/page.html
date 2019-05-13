@@ -1,0 +1,122 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="cluster">
+  <div class="accordion mb-2">
+    <div class="card border-bottom">
+      <div id="{{getClusterName cluster}}" class="card-header">
+        <div class="d-flex w-100 justify-content-between">
+          <h4 class="text-muted m-0">
+            {{#if collapsable}}
+            <a class="text-primary" data-toggle="collapse" data-parent="#accordion" href="#collapse{{idx}}" aria-expanded="true" aria-controls="collapse{{idx}}">
+              {{getClusterName cluster}}
+            </a>
+            {{else}}
+            <i class="fa fa-cube" aria-hidden="true"></i>
+            {{getClusterName cluster}} {{/if}}
+          </h4>
+        </div>
+      </div>
+      <div id="collapse{{idx}}" class="{{#if collapsable}}collapse{{/if}}" role="tabpanel"
+        aria-labelledby="headingOne">
+        <div class="card-block my-1">
+
+          <div class="row">
+            <div class="col">
+              <div class="p-2">
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link show {{isActiveTab 'info'}}" href="info" role="tab" aria-controls="profile" aria-selected="false"
+                       tabname="info">
+                      <i class="fa fa-info" aria-hidden="true"></i> Details
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link show {{or (isActiveTab 'resources') (isActiveTab 'namespaces')}}" href="resources" role="tab" aria-controls="profile" aria-selected="false"
+                      tabname="resources">
+                      <i class="fa fa-globe" aria-hidden="true"></i> Resources
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {{isActiveTab 'updaterMessages'}}" href="updaterMessages" role="tab" aria-selected="true" tabname="updaterMessages">
+                      <span>
+                        <span class="">
+                          <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Updater messages
+                        </span>
+                        {{#if hasUpdaterMessages cluster.cluster_id }}
+                        <span class="badge badge-danger mx-1">{{updaterMessagesByClusterIdCountStr cluster.cluster_id}}</span>
+                        {{/if}}
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {{isActiveTab 'webhooks'}}" href="webhooks" role="tab" aria-controls="profile" aria-selected="false"
+                      tabname="webhooks">
+                      <i class="fa fa-anchor" aria-hidden="true"></i> Webhooks
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {{isActiveTab 'comments'}}" href="comments" role="tab" aria-controls="profile" aria-selected="false"
+                      tabname="comments">
+                      <i class="fa fa-comments" aria-hidden="true"></i> Comments {{#if hasComments }}
+                      <span class="badge badge-primary mx-1">{{commentCountStr}}</span>
+                      {{/if}}
+                    </a>
+                  </li>
+
+                  <li class="flex-grow-1 text-right small align-self-center clusterVersionInfo">
+                    <span class="text-muted">ID - </span>{{cluster.cluster_id}}
+                  </li>
+                </ul>
+
+                {{#if isActiveTab "info"}}
+                <div class="card border-top-0 border-bottom">
+                  {{> cluster_info cluster=cluster}}
+                </div>
+                {{/if}}
+
+                {{#if or (isActiveTab "resources") (isActiveTab "namespaces")}}
+                <div class="card border-top-0 border-bottom">
+                  {{> cluster_resources cluster_id=cluster.cluster_id}}
+                </div>
+                {{/if}}
+                
+                {{#if isActiveTab "updaterMessages"}}
+                <div class="card border-top-0 border-bottom">
+                  {{> updater_messages_table updaterMessages=(updaterMessagesByClusterId cluster.cluster_id) }}
+                </div>
+                {{/if}}
+
+                {{#if isActiveTab "webhooks"}}
+                <div class="card border-top-0 border-bottom">
+                  {{> cluster_webhooks cluster=cluster}}
+                </div>
+                {{/if}}
+                
+                {{#if isActiveTab "comments"}}
+                  <div class="card border-top-0 border-bottom">
+                    {{> cluster_comments cluster=cluster}}
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

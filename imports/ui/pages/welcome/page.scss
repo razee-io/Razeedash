@@ -1,0 +1,74 @@
+/**
+* Copyright 2019 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+  .recentDeployments {
+    .dropdown {
+      width: 75px;
+      margin-right: 5px;
+      // line-height: 70px;
+      // border: 1px solid #0BCFD8;
+      // border-radius: 50%;
+      background-color: #0BCFD8;
+    }
+    a#dropdownHistoryButton {
+        font-size: 2em;
+        margin: 25%;
+        font-family: sans-serif;
+        font-weight: bold;
+        color: #0F3659;
+    }
+    h5, h6 {
+      margin-bottom: 0rem;
+    }
+    h6 {
+      a {
+        color: grey;
+      }
+    }
+}
+
+.animated {
+-webkit-animation-duration: 3s;
+animation-duration: 3s;
+-webkit-animation-fill-mode: both;
+animation-fill-mode: both;
+border: 6px solid rgb(245, 247, 250);
+padding: 0.25rem;
+}
+
+@-webkit-keyframes fadeIn {
+0% {opacity: 0;}
+100% {opacity: 1;}
+}
+
+@keyframes fadeIn {
+0% {opacity: 0;}
+100% {opacity: 1;}
+}
+
+.fadeIn {
+-webkit-animation-name: fadeIn;
+animation-name: fadeIn;
+}
+
+.plot-container.plotly {
+  .svg-container{
+    width: 100% !important;
+    .main-svg {
+      width: 100%;
+    }
+  }
+}

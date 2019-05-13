@@ -1,0 +1,108 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="page_clusters">
+  <div class="card m-2">
+    <div class="card-header">
+      <div class="row align-items-center justify-content-between">
+        <h2 class="col-12 col-sm-5 col-md-3">
+          <span class="text-muted">
+            <i class="fa fa-cubes d-none d-lg-inline" aria-hidden="true"></i> Clusters
+          </span>
+        </h2>
+        <div class="col-12 col-sm-7 col-md-9">
+          <input id="clusterSearchInput" type="text" class="form-control" aria-label="Search" value="{{getSearchStr}}" placeholder="Search"
+            autofocus/>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive-sm">
+      {{#if hasResults}}
+        <table class="table table-sm table-striped mb-0 deploymentList">
+          <thead>
+            <tr>
+              <th class="sortable-header" data-column="cluster_name">
+                Name {{#if sortedBy "cluster_name" }}
+                <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
+              </th>
+              <th class="d-none d-md-table-cell sortable-header" data-column="kube_version">
+                Version {{#if sortedBy "kube_version" }}
+                <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each cluster in foundClusters}}
+              {{>page_clusters_cluster cluster=cluster searchStr=getSearchStr}}
+            {{/each}}
+          </tbody>
+          <tfoot>
+            {{#if hitDisplayLimit}}
+              <tr>
+                <th colspan="4">
+                  <a href="#" class="clusterListMoreBtn">
+                    <i class="fa fa-arrow-down" aria-hidden="true"></i> More...</a>
+                </th>
+              </tr>
+            {{/if}}
+          </tfoot>
+        </table>
+      {{else}}
+        <li class="list-group-item">
+          {{#if Template.subscriptionsReady}}
+            No clusters found
+          {{else}}
+            {{> loading }}
+          {{/if}}
+        </li>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="page_clusters_cluster">
+  <tr id="{{deployment.name}}">
+    <td>
+      <a class="text-primary" href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">
+        {{{ boldifySearchMatches searchStr (getClusterName cluster) }}}
+      </a>
+    </td>
+    <td class="d-none d-md-table-cell">
+      {{getClusterVersion cluster}}
+    </td>
+    <td class="cluster_icon_row">
+      {{#if withinMinutes cluster.last_updater_message 10 }}
+      <a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='updaterMessages'}}">
+        <i class="fa fa-exclamation-triangle align-middle text-danger" aria-hidden="true" title="This cluster has messages"></i>
+      </a>
+      {{/if}}
+    </td>
+  </tr>
+</template>
+
+<template name="page_cluster_id">
+  <div class="m-2">
+    {{#if Template.subscriptionsReady}} 
+        {{#if getCluster}} 
+            {{>cluster cluster=getCluster notCollapsable=1}} 
+        {{else}} 
+            Cluster not found 
+        {{/if}} 
+    {{else}} 
+        {{> loading }} 
+    {{/if}}
+  </div>
+</template>

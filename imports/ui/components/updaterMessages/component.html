@@ -1,0 +1,39 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="updaterMessages">
+  {{> portletHeader title='Updater messages'}}
+  {{#each message in recentUpdaterMessages}}
+    <div class="alert updaterMessages {{getMessageType(message.message)}}">
+      <button type="button" class="close d-none" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+      <h5 class="text-{{getMessageType(message.message)}}">{{{getMessageHeader(message.message)}}}</h5> 
+      <p class="chop"><a href="{{pathFor 'cluster.tab' id=message.cluster_id tabId='updaterMessages'}}">{{message.message}}</a></p>
+      {{#if message.deployment_name}}
+        <h6 class="mt-0 mb-1"><a href="{{pathFor 'deployment' deploymentName=message.deployment_name}}">{{message.deployment_name}}</a></h6>
+      {{/if}}
+      <h6 class="m-b-0"><a href="{{pathFor 'cluster.tab' id=message.cluster_id tabId='resources'}}">{{message.cluster_name}}</a></h6>
+      <p class="text-muted font-14"><i class="fa fa-clock-o" aria-hidden="true"></i> {{moment message.updated}}</p>
+    </div>
+  {{else}}
+    <div class="pl-3">No recent updater messages.</div>
+  {{/each}}
+</template>
+
+<template name="updaterMessagesCard">
+    <div class="card">
+      {{> updaterMessages }}
+    </div>
+</template>

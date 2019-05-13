@@ -1,0 +1,4 @@
+*
+!.build
+!private/scripts
+build-tools/

@@ -1,0 +1,195 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="page_resources">
+    <div class="card m-2">
+        <div class="card-header">
+            <div class="row align-items-center justify-content-between">
+                <h2 class="col-12 col-md-3 my-0">
+                    <span class="text-muted">
+                        <i class="fa fa-cube d-none d-lg-inline" aria-hidden="true"></i> Resources
+                    </span>
+                </h2>
+                <div class="col-12 col-md-9">
+                    <div class="form-group mb-0">
+                        <div class="row w-100">
+                            <div class="input-group" id="datepickersContainer">
+                                <input id="resourcesSearchInput" type="text" class="form-control" aria-label="Search" value="{{getSearchStr}}" placeholder="Search" autofocus/>
+                                <div class="input-group-append">
+                                    <span id="datepicker-from" class="{{datepickerItemsClass}} fadein">
+                                        <input type="text" class="rounded-0 form-control" placeholder="From" title="from"/>
+                                    </span>
+                                </div>
+                                <div class="input-group-append">
+                                    <span id="datepicker-to" class="{{datepickerItemsClass}} fadein">
+                                        <input type="text" class="rounded-0 form-control" placeholder="To" title="to"/>
+                                    </span>
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="rounded-right input-group-text {{datepickerItemsClassShowHide}}" id="calendar-close-btn">
+                                        <i class="fa fa-lg fa-calendar-times-o"></i>
+                                    </span>
+                                    <span class="rounded-right input-group-text {{datepickerItemsClassShowHide true}}" id="calendar-open-btn">
+                                        <i class="fa fa-lg fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive-sm">
+            {{#if hasResults}}
+                <table class="table table-sm table-striped mb-0 resourceList">
+                    <thead>
+                    <tr>
+                        <th nowrap class="sortable-header" data-column="name">
+                            Name {{#if sortedBy "name" }}
+                            <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
+                        </th>
+                        <th nowrap class="sortable-header" data-column="cluster_name">
+                            Cluster {{#if sortedBy "cluster_name" }}
+                            <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
+                        </th>
+                        <th nowrap class="sortable-header" data-column="namespace">
+                            Namespace {{#if sortedBy "namespace" }}
+                            <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {{#each resource in foundResources}}
+                            {{>page_resources_resource resource=resource searchStr=getSearchStr}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        {{#if hitDisplayLimit}}
+                            <tr>
+                                <th colspan="7">
+                                    <a href="#" class="resourceListMoreBtn">
+                                        <i class="fa fa-arrow-down" aria-hidden="true"></i> More...
+                                    </a>
+                                </th>
+                            </tr>
+                        {{/if}}
+                    </tfoot>
+                </table>
+            {{else}}
+                <li class="list-group-item">
+                    {{#if hasSearch}}
+                        {{#if Template.subscriptionsReady}}
+                            No resources found
+                        {{else}}
+                            {{> loading }}
+                        {{/if}}
+                    {{else}}
+                        Enter a search.
+                    {{/if}}
+                </li>
+            {{/if}}
+        </div>
+    </div>
+</template>
+
+<template name="page_resources_resource">
+    <tr id="{{resource._id}}">
+        <td>
+            {{> kindIcon kind=resource.searchableData.kind}}
+            <a href="{{pathFor 'resource.cluster' resourceName=resource.searchableData.name clusterId=resource.cluster_id}}">
+                {{{boldifySearchMatches searchStr resource.searchableData.name}}}
+            </a>
+        </td>
+        <td>
+            <a href="{{pathFor 'cluster.tab' id=resource.cluster_id tabId='resources'}}">{{{boldifySearchMatches searchStr resource.cluster_id}}}</a>
+        </td>
+        <td>
+            {{{boldifySearchMatches searchStr resource.searchableData.namespace}}}
+        </td>
+    </tr>
+</template>
+
+<template name="page_resource_id">
+    <div class="m-2">
+        {{#if Template.subscriptionsReady}}
+            {{#if getResource}}
+                {{>resource resource=getResource notCollapsable=1}}
+            {{else}}
+                Resource not found
+            {{/if}}
+        {{else}}
+            {{> loading }}
+        {{/if}}
+    </div>
+</template>
+
+
+<template name="Resources_single">
+    <div class="card m-2">
+        <div class="card-header">
+            <h4 class="mb-0">Resource {{resourceName}} on {{clusterName}}</h4>
+        </div>
+        <div class="card-body">
+            {{#if Template.subscriptionsReady}}
+                {{> Template.dynamic template=decideTemplate data=templateData}}
+            {{else}}
+                {{> loading}}
+            {{/if}}
+        </div>
+    </div>
+</template>
+
+<template name="Resources_single_default">
+    <h5>Searchable Data</h5>
+    {{>Resources_single_dump_searchable_attrs resource=resource}}
+
+    <h5>Razee data</h5>
+    {{>stringifyp data=resource}}
+
+    <h5>Resource JSON</h5>
+    <div class="form-group row m-0">
+        <label class="col-form-label">Decryption Key:</label>
+        <div class="col-sm-10">
+            <div class="input-group">
+                <input type="{{decryptionKeyInputType}}" class="decryptionKey form-control" data-lpignore="true" />
+                <div class="input-group-append">
+                    <input type="button" class="btn btn-primary form-control showDecryptionKeyBtn" value="{{showDecryptionKeyBtnText}}" />
+                </div>
+            </div>
+        </div>
+    </div>
+    {{#if decryptionKey}}
+        {{#if resourceData.success}}
+            {{>stringifyp data=(jsonparse resourceData.str)}}
+        {{else}}
+            <div class="my-2">Failed to decrypt with entered key</div>
+        {{/if}}
+    {{else}}
+        <div class="mt-2">Enter a decryption key to resource data</div>
+    {{/if}}
+</template>
+
+<template name="Resources_single_dump_searchable_attrs">
+    <table>
+        {{#each item in searchableDataAsArr}}
+            <tr>
+                <td>{{item.key}}</td>
+                <td>{{>stringifyp data=(formatVal item.key item.val) classes='m-0'}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</template>

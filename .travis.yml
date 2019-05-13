@@ -1,0 +1,31 @@
+language: generic
+
+sudo: true
+
+services:
+- docker
+
+env:
+  global:
+    - GIT_REMOTE=$(git remote get-url origin)
+
+before_install:
+  # project unique tools
+  - curl https://install.meteor.com | /bin/sh
+  - export PATH="$HOME/.meteor:$PATH"
+  - if [[ `npm -v` != 6* ]]; then npm i -g npm@latest; fi
+
+install:
+  - meteor npm i
+
+script:
+ # Audit npm packages. Fail build whan a PR audit fails, otherwise report the vulnerability and proceed.
+  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --low; else npx audit-ci --low || true; fi || travis_terminate 1
+  - npm run lint || travis_terminate 1
+  - npm test || travis_terminate 1
+  - meteor build --directory .build --architecture=os.linux.x86_64 --server-only
+  - export HASH=`git log --pretty=format:'%h' -n 1`
+  - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quqy.io/razee/razeedash:${TRAVIS_COMMIT}" .
+  - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
+  - docker images
+  - ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml

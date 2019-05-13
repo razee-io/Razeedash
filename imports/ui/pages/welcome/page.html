@@ -1,0 +1,71 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="page_welcome">
+    {{#if hasOrgAccess}}
+        <div class="welcomePage container-fluid">
+            <div class="row pt-3">
+                <div class="col-12 col-md-6 mb-3">
+                    {{> clustersByKubeVersion }}
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    {{> activeDeployments }}
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    {{> sevenDayDeployments }}
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    {{> recentDeployments }}
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    {{> inactiveClusters}}
+                </div>
+                <div class="col-12">
+                    {{> updaterMessagesCard }}
+                </div>
+            </div>
+        </div>
+    {{else}}
+        {{> page_select_org}}
+    {{/if}}
+</template>
+
+<template name="page_select_org">
+    <div class="card mx-2">
+        <h3 class="card-header">Select an org to connect to</h3>
+        <div class="card-body">
+            {{#each orgName in orgNamesToSwitchTo}}
+                <div class="m-2">
+                    <a class="btn btn-primary btn-lg" href="{{pathFor 'welcome' baseOrgName=orgName}}" role="button">
+                        <img class="img-thumbnail org-image my-1" src="{{getProp (userOrgByName orgName) 'avatarUrl'}}">
+                        <span class="m-0 align-middle">Use {{orgName}}</span>
+                    </a>
+                </div>
+            {{/each}}
+            {{#each orgName in orgNamesToManage}}
+                <div class="m-2">
+                    <a class="btn btn-warning btn-lg registerOrgBtn" href="#" role="button" orgname="{{orgName}}">
+                        <img class="img-thumbnail org-image my-1" src="{{getProp (userOrgByName orgName) 'avatarUrl'}}">
+                        <span class="m-0 align-middle">Register {{orgName}} in razee</span>
+                    </a>
+                </div>
+            {{/each}}
+            {{#if doesntHaveAnyOperationalOrgs}}
+                It appears you dont have access to any orgs. To add an org, request someone with GHE admin access to register it in razeedash.
+            {{/if}}
+        </div>
+    </div>
+</template>

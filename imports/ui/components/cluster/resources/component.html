@@ -1,0 +1,64 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="cluster_resources">
+    {{> deployments datacenter=datacenter cluster_id=cluster_id}}
+</template>
+
+<template name="deployments">
+  <div class='deployments'>
+    <table class="table table-sm table-hover">
+      <thead>
+        <tr>
+          <th class="pl-3">Resource</th>
+          <th class="">Changed</th>
+          <th class="d-table-cell d-lg-none"></th>
+        </tr>
+      </thead>
+
+      {{#if Template.subscriptionsReady}}
+        <tbody>
+          {{#each resource in resources}} {{> deploymenttemplate resource=resource cluster_id=cluster_id}} {{/each}}
+        </tbody>
+      {{else}}
+        {{> loading}}
+      {{/if}}
+    </table>
+  </div>
+</template>
+
+<template name="deploymenttemplate">
+  <tr class="deployment-row">
+   
+    <td class="pl-3">
+      <div class="pr-2 deployment-details-dropdown d-none d-lg-inline" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+      </div>
+      {{> kindIcon kind=resource.searchableData.kind}}
+       <a class="bx--link" href="{{pathFor 'resource.cluster' resourceName=resource.searchableData.name clusterId=cluster_id}}">
+        <span class="text-muted">{{resource.searchableData.namespace}}</span>/{{resource.searchableData.name}}
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="{{pathFor 'resources.search' query=(generateQueryString resource.searchableData.name)}}">Show {{resource.searchableData.name}} resources</a>
+      </div>
+    </td>
+
+    <td>
+      {{> history_dropdown _lastUpdated=(lastUpdated resource) }}
+    </td>
+
+  </tr>
+</template>

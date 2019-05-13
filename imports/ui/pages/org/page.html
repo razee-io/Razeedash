@@ -1,0 +1,133 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="OrgSingle">
+    {{#if Template.subscriptionsReady}}
+        <div class="card m-2">
+            <div class="card-header">
+                <h4 class="mb-0"><span class="text-muted">Organization</span> {{org.name}}</h4>
+            </div>
+            <div class="card-body">
+                <form action="">
+                    <div class="form-group row">
+                        <label for="org_name" class="col-sm-2 col-form-label">
+                            Name
+                        </label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="org_name" type="text" value="{{org.name}}" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="org_creator" class="col-sm-2 col-form-label">
+                            Creator
+                        </label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="org_creator" type="text" value="{{org.creatorUserId}}" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="org_created" class="col-sm-2 col-form-label">
+                            Created
+                        </label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="org_created" type="text" value="{{moment org.created}}" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="org_api_key" class="col-sm-2 col-form-label">
+                            Api Key
+                        </label>
+                        <div class="col-sm-10">
+                            <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{org.apiKey}}" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="org_command" class="col-sm-2 col-form-label">
+                            Install Cluster-updater
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group mb-3">
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{yamlUrl org.name org.apiKey}}</code>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{yamlUrl org.name org.apiKey}}">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{#if hasMustacheVars}}
+                        <div class="row">
+                            <div class="col-2">Yaml Template Used Vars</div>
+                            <div class="col-10">
+                                <div class="card mb-2 varNamesCard">
+                                    <div class="card-body p-0">
+
+                                        <table class="table table-striped mb-0">
+                                            <tbody>
+                                                {{#each item in getMustacheVarsFromTemplate}}
+                                                    <tr class="">
+                                                        <td>{{item.name}}</td>
+                                                        <td>
+                                                            {{#if item.isUndefined}}
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control customYamlVar" data-lpignore="true" yamlvarname="{{item.name}}" value="{{customVarVal item.name}}" />
+                                                                    <div class="input-group-append">
+                                                                        <div class="input-group-text">
+                                                                            {{#if equals (customVarSaveStatus item.name) 'unknown'}}
+                                                                                &nbsp;
+                                                                            {{else if equals (customVarSaveStatus item.name) 'saving'}}
+                                                                                <i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;Saving...
+                                                                            {{else if equals (customVarSaveStatus item.name) 'saved'}}
+                                                                                <i class="fa fa-check text-success" aria-hidden="true"></i>&nbsp;Saved
+                                                                            {{else if equals (customVarSaveStatus item.name) 'error'}}
+                                                                                <i class="fa fa-times text-danger" aria-hidden="true"></i>&nbsp;Failed to save
+                                                                            {{/if}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {{else}}
+                                                                {{item.val}}
+                                                            {{/if}}
+                                                        </td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    <div class="form-group row">
+                        <label for="editor" class="col-sm-2 col-form-label">
+                            Cluster-updater template
+                            <button type="submit" class="btn btn-primary" {{disabled}}>Save</button>
+                        </label>
+                        <div class="col-sm-10">
+                            <pre id="editor" class="border rounded"></pre>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {{/if}}
+</template>

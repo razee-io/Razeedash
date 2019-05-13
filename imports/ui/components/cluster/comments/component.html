@@ -1,0 +1,38 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="cluster_comments">
+    <div class="card-body">
+        <textarea class="postCommentTextarea form-control w-100 d-block" placeholder="Add comment about {{getClusterName cluster}}..."></textarea>
+        <button class="postCommentBtn mt-2 mb-0 btn btn-primary {{postCommentBtnDisplayClass}}">Post Comment</button>
+    
+        <div class="commentsList">
+        {{#each comment in comments}} {{> cluster_comment comment=comment }} {{/each}}
+        </div>
+    </div>
+</template>
+    
+<template name="cluster_comment">
+    <div class="card mb-1 border-bottom">
+        <div class="card-header p-1">
+        <strong>{{authorName}}</strong>
+        <span class="text-muted">commented {{moment comment.created}}</span>
+        </div>
+        <div class="card-body p-1">
+        {{{commentHtml}}}
+        </div>
+    </div>
+</template>

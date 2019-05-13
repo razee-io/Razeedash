@@ -1,0 +1,13 @@
+node_modules/
+.build
+build-tools/
+armada-config/
+npm-debug.log
+.idea/
+.vscode/launch.json
+.DS_Store
+.nyc_output/
+.coverage/
+.vscode/settings.json
+dev-envvars.sh
+.vscode

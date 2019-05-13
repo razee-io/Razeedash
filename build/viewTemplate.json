@@ -1,0 +1,4 @@
+{
+    "TRAVIS_COMMIT": "${TRAVIS_COMMIT}",
+    "GIT_REMOTE": "${GIT_REMOTE}"
+}

@@ -1,0 +1,116 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="cluster_webhooks">
+    <div class="card border-top-0 border-bottom">
+        <div class="card-header">
+        Add new webhook
+        </div>
+        <div class="card-body">
+        <div class="input-group">
+            <input class="form-control" type="text" id="newWebhookName" placeholder="http://webhook.url/path/to/endpoint" required>
+            <div class="input-group-append">
+            <a href="#" id="addWebhookBtn" class="btn btn-primary {{addBtnDisabledClass}}">Add</a>
+            </div>
+        </div>
+        </div>
+    </div>
+    {{#each webhook in webhooks}} {{> cluster_webhooks_recent_logs cluster=cluster webhook=webhook webhookIdx=@index }} {{else}}
+    There are currently no webhooks for this cluster. {{/each}}
+    
+</template>
+    
+<template name="cluster_webhooks_recent_logs">
+    <div class="card my-2 border-bottom">
+        <div class="card-header">
+        {{webhook.url}}
+    
+        <span class="removeWebhookBtn float-right" data-url="{{webhook.url}}" webhookid="{{webhook.id}}">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+    
+        <div class="modal fade removeWebhookModal" id="removeWebhookModal-{{webhook.id}}" webhookid="{{webhook.id}}">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h4 class="p-0 m-0">Remove Webhook</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Are you sure you want to remove the webhook for "{{webhook.url}}"?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary removeWebhookSubmitBtn" data-dismiss="modal">Remove</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <div class="card-body">
+        {{#each log in logs}} {{> cluster_webhooks_recent_log cluster=cluster log=log webhookIdx=webhookIdx logIdx=@index}} {{else}}
+        No recent logs found {{/each}}
+        </div>
+    </div>
+</template>
+    
+<template name="cluster_webhooks_recent_log">
+    <div class="my-1">
+        <span class="webhookLogSuccessIcon {{successIconClass log}}">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        </span>
+        <span class="webhookLogErrorIcon {{errorIconClass log}}">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        </span>
+        <a class="showWebhookLogDetailsBtn d-inline-block p-1" data-toggle="collapse" href="#collapseWebhookLog-{{logId}}">
+        {{log.deployment_id}} - {{moment log.created}}
+        </a>
+        <div class="collapse my-1" id="collapseWebhookLog-{{logId}}">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+            <a class="nav-link show active" id="requestTabBtn-{{logId}}" data-toggle="tab" href="#requestTab-{{logId}}" role="tab" aria-controls="profile"
+                aria-selected="false">
+                Request
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" id="responseTabBtn-{{logId}}" data-toggle="tab" href="#responseTab-{{logId}}" role="tab" aria-controls="profile"
+                aria-selected="false">
+                Response
+            </a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent-{{logId}}">
+            <div class="tab-pane show active" id="requestTab-{{logId}}" role="tabpanel">
+            <div class="card border-top-0 border-bottom">
+                <code class="p-2">{{log.req.url}}<br />
+                <pre class="m-0">{{payloadForLog log}}</pre>
+                </code>
+            </div>
+            </div>
+            <div class="tab-pane" id="responseTab-{{logId}}" role="tabpanel">
+            <div class="card border-top-0 border-bottom">
+                <code class="p-2">
+                <pre class="m-0">{{responseForLog log}}</pre>
+                </code>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</template>

@@ -35,6 +35,12 @@ Meteor.setInterval(function() {
     time.set(new Date());
 }, 10000);
 
+export let hasOrgsDefined = new ReactiveVar(true);
+
+Template.registerHelper('hasOrgsDefined', () => {
+    return hasOrgsDefined.get();
+});
+
 // updates pathFor() helper to auto-put the orgName
 var oldPathFor = Blaze._globalHelpers.pathFor;
 Template.deregisterHelper('pathFor');

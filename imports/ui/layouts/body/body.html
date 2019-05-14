@@ -22,7 +22,11 @@
         {{> Template.dynamic template=main}}
       </div>
     {{else}}
-        {{> loading }}
+        {{#if hasOrgsDefined }}
+            {{> loading }}
+        {{else}}
+            {{> page_select_org}}
+        {{/if}}
     {{/if}}
   {{> footer}}
 </template>

@@ -118,6 +118,7 @@ Template.page_select_org.events({
             if(err){
                 throw err;
             }
+            FlowRouter.go('welcome', { baseOrgName: orgName });
         });
         return false;
     },

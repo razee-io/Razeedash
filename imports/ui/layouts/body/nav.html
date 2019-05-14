@@ -29,21 +29,22 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
       {{#if currentUser}}
       <ul class="navbar-nav d-flex">
-        {{> nav_org_dropdown}}
-
-       <li class="nav-item {{isActive 'clusters.search'}}">
-          <a class="nav-link align-middle" href="{{pathFor 'clusters.search' query=(navItemQueryStr 'clusters')}}">
-            <span class="align-middle">Clusters</span>
-            <span class="badge badge-dark align-middle">{{clusterCount}}</span>
-          </a>
-        </li>
-  
-        <li class="nav-item {{isActive 'resources.search'}}">
-          <a class="nav-link" href="{{pathFor 'resources.search' query=(navItemQueryStr 'deployments')}}">
-            <span class="align-middle">Resources</span>
-            <span class="badge badge-dark align-middle">{{deploymentCount}}</span>
-          </a>
-        </li>
+        {{#if hasOrgsDefined }}
+            {{> nav_org_dropdown}}
+            <li class="nav-item {{isActive 'clusters.search'}}">
+                <a class="nav-link align-middle" href="{{pathFor 'clusters.search' query=(navItemQueryStr 'clusters')}}">
+                    <span class="align-middle">Clusters</span>
+                    <span class="badge badge-dark align-middle">{{clusterCount}}</span>
+                </a>
+            </li>
+        
+            <li class="nav-item {{isActive 'resources.search'}}">
+                <a class="nav-link" href="{{pathFor 'resources.search' query=(navItemQueryStr 'deployments')}}">
+                    <span class="align-middle">Resources</span>
+                    <span class="badge badge-dark align-middle">{{deploymentCount}}</span>
+                </a>
+            </li>
+        {{/if}}
       </ul>
 
       <ul class="navbar-nav">
@@ -52,8 +53,10 @@
             {{currentUser.profile.name}}
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+            {{#if hasOrgsDefined }}
             <a class="dropdown-item" href="{{pathFor 'profile'}}">
               <i class="text-muted fa fa-user" aria-hidden="true"></i> Profile</a>
+            {{/if}}
             {{#if isRazeeAdmin}}
             <a class="dropdown-item" href="{{pathFor 'admin.home'}}">
               <i class="text-muted fa fa-user-circle-o" aria-hidden="true"></i> Admin</a>

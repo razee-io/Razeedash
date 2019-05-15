@@ -59,7 +59,7 @@ metadata:
   name: razeedash-secret
 type: Opaque
 data:
-  oauth_secret_key: bW9uZ29kYjovL21vbmdv4oCRMC5tb25nbzoyNzAxNyxtb25nb+KAkTEubW9uZ286MjcwMTcsbW9uZ2/igJEyLm1vbmdvL215cHJvamVjdD9yZXBsaWNhU2V0PXJzMA==
+  oauth_secret_key: "output of base64 command above"
 ```
 
 ```bash

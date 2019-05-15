@@ -12,7 +12,8 @@ Razeedash is an app to manage deployments on Kubernetes
 
 ## Environment Varibles
 
-|| Name || Value || Description ||
+| Name | Value | Description |
+| ---- | ----- | ----------- |
 | OAUTH_SECRET_KEY | - | OAuth Secret Key.  For Github.com [register app](https://github.com/settings/applications/new) |
 | GITHUB_URL | <https://github.com> | GitHub URL |
 | GITHUB_API | <https://api.github.com> | GitHub API URL |
@@ -25,7 +26,8 @@ Razeedash is an app to manage deployments on Kubernetes
 To use OAUTH authentication to GitHub you need to [Register a new GitHub App](https://github.com/settings/apps/new)
 Example registration for running locally.
 
-|| Field || Value ||
+| Field | Value |
+| ----- | ----- |
 | Name | Local Razeedash Development |
 | Description | Local development |
 | Homepage URL | <http://localhost:3000> |
@@ -99,7 +101,8 @@ npm install
 
 ### NPM Commands
 
-|| Name || Description ||
+| Name | Description |
+| ---- | ----------- |
 | npm install | Install packages |
 | `npm start` | Run app |
 | `npm run lint` | Run lint ES6, yaml, json, docker and markdown' |

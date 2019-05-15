@@ -20,6 +20,7 @@ import './page.html';
 import './page.scss';
 import '../../components/kindIcon';
 import '/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
+import ResourcesSingle from './resourcesSingle';
 
 // eslint-disable-next-line
 import datepicker from 'bootstrap-datepicker';
@@ -381,6 +382,9 @@ Template.Resources_single.helpers({
     clusterName(){
         var clusterId = Template.instance().getClusterId();
         return _.get(Clusters.findOne({ cluster_id: clusterId }), 'cluster_name', clusterId);
+    },
+    ResourcesSingle(){
+        return ResourcesSingle;
     },
 });
 Template.Resources_single.events({

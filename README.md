@@ -12,14 +12,13 @@ Razeedash is an app to manage deployments on Kubernetes
 
 ## Environment Varibles
 
-| Name | Value | Description |
-| ---- | ----- | ----------- |
-| OAUTH_SECRET_KEY | - | GitHub OAuth Secret Key |
-| GITHUB_URL | <https://github.com> | GitHub URL |
-| GITHUB_API | <https://api.github.com> | GitHub API URL |
-| RAZEE_GHE_URL | <https://github.com/razee-io/razeedash> | Link to razeedash GitHub |
-| BUILD_ID | Travis build ID | Travis Build ID |
-| LAST_COMMIT_ID | GitHub commit hashcode | `git log --pretty=format:'%h' -n 1` |
+| Name             | Required | Value                    | Description |
+| ----             | -------- | -----                    | ----------- |
+| OAUTH_SECRET_KEY | Required | -                        | GitHub OAuth Secret Key |
+| GITHUB_URL       | Optional | <https://github.com>     | GitHub URL |
+| GITHUB_API       | Optional | <https://api.github.com> | GitHub API URL |
+| BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
+| LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
 
 ### Register GitHub application
 
@@ -100,18 +99,18 @@ npm install
 
 ### NPM Commands
 
-| Name | Description |
-| ---- | ----------- |
-| npm install | Install packages |
-| `npm start` | Run app |
-| `npm run lint` | Run lint ES6, yaml, json, docker and markdown' |
-| `npm run eslint` | Fix common ES6 lint issues |
-| `npm run jsonlint` | Lint JSON files |
-| `npm run dockerlint` | Lint Dockerfile |
-| `npm run shlint` | Lint shell scripts |
-| `npm run markdownlint` | Lint markdown files |
-| `npm test` | Run unit tests |
-| `npm run test:local` | Run tests and watch for changes |
+| Name                          | Description |
+| ----                          | ----------- |
+| npm install                   | Install packages |
+| `npm start`                   | Run app |
+| `npm run lint`                | Run lint ES6, yaml, json, docker and markdown|
+| `npm run eslint`              | Fix common ES6 lint issues |
+| `npm run jsonlint`            | Lint JSON files |
+| `npm run dockerlint`          | Lint Dockerfile |
+| `npm run shlint`              | Lint shell scripts |
+| `npm run markdownlint`        | Lint markdown files |
+| `npm test`                    | Run unit tests |
+| `npm run test:local`          | Run tests and watch for changes |
 | `npm run test:local:coverage` | Run tests, generate coverage and watch |
-| `npm run test:unit` | Run tests |
-| `npm run test:unit:coverage` | Run tests and generate coverage |
+| `npm run test:unit`           | Run tests |
+| `npm run test:unit:coverage`  | Run tests and generate coverage |

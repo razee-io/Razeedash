@@ -50,7 +50,7 @@ Template.page_welcome.onCreated(function() {
     this.clusterCount = new ReactiveVar();
     this.deploymentCount = new ReactiveVar();
     this.autorun(() => {
-        this.subscribe('stats', Session.get('currentOrgId'));
+        this.subscribe('resourceStats', Session.get('currentOrgId'));
 
         // if has access, sets the user's currentOrgName attr
         if(hasOrgAccess.get()){

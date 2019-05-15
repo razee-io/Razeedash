@@ -111,7 +111,7 @@ Template.nav.events({
 
 Template.nav.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('stats', Session.get('currentOrgId'));
+        this.subscribe('resourceStats', Session.get('currentOrgId'));
         Meteor.call('hasOrgs', function(err, result) {
             hasOrgsDefined.set(result);
         });

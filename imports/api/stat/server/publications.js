@@ -18,7 +18,7 @@ import { Meteor } from 'meteor/meteor';
 import { Stats } from '../stats.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 
-Meteor.publish('stats', function(orgId){
+Meteor.publish('resourceStats', function(orgId){
     requireOrgAccess(orgId);
     return Stats.find({org_id: orgId});
 });

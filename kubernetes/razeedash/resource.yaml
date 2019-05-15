@@ -4,19 +4,19 @@ metadata:
   name: razeedash-deployment
   namespace: razee
   annotations:
-    version: "{{$TRAVIS_COMMIT}}"
-    razee.io/git-repo: "{{{$GIT_REMOTE}}}" 
-    razee.io/commit-sha: "{{$TRAVIS_COMMIT}}"
+    version: "{{TRAVIS_COMMIT}}"
+    razee.io/git-repo: "{{{GIT_REMOTE}}}"
+    razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
 items:
   - apiVersion: extensions/v1beta1
     kind: Deployment
     metadata:
       annotations:
-        version: "{{$TRAVIS_COMMIT}}"
-        razee.io/git-repo: "{{{$GIT_REMOTE}}}"
-        razee.io/commit-sha: "{{$TRAVIS_COMMIT}}"
+        version: "{{TRAVIS_COMMIT}}"
+        razee.io/git-repo: "{{{GIT_REMOTE}}}"
+        razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
       name: razeedash
-      namespace: razee 
+      namespace: razee
     spec:
       replicas: 6
       revisionHistoryLimit: 0
@@ -56,7 +56,7 @@ items:
                   key: root_url
             - name: app_name
               value: Razeedash
-            image: "quay.io/razee/razeedash:{{TRAVIS_COMMIT}}" 
+            image: "quay.io/razee/razeedash:{{TRAVIS_COMMIT}}"
             imagePullPolicy: Always
             name: razeedash
             ports:
@@ -80,9 +80,9 @@ items:
     kind: Service
     metadata:
       annotations:
-        version: "{{$TRAVIS_COMMIT}}"
-        razee.io/git-repo: "{{{$GIT_REMOTE}}}"
-        razee.io/commit-sha: "{{$TRAVIS_COMMIT}}"
+        version: "{{TRAVIS_COMMIT}}"
+        razee.io/git-repo: "{{{GIT_REMOTE}}}"
+        razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
 
       name: razeedash-service
       namespace: razee
@@ -97,9 +97,9 @@ items:
     kind: Ingress
     metadata:
       annotations:
-        version: "{{$TRAVIS_COMMIT}}"
-        razee.io/git-repo: "{{{$GIT_REMOTE}}}"
-        razee.io/commit-sha: "{{$TRAVIS_COMMIT}}"
+        version: "{{TRAVIS_COMMIT}}"
+        razee.io/git-repo: "{{{GIT_REMOTE}}}"
+        razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
         ingress.bluemix.net/redirect-to-https: "True"
         ingress.bluemix.net/client-max-body-size: 8m
         ingress.bluemix.net/proxy-add-headers: |

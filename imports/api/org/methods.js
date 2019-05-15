@@ -24,8 +24,9 @@ import { requireOrgAdmin } from './utils';
 
 Meteor.methods({
     hasOrgs() {
-        const orgsInMeteor = Orgs.find({}).count();
-        if(orgsInMeteor === 0) {
+        var userOrgNames = _.map(_.get(Meteor.user(), 'profile.orgs', []), 'name');
+        var userOrgsInMeteor = Orgs.find({ name: { $in: userOrgNames } }).count();
+        if(userOrgsInMeteor === 0) {
             return false;
         } else {
             return true;

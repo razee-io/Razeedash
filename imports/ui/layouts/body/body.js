@@ -93,7 +93,7 @@ Template.nav.helpers({
 Template.nav.events({
     'click .razee-login' () {
         if (!Meteor.user()) {
-            Meteor.loginWithGhe({ requestPermissions: ['read:user', 'read:org'] }, function() {
+            Meteor.loginWithGithub({ requestPermissions: ['read:user', 'read:org'] }, function() {
                 Meteor.call('reloadUserOrgList', ()=> {
                     FlowRouter.go('welcome');
                 });

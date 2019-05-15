@@ -27,6 +27,8 @@ import { Stats } from '/imports/api/stat/stats.js';
 import { Orgs } from '/imports/api/org/orgs';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
+import { hasOrgsDefined } from '../../../startup/client';
+
 Template.App_body.helpers({
     versionsMatch() {
         return this.version === this.advertised_version;
@@ -53,6 +55,9 @@ Template.App_body.onRendered(function() {
     this.autorun(()=>{
         var orgName = Session.get('currentOrgName');
         this.subscribe('orgIdByName', orgName);
+        Meteor.call('hasOrgs', function(err, result) {
+            hasOrgsDefined.set(result);
+        });
     });
 });
 
@@ -107,6 +112,9 @@ Template.nav.events({
 Template.nav.onCreated(function() {
     this.autorun(() => {
         this.subscribe('stats', Session.get('currentOrgId'));
+        Meteor.call('hasOrgs', function(err, result) {
+            hasOrgsDefined.set(result);
+        });
     });
 });
 

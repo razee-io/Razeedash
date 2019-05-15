@@ -23,6 +23,14 @@ import ghe from '../lib/ghe.js';
 import { requireOrgAdmin } from './utils';
 
 Meteor.methods({
+    hasOrgs() {
+        const orgsInMeteor = Orgs.find({}).count();
+        if(orgsInMeteor === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }, 
     setAsCurrentOrgName(orgName){
         var userId = Meteor.userId();
         if(!userId){
@@ -34,18 +42,6 @@ Meteor.methods({
         var userObj = Meteor.users.findOne({ _id: Meteor.userId() });
         var orgs = ghe.listOrgs(userObj);
         Meteor.users.update({ _id: userObj._id}, { $set: { 'profile.orgs': orgs } });
-
-        // A first time user may not have an org defined in mongo. If that happens then we need
-        // to define a db entry for orgs where they are an admin.
-        const orgsInProfile = _.get(Meteor.user(), 'profile.orgs', []);
-        const orgsInMeteor = Orgs.find({}).count();
-        if(orgsInMeteor === 0) {
-            const adminOrgs = orgsInProfile.filter( org => org.role === 'admin');
-            adminOrgs.forEach( org => Meteor.call('registerOrg', org.name) );
-        }
-
-        const defaultOrg = orgsInProfile[0].name;
-        Meteor.call('setAsCurrentOrgName', defaultOrg);
     },
     registerOrg(name){
         check( name, String );

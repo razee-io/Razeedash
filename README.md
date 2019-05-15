@@ -14,9 +14,9 @@ Razeedash is an app to manage deployments on Kubernetes
 
 || Name || Value || Description ||
 | OAUTH_SECRET_KEY | - | OAuth Secret Key.  For Github.com [register app](https://github.com/settings/applications/new) |
-| GITHUB_URL | https://github.com | GitHub URL |
-| GITHUB_API | https://api.github.com | GitHub API URL |
-| RAZEE_GHE_URL | https://github.com/razee-io/razeedash | Link to razeedash GitHub |
+| GITHUB_URL | <https://github.com> | GitHub URL |
+| GITHUB_API | <https://api.github.com> | GitHub API URL |
+| RAZEE_GHE_URL | <https://github.com/razee-io/razeedash> | Link to razeedash GitHub |
 | BUILD_ID | Travis build ID | Travis Build ID |
 | LAST_COMMIT_ID | GitHub commit hashcode | `git log --pretty=format:'%h' -n 1` |
 
@@ -28,8 +28,8 @@ Example registration for running locally.
 || Field || Value ||
 | Name | Local Razeedash Development |
 | Description | Local development |
-| Homepage URL | http://localhost:3000 |
-| User authorization callback URL | http://localhost:3000/_oauth/github |
+| Homepage URL | <http://localhost:3000> |
+| User authorization callback URL | <http://localhost:3000/_oauth/github> |
 
 ### Create secrets and deploy
 
@@ -39,9 +39,11 @@ razeedash-secret.
 Replace OAUTH_SECRET_KEY with the value from the registration of the GitHub application step.
 
 <!--Markdownlint-disable MD013-->
+
 ```bash
 echo -n "OAUTH_SECRET_KEY" | base64
 ```
+
 <!--Markdownlint-enable MD013-->
 
 Create file razeedash-secret.yaml using the generated string provided from the
@@ -108,7 +110,6 @@ npm install
 | `npm run markdownlint` | Lint markdown files |
 | `npm test` | Run unit tests |
 | `npm run test:local` | Run tests and watch for changes |
-| `npm run test:local:coverage` | Run tests, generate coverage and watch for changes |
+| `npm run test:local:coverage` | Run tests, generate coverage and watch |
 | `npm run test:unit` | Run tests |
 | `npm run test:unit:coverage` | Run tests and generate coverage |
-

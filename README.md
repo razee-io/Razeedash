@@ -14,7 +14,7 @@ Razeedash is an app to manage deployments on Kubernetes
 
 | Name | Value | Description |
 | ---- | ----- | ----------- |
-| OAUTH_SECRET_KEY | - | OAuth Secret Key.  For Github.com [register app](https://github.com/settings/applications/new) |
+| OAUTH_SECRET_KEY | - | GitHub OAuth Secret Key |
 | GITHUB_URL | <https://github.com> | GitHub URL |
 | GITHUB_API | <https://api.github.com> | GitHub API URL |
 | RAZEE_GHE_URL | <https://github.com/razee-io/razeedash> | Link to razeedash GitHub |

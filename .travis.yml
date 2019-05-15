@@ -33,25 +33,30 @@ deploy:
     script: docker push "quay.io/razee/razeedash:${TRAVIS_COMMIT}"
     skip_cleanup: true
     on:
-      branch: master
+      tags: true
+      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+_[0-9]{3}
   - provider: releases
     file: /tmp/resource.yaml
     skip_cleanup: true
     draft: true
     on:
-      branch: master
+      tags: true
+      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+_[0-9]{3}
     api_key:
       secure: "${GITHUB_TOKEN}"
+
   # Deploy released builds
   - provider: script
     script: docker push "quay.io/razee/razeedash:${TRAVIS_TAG}"
     skip_cleanup: true
     on:
       tags: true
+      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+
   - provider: releases
     file: /tmp/resource.yaml
     skip_cleanup: true
     on:
       tags: true
+      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+
     api_key:
       secure: "${GITHUB_TOKEN}"

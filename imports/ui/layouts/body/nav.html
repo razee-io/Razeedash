@@ -34,14 +34,14 @@
             <li class="nav-item {{isActive 'clusters.search'}}">
                 <a class="nav-link align-middle" href="{{pathFor 'clusters.search' query=(navItemQueryStr 'clusters')}}">
                     <span class="align-middle">Clusters</span>
-                    <!-- <span class="badge badge-dark align-middle">{{clusterCount}}</span> -->
+                    <span class="badge badge-dark align-middle">{{clusterCount}}</span>
                 </a>
             </li>
         
             <li class="nav-item {{isActive 'resources.search'}}">
                 <a class="nav-link" href="{{pathFor 'resources.search' query=(navItemQueryStr 'deployments')}}">
                     <span class="align-middle">Resources</span>
-                    <!-- <span class="badge badge-dark align-middle">{{deploymentCount}}</span> -->
+                    <span class="badge badge-dark align-middle">{{deploymentCount}}</span>
                 </a>
             </li>
         {{/if}}

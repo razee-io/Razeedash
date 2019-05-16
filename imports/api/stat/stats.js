@@ -16,7 +16,7 @@
 
 import { Mongo } from 'meteor/mongo';
 
-export const Stats = new Mongo.Collection('stats');
+export const Stats = new Mongo.Collection('resourceStats');
 
 Stats.deny({
     insert() { return true; },

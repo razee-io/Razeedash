@@ -24,10 +24,18 @@
       </p>
       <p class="lead text-center">To get started, you'll first need to sign in.</p>
       <p class="text-center">
+        {{> loginButtons}}
+        {{#if isLoginConfigured}}
         <a href="#" class="btn btn-primary razee-login razee-login-button justify-content-end ml-auto">
           <i class="fa fa-github align-middle" aria-hidden="true"></i>
-          <span class="align-middle">Login with GitHub</span>
+            <span class="align-middle">Login with GitHub</span>
         </a>
+        {{else}}
+        <a href="#" class="btn btn-primary razee-login razee-config-login-button justify-content-end ml-auto">
+          <i class="fa fa-github align-middle" aria-hidden="true"></i>
+            <span class="align-middle">Configure login for GitHub</span>
+        </a>
+        {{/if}}
       </p>
     </div>
   </div>

@@ -19,12 +19,19 @@ import './page.html';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-
+import { Accounts } from 'meteor/accounts-base';
 
 Template.Login.created = function() {
     if (Meteor.user()) {
         FlowRouter.redirect('home');
     }
+    else {
+        Accounts.ui.config( { requestPermissions: { github: ['user', 'repo'] } } );
+    }
+};
+
+Template.Login.helpers = {
+    isLoginConfigured: () => Accounts.loginServicesConfigured()
 };
 
 Template.Login.events({

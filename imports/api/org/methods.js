@@ -52,7 +52,7 @@ Meteor.methods({
             return (org.name == name);
         });
         if(!userOrg || userOrg.role != 'admin'){
-            throw new Meteor.Error(`You must be a GHE "${name}" org admin to register it.`);
+            throw new Meteor.Error(`You must be a Github "${name}" org admin to register it.`);
         }
         var org = Orgs.findOne({ name });
         if(org){

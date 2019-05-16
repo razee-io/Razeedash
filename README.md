@@ -1,5 +1,8 @@
 # Razeedash
 
+![Travis Build Status](https://api.travis-ci.com/razee-io/Razeedash.svg?branch=master)
+<https://travis-ci.com/razee-io/razeedash>
+
 Razeedash is an app to manage deployments on Kubernetes
 
 ## Requirements

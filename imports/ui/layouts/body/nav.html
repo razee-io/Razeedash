@@ -59,10 +59,6 @@
             <a class="dropdown-item" href="{{pathFor 'profile'}}">
               <i class="text-muted fa fa-user" aria-hidden="true"></i> Profile</a>
             {{/if}}
-            {{#if isRazeeAdmin}}
-            <a class="dropdown-item" href="{{pathFor 'admin.home'}}">
-              <i class="text-muted fa fa-user-circle-o" aria-hidden="true"></i> Admin</a>
-            {{/if}}
             <a class="dropdown-item" target="_blank" href="{{meteorSetting 'RAZEE_GHE_URL'}}">
               <i class="text-muted fa fa-github" aria-hidden="true"></i> Razee on GitHub</a>
             <a class="dropdown-item razee-login" href="#">

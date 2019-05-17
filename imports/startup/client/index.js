@@ -28,6 +28,7 @@ import './main.html';
 import './toastr';
 import { Orgs } from '/imports/api/org/orgs';
 import { Session } from 'meteor/session';
+import { Accounts } from 'meteor/accounts-base';
 
 Accounts.ui.config( { requestPermissions: { github: ['read:user', 'read:org'] } } );
 

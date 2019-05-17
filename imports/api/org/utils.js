@@ -26,7 +26,6 @@ export const requireOrgAccess = (orgId)=>{
         return true;
     }
     const errorMessage = `you dont have access to org ${_.get(org, 'name', `_id ${orgId}`)}`;
-    console.error(errorMessage);
     throw new Meteor.Error(errorMessage);
 };
 

@@ -82,10 +82,7 @@ Template.nav.helpers({
         return qs;
     },
     clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
-    deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString(),
-    isRazeeAdmin: ()=>{
-        return _.get(Meteor.user(), 'profile.isRazeeAdmin', false);
-    },
+    deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString()
 });
 
 Template.nav.events({
@@ -127,11 +124,5 @@ Template.nav_org_dropdown.helpers({
     isSelected(orgName){
         var selectedOrgName = Session.get('currentOrgName');
         return (selectedOrgName == orgName ? 'selected' : '');
-    },
-});
-
-Template.AppAdminPage.helpers({
-    isAdmin(){
-        return !!_.get(Meteor.user(), 'profile.isRazeeAdmin', false);
     },
 });

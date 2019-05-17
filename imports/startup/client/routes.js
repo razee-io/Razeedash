@@ -31,8 +31,6 @@ import '../../ui/pages/clusters';
 import '../../ui/pages/cluster';
 import '../../ui/pages/welcome';
 import '../../ui/pages/org';
-import '../../ui/pages/admin/adminHome';
-import '../../ui/pages/admin/adminOrgs';
 import '../../ui/pages/selectOrg';
 
 const Routes = FlowRouter.group({
@@ -69,42 +67,6 @@ Routes.route('/orgs', {
     triggersEnter: [checkForOrg],
     action() {
         BlazeLayout.render('App_body', { main: 'UserProfile_orgs', });
-    },
-});
-
-const adminRoutes = Routes.group({
-    prefix: '/admin',
-    name: 'admin',
-});
-adminRoutes.route('/', {
-    name: 'admin.home',
-    title: 'Admin',
-    action: function() {
-        BlazeLayout.render('AppAdminPage', { main: 'AdminHome', });
-    },
-});
-adminRoutes.route('/orgs', {
-    name: 'admin.orgs',
-    title: 'Orgs',
-    parent: 'admin.home',
-    action: function() {
-        BlazeLayout.render('AppAdminPage', { main: 'AdminOrgsHome', });
-    },
-});
-adminRoutes.route('/orgs/register', {
-    name: 'admin.org.register',
-    title: 'Register',
-    parent: 'admin.orgs',
-    action: function() {
-        BlazeLayout.render('AppAdminPage', { main: 'AdminOrgRegister', });
-    },
-});
-adminRoutes.route('/orgs/:orgName', {
-    name: 'admin.org',
-    title: ':orgName',
-    parent: 'admin.orgs',
-    action: function(params) {
-        BlazeLayout.render('AppAdminPage', { main: 'AdminOrgsSingle', orgName: params.orgName, });
     },
 });
 

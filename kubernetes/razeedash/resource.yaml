@@ -47,8 +47,6 @@ items:
               value: "https://github.com/"
             - name: GITHUB_API
               value: "https://api.github.com/"
-            - name: RAZEE_GHE_URL
-              value: "https://github.com/razee-io/razeedash/"
             - name: ROOT_URL
               valueFrom:
                 configMapKeyRef:

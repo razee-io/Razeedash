@@ -30,7 +30,7 @@ before_deploy:
 deploy:
   # Deploy alpha builds
   - provider: script
-    script: docker push "quay.io/razee/razeedash:${TRAVIS_COMMIT}"
+    script: docker push "quay.io/razee/razeedash:${TRAVIS_TAG}"
     skip_cleanup: true
     on:
       tags: true

@@ -22,27 +22,15 @@ import { Template } from 'meteor/templating';
 import { Orgs } from '/imports/api/org/orgs';
 import _ from 'lodash';
 
-Template.UserProfile_home.events({
-    'click button': function() {
-        Meteor.call('generateApikey');
-    }
-});
-
-Template.UserProfile_home.onCreated(function() {
-    this.autorun(() => {
-        this.subscribe('userData');
-    });
-});
-
 var refreshStatus = new ReactiveVar('');
 
-Template.UserProfile_orgs.onCreated(function(){
+Template.SelectOrg.onCreated(function(){
     this.autorun(()=>{
         this.subscribe('orgsForUser');
     });
 });
 
-Template.UserProfile_orgs.helpers({
+Template.SelectOrg.helpers({
     refreshStatus(){
         return refreshStatus.get();
     },
@@ -61,7 +49,7 @@ Template.UserProfile_orgs.helpers({
     },
 });
 
-Template.UserProfile_orgs.events({
+Template.SelectOrg.events({
     'click .refresh-btn'(){
         refreshStatus.set('fa-spin');
         Meteor.call('reloadUserOrgList', ()=>{
@@ -70,17 +58,17 @@ Template.UserProfile_orgs.events({
     },
 });
 
-Template.UserProfile_orgs_register_btn.onCreated(function(){
+Template.SelectOrg_register.onCreated(function(){
     this.isRegistering = new ReactiveVar(false);
 });
 
-Template.UserProfile_orgs_register_btn.helpers({
+Template.SelectOrg_register.helpers({
     isRegistering(){
         return Template.instance().isRegistering.get();
     },
 });
 
-Template.UserProfile_orgs_register_btn.events({
+Template.SelectOrg_register.events({
     'click .registerOrgBtn'(){
         var inst = Template.instance();
         var orgName = Template.currentData().org.name;

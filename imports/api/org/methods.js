@@ -24,7 +24,7 @@ import { requireOrgAdmin } from './utils';
 
 Meteor.methods({
     hasOrgs() {
-        var userOrgNames = _.map(_.get(Meteor.user(), 'profile.orgs', []), 'name');
+        var userOrgNames = _.map(_.get(Meteor.user(), 'github.orgs', []), 'name');
         var userOrgsInMeteor = Orgs.find({ name: { $in: userOrgNames } }).count();
         if(userOrgsInMeteor === 0) {
             return false;
@@ -42,12 +42,12 @@ Meteor.methods({
     reloadUserOrgList(){
         var userObj = Meteor.users.findOne({ _id: Meteor.userId() });
         var orgs = ghe.listOrgs(userObj);
-        Meteor.users.update({ _id: userObj._id}, { $set: { 'profile.orgs': orgs } });
+        Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
     },
     registerOrg(name){
         check( name, String );
         var userObj = Meteor.user();
-        var userOrgs = _.get(userObj, 'profile.orgs');
+        var userOrgs = _.get(userObj, 'github.orgs');
         var userOrg = _.find(userOrgs, (org)=>{
             return (org.name == name);
         });

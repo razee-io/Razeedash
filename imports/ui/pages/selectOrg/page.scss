@@ -14,5 +14,19 @@
 * limitations under the License.
 */
 
-import './page.scss';
-import './page.html';
+.refresh-btn{
+  cursor:pointer;
+}
+
+.org-image {
+  width: 25px;
+  height: 25px;
+}
+.org-link:hover{
+    text-decoration: none;
+}
+.img-thumbnail org-image my-1
+
+.grayscale{
+  filter:grayscale(100%);
+}

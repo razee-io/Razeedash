@@ -15,20 +15,26 @@
 -->
 
 <template name="App_body">
-  {{> nav}}
-    {{#if baseOrgLoaded}}
-      <div class="container-fluid px-0">
-        {{> breadcrumbs }}
-        {{> Template.dynamic template=main}}
-      </div>
-    {{else}}
-        {{#if hasOrgsDefined }}
-            {{> loading }}
+ {{#if Template.subscriptionsReady}}
+  {{#if currentUser}}
+        {{#if baseOrgLoaded}}
+            {{> nav}}
+                <div class="container-fluid px-0">
+                {{> breadcrumbs }}
+                {{> Template.dynamic template=main}}
+                </div>
+            {{> footer}}
         {{else}}
-            {{> page_select_org}}
+            {{> nav}}
+            <div class="container-fluid px-5">
+                {{> SelectOrg }}
+            </div>
+            {{> footer}} 
         {{/if}}
-    {{/if}}
-  {{> footer}}
+  {{else}}
+    {{> Login }}
+  {{/if}}
+ {{/if}}
 </template>
 
 <template name="AppAdminPage">

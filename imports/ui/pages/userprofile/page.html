@@ -71,7 +71,7 @@
                 </span>
             </h2>
         </div>
-        <div class="container m-0 my-1 p-0">
+        <div class="container-fluid m-0 my-1 p-0">
             {{#if Template.subscriptionsReady}}
                 {{#each org in orgNames}}
                     <div class="row px-2">
@@ -83,7 +83,7 @@
                         </div>
                         <div class="col col-sm-6 col-md-7 col-lg-8">
                             {{#if orgExists org.name}}
-                                <a href="{{pathFor 'org' baseOrgName=org.name}}" class="btn btn-danger">Manage</a>
+                                <a href="{{pathFor 'org' baseOrgName=org.name}}" class="btn btn-primary btn-sm">Manage</a>
                             {{else}}
                                 {{#if isAdminOfOrg org.name}}
                                     {{> UserProfile_orgs_register_btn org=org}}
@@ -108,7 +108,7 @@
 </template>
 
 <template name="UserProfile_orgs_register_btn">
-    <button class="btn btn-primary registerOrgBtn" {{outputDisabled isRegistering}}>
+    <button class="btn btn-primary btn-sm registerOrgBtn" {{outputDisabled isRegistering}}>
         Register
         {{#if isRegistering}}
             <i class="fa fa-spinner fa-spin"></i>

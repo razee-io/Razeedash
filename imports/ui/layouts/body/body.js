@@ -18,6 +18,7 @@ import './body.scss';
 import './nav.html';
 import './body.html';
 import './footer.html';
+import '../../pages/login';
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -44,15 +45,12 @@ Template.App_body.helpers({
         }
         Session.set('currentOrgId', val._id);
         return val;
-    },
-    baseOrgLoaded(){
-        var val = Template.App_body.__helpers.get('baseOrg').call(Template.instance());
-        return val;
     }
 });
 
 Template.App_body.onRendered(function() {
     this.autorun(()=>{
+        this.subscribe('userData');
         var orgName = Session.get('currentOrgName');
         this.subscribe('orgIdByName', orgName);
         Meteor.call('hasOrgs', function(err, result) {
@@ -92,17 +90,7 @@ Template.nav.helpers({
 
 Template.nav.events({
     'click .razee-login' () {
-        if (!Meteor.user()) {
-            Meteor.loginWithGithub({ requestPermissions: ['read:user', 'read:org'] }, function() {
-                Meteor.call('reloadUserOrgList', ()=> {
-                    FlowRouter.go('welcome');
-                });
-            });
-        } else {
-            Meteor.logout(function() {
-                FlowRouter.go('/login');
-            });
-        }
+        Meteor.logout();
     },
     'click a' () {
         $('.navbar-collapse').collapse('hide');
@@ -111,16 +99,18 @@ Template.nav.events({
 
 Template.nav.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('resourceStats', Session.get('currentOrgId'));
-        Meteor.call('hasOrgs', function(err, result) {
-            hasOrgsDefined.set(result);
-        });
-    });
-});
+        Meteor.call('reloadUserOrgList');
+        this.subscribe('orgsForUser');
 
-Template.App_body.onCreated(function() {
-    this.autorun(() => {
-        this.subscribe('gheOrg', Session.get('currentOrgName') );
+        if(Session.get('currentOrgName')) {
+            hasOrgsDefined.set(true);
+        } else {
+            hasOrgsDefined.set(false);
+        }
+        if(Session.get('currentOrgId')) {
+            this.subscribe('resourceStats', Session.get('currentOrgId'));
+        }
+        this.subscribe('userData');
     });
 });
 
@@ -131,16 +121,6 @@ Template.nav_org_dropdown.onCreated(function(){
 });
 
 Template.nav_org_dropdown.helpers({
-    orgs(){
-        var count = Orgs.find({}).count();
-        if(count < 1){
-            // sets a default if they cant access anything
-            return [
-                { name:  Session.get('currentOrgName')},
-            ];
-        }
-        return Orgs.find({}, { sort: { name: -1 } });
-    },
     selectedOrgName(){
         return Session.get('currentOrgName');
     },

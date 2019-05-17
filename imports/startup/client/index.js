@@ -29,6 +29,8 @@ import './toastr';
 import { Orgs } from '/imports/api/org/orgs';
 import { Session } from 'meteor/session';
 
+Accounts.ui.config( { requestPermissions: { github: ['read:user', 'read:org'] } } );
+
 const time = new ReactiveVar();
 time.set(new Date());
 Meteor.setInterval(function() {
@@ -39,6 +41,21 @@ export let hasOrgsDefined = new ReactiveVar(true);
 
 Template.registerHelper('hasOrgsDefined', () => {
     return hasOrgsDefined.get();
+});
+
+Template.registerHelper('baseOrgLoaded', () => {
+    const val = Template.App_body.__helpers.get('baseOrg').call(Template.instance());
+    return val;
+});
+Template.registerHelper('orgs', () => {
+    const count = Orgs.find({}).count();
+    if(count < 1){
+        // sets a default if they cant access anything
+        return [
+            { name:  Session.get('currentOrgName')},
+        ];
+    }
+    return Orgs.find({}, { sort: { name: -1 } });
 });
 
 // updates pathFor() helper to auto-put the orgName
@@ -245,7 +262,7 @@ Template.registerHelper('boldifySearchMatches', (searchStr, str) => {
 
 
 Template.registerHelper('iconForOrgName', (orgName) => {
-    var orgs = _.get(Meteor.user(), 'profile.orgs', []);
+    var orgs = _.get(Meteor.user(), 'github.orgs', []);
     var selectedOrg = _.find(orgs, (org)=>{
         return (_.get(org, 'name') == orgName);
     });

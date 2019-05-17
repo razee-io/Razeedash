@@ -15,18 +15,36 @@
 */
 
 .razee-logo {
-  width: 25%;
+    width: 25px;
+    height: 25px;
+    margin-right: 8px;
+    vertical-align: baseline;
 }
 
-.razee-login-button {
-  background: #333333;
-  &:hover{
-    background: #555555;
-  }
-  i.fa-github {
-      font-size: 1.5em;
-  }
-  span {
-    padding-left: 10px;
-  }
+.login-header {
+    margin: 33px 0;
+    .login-app-name {
+        font-size: 28px;
+        font-family: 'IBM Plex Sans Condensed';
+        font-weight: lighter;
+        color: #171717;
+        margin-bottom: 0px;
+    }
+}
+
+.login-card {
+    width: 464px;
+    padding: 24px 0;
+    font-family: 'IBM Plex Sans';
+    .heading {
+        margin-bottom: 0px;
+        font-size: 28px;
+        color: #171717;
+    }
+    .details {
+        font-size: 14px;
+        font-weight: lighter;
+        margin-bottom: 50px;
+        color: #565656;
+    }
 }

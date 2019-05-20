@@ -25,7 +25,7 @@ Razeedash is an app to manage deployments on Kubernetes
 
 ### Register GitHub application
 
-To use OAUTH authentication to GitHub you need to [Register a new GitHub App](https://github.com/settings/apps/new)
+To use OAUTH authentication to GitHub you need to [Register a new Github OAuth App](https://github.com/settings/applications/new)
 Example registration for running locally.
 
 | Field | Value |

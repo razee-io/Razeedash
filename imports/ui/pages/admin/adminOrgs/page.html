@@ -75,10 +75,12 @@
 
             <div class="row no-gutters py-2">
                 <div class="col-12 col-sm-2 font-italic">
-                    Api Key:
+                    Api Keys:
                 </div>
                 <div class="col-10">
-                    <input class="form-control keyDisplay" type="text" value="{{org.apiKey}}" disabled />
+                    {{#each orgKey in org.orgKeys}}
+                        <input class="form-control keyDisplay" type="text" value="{{orgKey}}" disabled />
+                    {{/each}}
                 </div>
             </div>
 
@@ -88,7 +90,7 @@
                 </div>
                 <div class="col-10">
                     <code>
-                        kubectl create -f https://razeedash.oneibmcloud.com/api/v1/orgYml/{{org.apiKey}}
+                        kubectl create -f https://razeedash.oneibmcloud.com/api/v1/orgYml/{{firstOrgKey org}}
                     </code>
                 </div>
             </div>

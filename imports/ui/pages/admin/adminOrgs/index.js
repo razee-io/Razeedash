@@ -46,6 +46,9 @@ Template.AdminOrgsSingle.helpers({
     org(){
         return Orgs.findOne({name: Template.instance().orgName});
     },
+    firstOrgKey(org){
+        return org.orgKeys[0];
+    },
 });
 
 Template.AdminOrgRegister.onCreated(function(){

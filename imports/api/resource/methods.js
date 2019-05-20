@@ -35,7 +35,7 @@ Meteor.methods({
         if(!org){
             throw new Meteor.Error(`couldnt find org id "${resource.org_id}" from resource._id "${resource._id}"`);
         }
-        return tokenCrypt.decrypt(resource.data, org.apiKey);
+        return tokenCrypt.decrypt(resource.data, org.orgKeys[0]);
     },
     async getActiveDepsPerService(orgId){
         requireOrgAccess(orgId);

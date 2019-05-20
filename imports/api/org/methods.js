@@ -54,7 +54,7 @@ Meteor.methods({
             return (org.name == name);
         });
         if(!userOrg || userOrg.role != 'admin'){
-            throw new Meteor.Error(`You must be a Github "${name}" org admin to register it.`);
+            throw new Meteor.Error(`You must be a GitHub "${name}" org admin to register it.`);
         }
         var org = Orgs.findOne({ name });
         if(org){
@@ -70,6 +70,19 @@ Meteor.methods({
             created: new Date(),
             updated: new Date()
         });
+        return true;
+    },
+    deRegisterOrg(name){
+        check( name, String );
+        var userObj = Meteor.user();
+        var userOrgs = _.get(userObj, 'github.orgs');
+        var userOrg = _.find(userOrgs, (org)=>{
+            return (org.name == name);
+        });
+        if(!userOrg || userOrg.role != 'admin'){
+            throw new Meteor.Error(`You must be a GitHub "${name}" org admin to de-register it.`);
+        }
+        Orgs.remove({ name: name });
         return true;
     },
     saveOrgYamlTemplate(orgId, template) {

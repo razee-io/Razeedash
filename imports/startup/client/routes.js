@@ -31,7 +31,7 @@ import '../../ui/pages/clusters';
 import '../../ui/pages/cluster';
 import '../../ui/pages/welcome';
 import '../../ui/pages/org';
-import '../../ui/pages/selectOrg';
+import '../../ui/pages/razeeWelcome';
 
 const Routes = FlowRouter.group({
     name: 'base_route',
@@ -41,32 +41,16 @@ Routes.route('/', {
     name: 'root',
     title: 'Welcome',
     action() {
-        BlazeLayout.render('App_body');
+        BlazeLayout.render('Base_layout', { main: 'Razee_welcome' });
     },
 });
 
-// without this, someone that bookmarks the /orgs or /profile routes will see an infinite spinner icon
-const checkForOrg = function() {
-    if(!Session.get('currentOrgName')) {
-        FlowRouter.go('/');
-    }
-};
 Routes.route('/profile', {
     name: 'profile',
     title: 'Profile',
     parent: 'welcome',
-    triggersEnter: [checkForOrg],
     action() {
-        BlazeLayout.render('App_body', { main: 'UserProfile_home', dcId: null });
-    },
-});
-Routes.route('/orgs', {
-    name: 'orgs',
-    title: 'Orgs',
-    parent: 'welcome',
-    triggersEnter: [checkForOrg],
-    action() {
-        BlazeLayout.render('App_body', { main: 'UserProfile_orgs', });
+        BlazeLayout.render('Base_layout', { main: 'UserProfile_home', dcId: null });
     },
 });
 
@@ -86,16 +70,16 @@ orgedRoutes.route('/', {
     name: 'welcome',
     title: 'Welcome',
     action: function() {
-        BlazeLayout.render('App_body', { main: 'page_welcome', });
+        BlazeLayout.render('Base_layout', { main: 'page_welcome', });
     }
 });
 
 orgedRoutes.route('/org', {
     name: 'org',
     title: ':baseOrgName',
-    parent: 'orgs',
+    parent: 'welcome',
     action: function() {
-        BlazeLayout.render('App_body', { main: 'OrgSingle', });
+        BlazeLayout.render('Base_layout', { main: 'OrgSingle', });
     }
 });
 
@@ -104,7 +88,7 @@ orgedRoutes.route('/clusters', {
     title: 'Clusters',
     parent: 'welcome',
     action: function() {
-        BlazeLayout.render('App_body', { main: 'page_clusters', });
+        BlazeLayout.render('Base_layout', { main: 'page_clusters', });
     }
 });
 
@@ -125,7 +109,7 @@ orgedRoutes.route('/clusters/:id/:tabId', {
         if ( !params.tabId ) {
             FlowRouter.setParams( { clusterId: params.id, tabID: 'resources' });
         }
-        BlazeLayout.render('App_body', { main: 'page_cluster_id', clusterId: params.id, tabID: params.tabId });
+        BlazeLayout.render('Base_layout', { main: 'page_cluster_id', clusterId: params.id, tabID: params.tabId });
     }
 });
 
@@ -134,7 +118,7 @@ orgedRoutes.route('/resources', {
     title: 'Resources',
     parent: 'welcome',
     action: function() {
-        BlazeLayout.render('App_body', { main: 'page_resources', });
+        BlazeLayout.render('Base_layout', { main: 'page_resources', });
     }
 });
 
@@ -143,12 +127,12 @@ orgedRoutes.route('/resources/:resourceName/:clusterId', {
     title: 'Resource Cluster :clusterId',
     parent: 'resources.search',
     action(params) {
-        BlazeLayout.render('App_body', { main: 'Resources_single', resourceName: params.resourceName, clusterId: params.clusterId });
+        BlazeLayout.render('Base_layout', { main: 'Resources_single', resourceName: params.resourceName, clusterId: params.clusterId });
     },
 });
 
 FlowRouter.notFound = {
     action() {
-        BlazeLayout.render('App_body', { main: 'App_notFound' });
+        BlazeLayout.render('Base_layout', { main: 'App_notFound' });
     },
 };

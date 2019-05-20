@@ -44,10 +44,6 @@ Template.registerHelper('hasOrgsDefined', () => {
     return hasOrgsDefined.get();
 });
 
-Template.registerHelper('baseOrgLoaded', () => {
-    const val = Template.App_body.__helpers.get('baseOrg').call(Template.instance());
-    return val;
-});
 Template.registerHelper('orgs', () => {
     const count = Orgs.find({}).count();
     if(count < 1){

@@ -22,33 +22,27 @@ import '../../pages/login';
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker'; 
 import _ from 'lodash';
 import { Template } from 'meteor/templating';
 import { Stats } from '/imports/api/stat/stats.js';
-import { Orgs } from '/imports/api/org/orgs';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
 import { hasOrgsDefined } from '../../../startup/client';
 
-Template.App_body.helpers({
+let currentRoute = new ReactiveVar(true);
+
+Template.Base_layout.helpers({
     versionsMatch() {
         return this.version === this.advertised_version;
     },
     appRoute() {
         return FlowRouter.path('App.home');
     },
-    baseOrg(){
-        var orgName = Session.get('currentOrgName');
-        var val = Orgs.findOne({ name: orgName });
-        if(!orgName || !val){
-            return null;
-        }
-        Session.set('currentOrgId', val._id);
-        return val;
-    }
 });
 
-Template.App_body.onRendered(function() {
+Template.Base_layout.onRendered(function() {
     this.autorun(()=>{
         this.subscribe('userData');
         var orgName = Session.get('currentOrgName');
@@ -81,6 +75,13 @@ Template.nav.helpers({
         }
         return qs;
     },
+    showCounters() {
+        if(currentRoute.get() === 'root') {
+            return false;
+        } else {
+            return true;
+        }
+    },
     clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
     deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString()
 });
@@ -108,6 +109,9 @@ Template.nav.onCreated(function() {
             this.subscribe('resourceStats', Session.get('currentOrgId'));
         }
         this.subscribe('userData');
+    });
+    Tracker.autorun(function() {
+        currentRoute.set(FlowRouter.getRouteName());
     });
 });
 

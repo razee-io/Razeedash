@@ -16,10 +16,14 @@
 
 <template name="nav">
   <header class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark py-0 {{isActiveRoute 'Login' class='d-none'}}">
-    <a class="navbar-brand razee-header-link align-middle" href="{{pathFor 'welcome'}}">
-      <img class="razee-header-icon" src="/img/razeedash.svg" alt="" role="presentation">
-      Razee<span class="font-italic">Dash</span>
-    </a>
+    <span class=" align-middle">
+        <a class="navbar-brand razee-header-link" href="{{pathFor 'root'}}">
+            <img class="razee-header-icon" src="/img/razeedash.svg" alt="" role="presentation">
+        </a>
+        <a class="navbar-brand razee-header-link" href="{{pathFor 'welcome'}}">
+            Razee<span class="font-italic">Dash</span>
+        </a>
+     </span>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -30,8 +34,8 @@
       {{#if currentUser}}
       <ul class="navbar-nav d-flex">
         {{#if hasOrgsDefined }}
-            {{#if baseOrgLoaded }}
                 {{> nav_org_dropdown}}
+                {{#if showCounters}}
                 <li class="nav-item {{isActive 'clusters.search'}}">
                     <a class="nav-link align-middle" href="{{pathFor 'clusters.search' query=(navItemQueryStr 'clusters')}}">
                         <span class="align-middle">Clusters</span>
@@ -45,7 +49,7 @@
                         <span class="badge badge-dark align-middle">{{deploymentCount}}</span>
                     </a>
                 </li>
-            {{/if}}
+                {{/if}}
           {{/if}}
       </ul>
 
@@ -84,9 +88,6 @@
         {{org.name}}
       </a>
       {{/each}}
-      <a class="dropdown-item py-1 px-2 manageOrgsBtn" href="{{pathFor 'orgs'}}">
-        <i>Manage organizations...</i>
-      </a>
     </div>
   </li>
 </template>

@@ -28,6 +28,9 @@ Template.SelectOrg.onCreated(function(){
     this.autorun(()=>{
         this.subscribe('orgsForUser');
     });
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 });
 
 Template.SelectOrg.helpers({
@@ -56,6 +59,7 @@ Template.SelectOrg.events({
             refreshStatus.set('');
         });
     },
+    
 });
 
 Template.SelectOrg_register.onCreated(function(){
@@ -76,6 +80,19 @@ Template.SelectOrg_register.events({
         inst.isRegistering.set(true);
         Meteor.call('registerOrg', orgName, (err)=>{
             inst.isRegistering.set(false);
+            if(err){
+                throw err;
+            }
+        });
+        return false;
+    },
+   
+});
+
+Template.SelectOrg_deregister.events({
+    'click .deRegisterOrgBtn'(){
+        var orgName = Template.currentData().org.name;
+        Meteor.call('deRegisterOrg', orgName, (err)=>{
             if(err){
                 throw err;
             }

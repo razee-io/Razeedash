@@ -159,8 +159,11 @@ Template.OrgSingle.helpers({
     org(){
         return Orgs.findOne({ name: Template.instance().orgName });
     },
-    yamlUrl( org, key ) {
-        return Meteor.absoluteUrl( `/install/${org}/${key}` );
+    inventoryYamlUrl(key){
+        return Meteor.absoluteUrl(`api/install/inventory?orgKey=${key}`);
+    },
+    kapitanYamlUrl(key){
+        return Meteor.absoluteUrl(`api/install/kapitan?orgKey=${key}`);
     },
     disabled() {
         return dirtyFlag.get() ? {} : {disabled: 'disabled'};

@@ -41,8 +41,10 @@ Meteor.methods({
     },
     reloadUserOrgList(){
         var userObj = Meteor.users.findOne({ _id: Meteor.userId() });
-        var orgs = ghe.listOrgs(userObj);
-        Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
+        if(userObj) {
+            var orgs = ghe.listOrgs(userObj);
+            Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
+        }
     },
     registerOrg(name){
         check( name, String );

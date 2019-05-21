@@ -29,8 +29,6 @@ import { Template } from 'meteor/templating';
 import { Stats } from '/imports/api/stat/stats.js';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
-import { Orgs } from '/imports/api/org/orgs';
-
 import { hasOrgsDefined } from '../../../startup/client';
 
 let currentRoute = new ReactiveVar(true);

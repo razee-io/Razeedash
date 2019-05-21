@@ -61,11 +61,11 @@ Meteor.methods({
             throw new Meteor.Error(`org "${name}" already exists`);
         }
 
-        var apiKey = `orgApiKey-${uuid()}`;
+        var orgKey = `orgApiKey-${uuid()}`;
         Orgs.insert({
             name,
             creatorUserId: userObj._id,
-            apiKey: apiKey,
+            orgKeys: [orgKey],
             gheOrgId: userOrg.gheOrgId,
             created: new Date(),
             updated: new Date()

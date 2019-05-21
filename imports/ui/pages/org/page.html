@@ -54,19 +54,35 @@
                             Api Key
                         </label>
                         <div class="col-sm-10">
-                            <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{org.apiKey}}" readonly />
+                            {{#each orgKey in org.orgKeys}}
+                                <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{orgKey}}" readonly />
+                            {{/each}}
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="org_command" class="col-sm-2 col-form-label">
-                            Install Cluster-updater
+                            Install Inventory
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{inventoryYamlUrl (firstOrgKey org)}}</code>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{inventoryYamlUrl (firstOrgKey org)}}">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="org_command" class="col-sm-2 col-form-label">
+                            Install Kapitan
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{yamlUrl org.name org.apiKey}}</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{kapitanYamlUrl (firstOrgKey org)}}</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{yamlUrl org.name org.apiKey}}">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{kapitanYamlUrl (firstOrgKey org)}}">Copy</button>
                                 </div>
                             </div>
                         </div>

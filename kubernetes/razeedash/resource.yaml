@@ -54,7 +54,7 @@ items:
                   key: root_url
             - name: app_name
               value: Razeedash
-            image: "quay.io/razee/razeedash:{{TRAVIS_COMMIT}}"
+            image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"
             imagePullPolicy: Always
             name: razeedash
             ports:

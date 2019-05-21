@@ -48,11 +48,6 @@ items:
               value: "https://github.com/"
             - name: GITHUB_API
               value: "https://api.github.com/"
-            - name: ROOT_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: root_url
             - name: app_name
               value: Razeedash
             image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"

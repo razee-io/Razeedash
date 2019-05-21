@@ -42,6 +42,7 @@ Follow [razeedash-api](https://github.com/razee-io/razeedash-api) instructions
 to setup razeedash-api and MongoDB.
 
 Build a configmap that points to the url you want to access razeedash from:
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -52,7 +53,8 @@ data:
   root_url: http://razee.example.com/
 ```
 
-Create the razeedash deployment:
+Create the razeedash deployment and service:
+
 ```bash
 # Get latest release of razeedash and deploy
 kubectl apply -f "https://github.com/razee-io/Razeedash/releases/latest/download/resource.yaml"
@@ -64,7 +66,6 @@ Check logs across pods using `kc_logs.sh` script from
 ```bash
 kc_logs.sh razee razeedash 1m
 ```
-
 
 ## Local Development
 

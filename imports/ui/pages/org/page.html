@@ -54,7 +54,9 @@
                             Api Key
                         </label>
                         <div class="col-sm-10">
-                            <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{org.apiKey}}" readonly />
+                            {{#each orgKey in org.orgKeys}}
+                                <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{orgKey}}" readonly />
+                            {{/each}}
                         </div>
                     </div>
 
@@ -64,9 +66,9 @@
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{inventoryYamlUrl org.apiKey}}</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{inventoryYamlUrl (firstOrgKey org)}}</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{inventoryYamlUrl org.apiKey}}">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{inventoryYamlUrl (firstOrgKey org)}}">Copy</button>
                                 </div>
                             </div>
                         </div>
@@ -78,9 +80,9 @@
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{kapitanYamlUrl org.apiKey}}</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{kapitanYamlUrl (firstOrgKey org)}}</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{kapitanYamlUrl org.apiKey}}">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{kapitanYamlUrl (firstOrgKey org)}}">Copy</button>
                                 </div>
                             </div>
                         </div>

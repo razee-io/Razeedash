@@ -165,6 +165,9 @@ Template.OrgSingle.helpers({
     kapitanYamlUrl(key){
         return Meteor.absoluteUrl(`api/install/kapitan?orgKey=${key}`);
     },
+    firstOrgKey(org){
+        return org.orgKeys[0];
+    },
     disabled() {
         return dirtyFlag.get() ? {} : {disabled: 'disabled'};
     },

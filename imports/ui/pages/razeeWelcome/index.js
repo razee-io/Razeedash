@@ -50,6 +50,11 @@ Template.SelectOrg.helpers({
         });
         return (org.role === 'admin');
     },
+    authMoreOrgsLink(){
+        var githubLoginService = Accounts.loginServiceConfiguration.findOne({service:'github'})
+        var clientId = _.get(githubLoginService, 'clientId', '');
+        return `https://github.com/settings/connections/applications/${clientId}`;
+    },
 });
 
 Template.SelectOrg.events({
@@ -59,7 +64,6 @@ Template.SelectOrg.events({
             refreshStatus.set('');
         });
     },
-    
 });
 
 Template.SelectOrg_register.onCreated(function(){

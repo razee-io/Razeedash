@@ -65,9 +65,16 @@
                 </ul>
             {{else}}
                 <div>
-                    <div>You don't appear to belong to any organizations. Try refreshing.</div>
+                    <div>
+                        You don't appear to belong to any organizations. Try refreshing.<br />
+                        You can also <a href="https://github.com/organizations/new" target="_blank">create a new github organization</a>.
+                    </div>
                 </div>
             {{/each}}
+
+            <div class="m-3">
+                <a href="{{authMoreOrgsLink}}" target="_blank" class="">Authorize more of your github orgs.</a> Click Grant next to each org you'd like to authorize.
+            </div>
         {{else}}
             <div>{{>loading}}</div>
         {{/if}}

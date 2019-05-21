@@ -160,10 +160,18 @@ Template.OrgSingle.helpers({
         return Orgs.findOne({ name: Template.instance().orgName });
     },
     inventoryYamlUrl(key){
-        return Meteor.absoluteUrl(`api/install/inventory?orgKey=${key}`);
+        var url = Meteor.absoluteUrl(`api/install/inventory?orgKey=${key}`)
+        if(Meteor.settings.public.RAZEEDASH_API_URL){
+            url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/inventory?orgKey=${key}`;
+        }
+        return url;
     },
     kapitanYamlUrl(key){
-        return Meteor.absoluteUrl(`api/install/kapitan?orgKey=${key}`);
+        var url = Meteor.absoluteUrl(`api/install/kapitan?orgKey=${key}`);
+        if(Meteor.settings.public.RAZEEDASH_API_URL){
+            url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/kapitan?orgKey=${key}`;
+        }
+        return url;
     },
     firstOrgKey(org){
         return org.orgKeys[0];

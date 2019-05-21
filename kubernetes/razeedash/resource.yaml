@@ -53,6 +53,12 @@ items:
                 configMapKeyRef:
                   name: razeedash-config
                   key: root_url
+            - name: RAZEEDASH_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: razeedash_api_url
+                  optional: true
             - name: app_name
               value: Razeedash
             image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"

@@ -16,6 +16,7 @@
 
 <template name="page_welcome">
     {{#if hasOrgAccess}}
+      {{#if orgIdFound }}
         <div class="welcomePage container-fluid">
             <div class="row pt-3">
                 <div class="col-12 col-md-6 mb-3">
@@ -38,5 +39,6 @@
                 </div>
             </div>
         </div>
+      {{/if}}
     {{/if}}
 </template>

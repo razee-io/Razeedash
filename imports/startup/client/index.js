@@ -40,6 +40,16 @@ Meteor.setInterval(function() {
 
 export let hasOrgsDefined = new ReactiveVar(true);
 
+Template.registerHelper('orgIdFound', () => {
+    const orgName = Session.get('currentOrgName');
+    const foundOrg = Orgs.findOne({ name: orgName });
+    if(!orgName || !foundOrg){
+        return null;
+    }
+    Session.set('currentOrgId', foundOrg._id);
+    return true;
+});
+
 Template.registerHelper('hasOrgsDefined', () => {
     return hasOrgsDefined.get();
 });

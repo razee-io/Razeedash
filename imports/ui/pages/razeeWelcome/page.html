@@ -47,7 +47,7 @@
                                     </a>
                                 </div>
                                 
-                                <div class="col col-sm-6 col-md-7 col-lg-8">
+                                <div class="col col-sm-6 col-md-7 col-lg-8 my-auto">
                                     {{#if orgExists org.name}}
                                         {{> SelectOrg_deregister org=org}}
                                         <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm">Manage</a>
@@ -85,5 +85,10 @@
 
 
 <template name="SelectOrg_deregister">
-    <button class="ml-2 btn btn-warning btn-sm deRegisterOrgBtn">Remove</button>
+    <button class="ml-2 btn btn-warning btn-sm deRegisterOrgBtn" {{outputDisabled isRegistering}}>
+        Remove
+        {{#if isDeRegistering}}
+            <i class="fa fa-spinner fa-spin"></i>
+        {{/if}}
+    </button>
 </template>

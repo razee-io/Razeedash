@@ -89,9 +89,21 @@ Template.SelectOrg_register.events({
    
 });
 
+Template.SelectOrg_deregister.onCreated(function(){
+    this.isDeRegistering = new ReactiveVar(false);
+});
+
+Template.SelectOrg_deregister.helpers({
+    isDeRegistering(){
+        return Template.instance().isDeRegistering.get();
+    },
+});
 Template.SelectOrg_deregister.events({
     'click .deRegisterOrgBtn'(){
-        var orgName = Template.currentData().org.name;
+        const inst = Template.instance();
+        const orgName = Template.currentData().org.name;
+
+        inst.isDeRegistering.set(true);
         Meteor.call('deRegisterOrg', orgName, (err)=>{
             if(err){
                 throw err;

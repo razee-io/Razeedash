@@ -15,9 +15,8 @@
 -->
 
 <template name="UserProfile_home">
-    {{#if Template.subscriptionsReady}}
-        {{#if currentUser}}
-
+{{#if Template.subscriptionsReady}}
+  {{#if currentUser}}
     <div id="dc_home" class="container-fluid h-10 mt-10">
         <div class="container-fluid">
             <div class="card">
@@ -59,8 +58,6 @@
             </div>
         </div>
     </div>
-        {{/if}}
-            {{> loading}}
-        {{else}}
-    {{/if}}
+  {{/if}}
+{{/if}}
 </template>

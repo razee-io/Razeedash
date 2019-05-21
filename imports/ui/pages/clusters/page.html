@@ -15,6 +15,7 @@
 -->
 
 <template name="page_clusters">
+  {{#if orgIdFound }}
   <div class="card m-2">
     <div class="card-header">
       <div class="row align-items-center justify-content-between">
@@ -71,6 +72,7 @@
       {{/if}}
     </div>
   </div>
+  {{/if}}
 </template>
 
 <template name="page_clusters_cluster">

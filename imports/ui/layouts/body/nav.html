@@ -34,8 +34,8 @@
       {{#if currentUser}}
       <ul class="navbar-nav d-flex">
         {{#if hasOrgsDefined }}
+            {{#if showNavItems}}
                 {{> nav_org_dropdown}}
-                {{#if showCounters}}
                 <li class="nav-item {{isActive 'clusters.search'}}">
                     <a class="nav-link align-middle" href="{{pathFor 'clusters.search' query=(navItemQueryStr 'clusters')}}">
                         <span class="align-middle">Clusters</span>
@@ -49,8 +49,8 @@
                         <span class="badge badge-dark align-middle">{{deploymentCount}}</span>
                     </a>
                 </li>
-                {{/if}}
-          {{/if}}
+            {{/if}}
+        {{/if}}
       </ul>
 
       <ul class="navbar-nav">

@@ -29,6 +29,8 @@ import { Template } from 'meteor/templating';
 import { Stats } from '/imports/api/stat/stats.js';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
+import { Orgs } from '/imports/api/org/orgs';
+
 import { hasOrgsDefined } from '../../../startup/client';
 
 let currentRoute = new ReactiveVar(true);
@@ -39,7 +41,7 @@ Template.Base_layout.helpers({
     },
     appRoute() {
         return FlowRouter.path('App.home');
-    },
+    }
 });
 
 Template.Base_layout.onRendered(function() {
@@ -75,7 +77,7 @@ Template.nav.helpers({
         }
         return qs;
     },
-    showCounters() {
+    showNavItems() {
         if(currentRoute.get() === 'root') {
             return false;
         } else {

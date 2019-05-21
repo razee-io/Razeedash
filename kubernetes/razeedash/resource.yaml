@@ -75,3 +75,17 @@ items:
                 port: 80
               initialDelaySeconds: 3
               periodSeconds: 20
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: razeedash-service
+      name: razeedash-service
+      namespace: razee
+    spec:
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      selector:
+        app: razeedash

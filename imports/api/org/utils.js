@@ -19,19 +19,20 @@ import { Orgs } from './orgs.js';
 import _ from 'lodash';
 
 export const requireOrgAccess = (orgId)=>{
-    var accessibleOrgs = _.get(Meteor.user(), 'profile.orgs', []);
+    var accessibleOrgs = _.get(Meteor.user(), 'github.orgs', []);
     var accessibleOrgNames = _.map(accessibleOrgs, 'name');
     var org = Orgs.findOne({_id: orgId});
     if(org && _.includes(accessibleOrgNames, org.name)){
         return true;
     }
-    throw new Meteor.Error(`you dont have access to org ${_.get(org, 'name', `_id ${orgId}`)}`);
+    const errorMessage = `you dont have access to org ${_.get(org, 'name', `_id ${orgId}`)}`;
+    throw new Meteor.Error(errorMessage);
 };
 
 export const requireOrgAdmin = (orgId)=>{
     var org = Orgs.findOne({  _id: orgId });
     var userObj = Meteor.user();
-    var userOrgs = _.get(userObj, 'profile.orgs');
+    var userOrgs = _.get(userObj, 'github.orgs');
     var userOrg = _.find(userOrgs, (userOrg)=>{
         return (userOrg.name === _.get(org, 'name'));
     });

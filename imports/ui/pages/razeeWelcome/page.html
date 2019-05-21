@@ -1,0 +1,94 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="Razee_welcome">
+    {{#if Template.subscriptionsReady}}
+        {{#if currentUser}}
+            <div class="container-fluid px-5">
+                {{> SelectOrg }}
+            </div>
+        {{/if}}
+    {{/if}}
+</template>
+
+<template name="SelectOrg">
+    <h1>Welcome to RazeeDash</h1>
+
+    <h2 class="text-muted mt-3 pb-2">
+        <i class="fa fa-github" aria-hidden="true"></i> Select an org
+        <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh GitHub Orgs">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+        </span>
+    </h2>
+
+    <div class="container-fluid m-0 my-1 p-0">
+        {{#if Template.subscriptionsReady}}
+            {{#each org in orgNames}}
+            <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row px-2">
+                                <div class="col col-sm-4 col-md-3 col-lg-2">
+                                    <a class="org-link {{#unless orgExists org.name}}grayscale{{/unless}}" href="{{githubUrl}}{{org.name}}" target="_blank"> 
+                                        <img class="img-thumbnail org-image my-1 {{#unless orgExists org.name}}grayscale{{/unless}}" src="{{org.avatarUrl}}">
+                                        {{org.name}}
+                                    </a>
+                                </div>
+                                
+                                <div class="col col-sm-6 col-md-7 col-lg-8 my-auto">
+                                    {{#if orgExists org.name}}
+                                        {{> SelectOrg_deregister org=org}}
+                                        <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm">Manage</a>
+                                        <a href="{{pathFor 'welcome' baseOrgName=org.name}}" class="ml-2 btn btn-success btn-sm">Launch</a>
+                                    {{else}}
+                                        {{#if isAdminOfOrg org.name}}
+                                            {{> SelectOrg_register org=org}}
+                                        {{else}}
+                                            <i>You must be a GHE "{{org.name}}" org admin to register it in RazeeDash.</i>
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                        </div>
+                    </li>
+                </ul>
+            {{else}}
+                <div>
+                    <div>You don't appear to belong to any organizations. Try refreshing.</div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div>{{>loading}}</div>
+        {{/if}}
+    </div>
+</template>
+
+<template name="SelectOrg_register">
+    <button class="ml-2 btn btn-primary btn-sm registerOrgBtn" {{outputDisabled isRegistering}}>
+        Register
+        {{#if isRegistering}}
+            <i class="fa fa-spinner fa-spin"></i>
+        {{/if}}
+    </button>
+</template>
+
+
+<template name="SelectOrg_deregister">
+    <button class="ml-2 btn btn-warning btn-sm deRegisterOrgBtn" {{outputDisabled isRegistering}}>
+        Remove
+        {{#if isDeRegistering}}
+            <i class="fa fa-spinner fa-spin"></i>
+        {{/if}}
+    </button>
+</template>

@@ -33,7 +33,7 @@ Meteor.publish('orgsForUser', function(){
     if(!Meteor.user()){
         return;
     }
-    var orgNames = _.map(Meteor.user().profile.orgs || [], 'name');
+    var orgNames = _.map(Meteor.user().github.orgs || [], 'name');
     return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1 });
 });
 

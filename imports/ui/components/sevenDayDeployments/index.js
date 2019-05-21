@@ -27,6 +27,7 @@ Template.sevenDayDeployments.helpers({
 
 Template.sevenDayDeployments.onRendered(function() {
     this.autorun(()=>{
+        this.subscribe('userData');
         Meteor.call('getRecentDepsPerService', Session.get('currentOrgId'), (error, result)=>{
             this.recentDepsPerService.set(result);
         });

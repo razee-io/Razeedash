@@ -18,41 +18,33 @@ import './body.scss';
 import './nav.html';
 import './body.html';
 import './footer.html';
+import '../../pages/login';
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker'; 
 import _ from 'lodash';
 import { Template } from 'meteor/templating';
 import { Stats } from '/imports/api/stat/stats.js';
-import { Orgs } from '/imports/api/org/orgs';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
 import { hasOrgsDefined } from '../../../startup/client';
 
-Template.App_body.helpers({
+let currentRoute = new ReactiveVar(true);
+
+Template.Base_layout.helpers({
     versionsMatch() {
         return this.version === this.advertised_version;
     },
     appRoute() {
         return FlowRouter.path('App.home');
-    },
-    baseOrg(){
-        var orgName = Session.get('currentOrgName');
-        var val = Orgs.findOne({ name: orgName });
-        if(!orgName || !val){
-            return null;
-        }
-        Session.set('currentOrgId', val._id);
-        return val;
-    },
-    baseOrgLoaded(){
-        var val = Template.App_body.__helpers.get('baseOrg').call(Template.instance());
-        return val;
     }
 });
 
-Template.App_body.onRendered(function() {
+Template.Base_layout.onRendered(function() {
     this.autorun(()=>{
+        this.subscribe('userData');
         var orgName = Session.get('currentOrgName');
         this.subscribe('orgIdByName', orgName);
         Meteor.call('hasOrgs', function(err, result) {
@@ -83,26 +75,20 @@ Template.nav.helpers({
         }
         return qs;
     },
-    clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
-    deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString(),
-    isRazeeAdmin: ()=>{
-        return _.get(Meteor.user(), 'profile.isRazeeAdmin', false);
+    showNavItems() {
+        if(currentRoute.get() === 'root') {
+            return false;
+        } else {
+            return true;
+        }
     },
+    clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
+    deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString()
 });
 
 Template.nav.events({
     'click .razee-login' () {
-        if (!Meteor.user()) {
-            Meteor.loginWithGithub({ requestPermissions: ['read:user', 'read:org'] }, function() {
-                Meteor.call('reloadUserOrgList', ()=> {
-                    FlowRouter.go('welcome');
-                });
-            });
-        } else {
-            Meteor.logout(function() {
-                FlowRouter.go('/login');
-            });
-        }
+        Meteor.logout();
     },
     'click a' () {
         $('.navbar-collapse').collapse('hide');
@@ -111,16 +97,21 @@ Template.nav.events({
 
 Template.nav.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('resourceStats', Session.get('currentOrgId'));
-        Meteor.call('hasOrgs', function(err, result) {
-            hasOrgsDefined.set(result);
-        });
-    });
-});
+        Meteor.call('reloadUserOrgList');
+        this.subscribe('orgsForUser');
 
-Template.App_body.onCreated(function() {
-    this.autorun(() => {
-        this.subscribe('gheOrg', Session.get('currentOrgName') );
+        if(Session.get('currentOrgName')) {
+            hasOrgsDefined.set(true);
+        } else {
+            hasOrgsDefined.set(false);
+        }
+        if(Session.get('currentOrgId')) {
+            this.subscribe('resourceStats', Session.get('currentOrgId'));
+        }
+        this.subscribe('userData');
+    });
+    Tracker.autorun(function() {
+        currentRoute.set(FlowRouter.getRouteName());
     });
 });
 
@@ -131,27 +122,11 @@ Template.nav_org_dropdown.onCreated(function(){
 });
 
 Template.nav_org_dropdown.helpers({
-    orgs(){
-        var count = Orgs.find({}).count();
-        if(count < 1){
-            // sets a default if they cant access anything
-            return [
-                { name:  Session.get('currentOrgName')},
-            ];
-        }
-        return Orgs.find({}, { sort: { name: -1 } });
-    },
     selectedOrgName(){
         return Session.get('currentOrgName');
     },
     isSelected(orgName){
         var selectedOrgName = Session.get('currentOrgName');
         return (selectedOrgName == orgName ? 'selected' : '');
-    },
-});
-
-Template.AppAdminPage.helpers({
-    isAdmin(){
-        return !!_.get(Meteor.user(), 'profile.isRazeeAdmin', false);
     },
 });

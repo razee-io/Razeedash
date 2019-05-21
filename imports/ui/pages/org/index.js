@@ -160,7 +160,7 @@ Template.OrgSingle.helpers({
         return Orgs.findOne({ name: Template.instance().orgName });
     },
     inventoryYamlUrl(key){
-        var url = Meteor.absoluteUrl(`api/install/inventory?orgKey=${key}`)
+        var url = Meteor.absoluteUrl(`api/install/inventory?orgKey=${key}`);
         if(Meteor.settings.public.RAZEEDASH_API_URL){
             url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/inventory?orgKey=${key}`;
         }

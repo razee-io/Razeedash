@@ -49,6 +49,7 @@ body {
     padding-left: $table-left-padding;
 }
 
+/* hides email+pass login since we dont do that */
 #login-buttons #login-dropdown-list{
     .or{
         display:none;

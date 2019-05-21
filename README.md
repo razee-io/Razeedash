@@ -17,7 +17,8 @@ Razeedash is an app to manage deployments on Kubernetes
 
 | Name             | Required | Value                    | Description |
 | ----             | -------- | -----                    | ----------- |
-| OAUTH_SECRET_KEY | Required | -                        | GitHub OAuth Secret Key |
+| MONGO_URL        | Required | -                        | URL to your mongo instance |
+| OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
 | GITHUB_URL       | Optional | <https://github.com>     | GitHub URL |
 | GITHUB_API       | Optional | <https://api.github.com> | GitHub API URL |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
@@ -35,44 +36,9 @@ Example registration for running locally.
 | Homepage URL | <http://localhost:3000> |
 | User authorization callback URL | <http://localhost:3000/_oauth/github> |
 
-### Create secrets and deploy
-
-Generate a base64 encoding for the `oauth_secret_key` to be used in the
-razeedash-secret.
-
-Replace OAUTH_SECRET_KEY with the value from the registration of the GitHub application step.
-
-<!--Markdownlint-disable MD013-->
-
-```bash
-echo -n "OAUTH_SECRET_KEY" | base64
-```
-
-<!--Markdownlint-enable MD013-->
-
-Create file razeedash-secret.yaml using the generated string provided from the
-previous command.
-
-File: secret.yaml
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: razeedash-secret
-type: Opaque
-data:
-  oauth_secret_key: "output of base64 command above"
-```
-
-```bash
-# Add razeedash secret for oauth_secret_key
-kubectl apply -f secret.yaml
-```
-
 ### Deploy components
 
-Follow [razeedash-api](https://github.com/razee.io/razeedash-api) instructions
+Follow [razeedash-api](https://github.com/razee-io/razeedash-api) instructions
 to setup razeedash-api and MongoDB.
 
 ```bash

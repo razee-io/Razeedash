@@ -8,41 +8,6 @@ import moment from 'moment';
 import utils from '../../../both/utils';
 import resourceKinds from './resourceKindComponents';
 
-
-var localOrgKeySave = {
-    keyName: 'savedOrgKeys',
-    getFullObj:()=>{
-        var obj = JSON.parse(localStorage.getItem(localOrgKeySave.keyName)||'{}')||{};
-        return obj;
-    },
-    set:(name, val)=>{
-        var obj = localOrgKeySave.getFullObj();
-        obj[name]=val;
-        localStorage.setItem(localOrgKeySave.keyName, JSON.stringify(obj));
-    },
-    get:(name)=>{
-        var obj = localOrgKeySave.getFullObj();
-        return obj[name];
-    },
-};
-
-var decryptStr = (encrypted, token)=>{
-    var success = false;
-    var str;
-    var data;
-    try{
-        str = utils.tokenCrypt.decrypt(encrypted, token);
-        data = JSON.parse(str);
-        success = true;
-    }catch(e){
-        success = false;
-    }
-
-    var out = { success, str, data, };
-    return out;
-};
-
-
 export class ResourcesSingle extends React.Component {
     render() {
         if(this.props.isLoading){

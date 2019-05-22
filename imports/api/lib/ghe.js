@@ -44,10 +44,10 @@ function listOrgs(loggedInUserObj){
     return _.map(data, (item)=>{
         var org = item.organization;
         if(!org){
-            throw new Meteor.Error('ghe returned a role obj without an org');
+            throw new Meteor.Error('GitHub returned a role obj without an org');
         }
         if(!item.role){
-            throw new Meteor.Error('ghe returned a role obj with a role set');
+            throw new Meteor.Error('GitHub returned a role obj with a role set');
         }
         return {
             name: org.login,

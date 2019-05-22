@@ -37,6 +37,6 @@ export const requireOrgAdmin = (orgId)=>{
         return (userOrg.name === _.get(org, 'name'));
     });
     if(!userOrg || userOrg.role !== 'admin'){
-        throw new Meteor.Error('save-error', `You must be a GHE "${_.get(org, 'name', orgId)}" org admin to update it.`);
+        throw new Meteor.Error('save-error', `You must be a GitHub "${_.get(org, 'name', orgId)}" org admin to update it.`);
     }
 };

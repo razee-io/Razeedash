@@ -28,15 +28,3 @@ export const requireOrgAccess = (orgId)=>{
     const errorMessage = `you dont have access to org ${_.get(org, 'name', `_id ${orgId}`)}`;
     throw new Meteor.Error(errorMessage);
 };
-
-export const requireOrgAdmin = (orgId)=>{
-    var org = Orgs.findOne({  _id: orgId });
-    var userObj = Meteor.user();
-    var userOrgs = _.get(userObj, 'github.orgs');
-    var userOrg = _.find(userOrgs, (userOrg)=>{
-        return (userOrg.name === _.get(org, 'name'));
-    });
-    if(!userOrg || userOrg.role !== 'admin'){
-        throw new Meteor.Error('save-error', `You must be a GitHub "${_.get(org, 'name', orgId)}" org admin to update it.`);
-    }
-};

@@ -20,7 +20,6 @@ import { Meteor } from 'meteor/meteor';
 import uuid from 'uuid';
 import { Orgs } from './orgs.js';
 import ghe from '../lib/ghe.js';
-import { requireOrgAdmin } from './utils';
 
 Meteor.methods({
     hasOrgs() {
@@ -84,26 +83,5 @@ Meteor.methods({
         }
         Orgs.remove({ name: name });
         return true;
-    },
-    saveOrgYamlTemplate(orgId, template) {
-        check( orgId, String );
-        check( template, String );
-
-        requireOrgAdmin(orgId);
-
-        Orgs.update({ _id: orgId }, { $set: { orgYaml: template, updated: new Date() } } );
-        return 'updated';
-    },
-    setOrgYamlCustomVar(orgId, attrName, val){
-        check( orgId, String );
-        check( attrName, String );
-        check( val, String );
-
-        requireOrgAdmin(orgId);
-
-        Orgs.update(
-            { _id: orgId },
-            { $set: { [`orgYamlCustomVars.${attrName}`]: val } }
-        );
     },
 });

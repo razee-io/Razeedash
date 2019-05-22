@@ -15,24 +15,3 @@
 */
 
 import './component.html';
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
-
-Template.cluster_info.onCreated(function(){
-    this.hasCopied = new ReactiveVar(false);
-});
-Template.cluster_info.helpers({
-    hasCopied(){
-        return Template.instance().hasCopied.get();
-    },
-});
-Template.cluster_info.events({
-    'click .copyGpgPublicKeyBtn'(e){
-        var $el = $(e.currentTarget).closest('.copyGpgPublicKeyBtn');
-        var $formGroup = $el.closest('.form-group');
-        var $textarea = $formGroup.find('textarea');
-        $textarea.get(0).select();
-        document.execCommand('copy');
-        Template.instance().hasCopied.set(true);
-    },
-});

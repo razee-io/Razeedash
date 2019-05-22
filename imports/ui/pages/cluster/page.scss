@@ -49,17 +49,3 @@
         width:100%;
     }
 }
-.gpgBox{
-    max-width:600px;
-    position:relative;
-
-    textarea{
-        font-family:ibm-mono;
-    }
-}
-.copyGpgPublicKeyBtn{
-    position:absolute;
-    right:26px;
-    bottom:10px;
-    box-shadow: 0 0 20px 8px #eee;
-}

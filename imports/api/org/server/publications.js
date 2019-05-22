@@ -30,7 +30,7 @@ Meteor.publish('orgs', function(names){
 
 Meteor.publish('orgsForUser', function(){
     // prevent server errors when the user clicks Logout
-    if(!Meteor.user()){
+    if(!Meteor.user() || !Meteor.user().github){
         return;
     }
     var orgNames = _.map(Meteor.user().github.orgs || [], 'name');

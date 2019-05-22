@@ -98,7 +98,6 @@ Template.nav.events({
 Template.nav.onCreated(function() {
     this.autorun(() => {
         Meteor.call('reloadUserOrgList');
-        this.subscribe('orgsForUser');
 
         if(Session.get('currentOrgName')) {
             hasOrgsDefined.set(true);

@@ -89,6 +89,7 @@ export class ResourcesSingle extends React.Component {
 
 export class ResourcesSingle_default extends React.Component{
     render(){
+        var data = JSON.parse(this.props.resource.data);
         var kind = this.props.resource.searchableData.kind;
         var KindResourceTagName = null;
         if(resourceKinds[kind]){
@@ -106,9 +107,7 @@ export class ResourcesSingle_default extends React.Component{
                 <div className="card mt-0">
                     <h5 className="card-header">Razee data</h5>
                     <div className="card-body">
-                        <Blaze template="stringifyp" data={this.props.resource} />
-
-                        <ResourcesSingle_DecryptionSection resource={this.props.resource} />
+                        <Blaze template="stringifyp" data={JSON.parse(this.props.resource.data)} />
                     </div>
                 </div>
             </div>
@@ -153,85 +152,14 @@ class ResourceKindAttrTable extends React.Component{
     }
 }
 
-export class ResourcesSingle_DecryptionSection extends React.Component{
-    componentWillMount(){
-        this.toggleShowDecryptionKey = this.toggleShowDecryptionKey.bind(this);
-        this.loadSavedDecryptionKey = this.loadSavedDecryptionKey.bind(this);
-        this.onChangeDescriptionKeyVal = this.onChangeDescriptionKeyVal.bind(this);
-        this.decryptData = this.decryptData.bind(this);
-
-        this.setState({
-            showDecryptionKey: true,
-            decryptionKey: '',
-        });
-        this.loadSavedDecryptionKey();
-    }
-
-    loadSavedDecryptionKey(){
-        var orgName = Meteor.settings.public.DEFAULT_ORG;
-        var savedDecryptionKey = localOrgKeySave.get(orgName);
-        this.setState({
-            decryptionKey: savedDecryptionKey,
-        });
-    }
-
-    toggleShowDecryptionKey(){
-        this.setState({
-            showDecryptionKey: !this.state.showDecryptionKey,
-        });
-    }
-
-    onChangeDescriptionKeyVal(event){
-        this.setState({
-            decryptionKey: event.target.value,
-        });
-    }
-
-    decryptData(){
-        return decryptStr(this.props.resource.data, this.state.decryptionKey);
-    }
-
-    render(){
-        var resourceData = this.decryptData();
-        return (
-            <div>
-                <h5>Resource JSON</h5>
-                <div className="form-group row m-0">
-                    <label className="col-form-label">Decryption Key:</label>
-                    <div className="col-sm-10">
-                        <div className="input-group">
-                            <input type={this.state.showDecryptionKey ? 'input' : 'password'} className="decryptionKey form-control" data-lpignore="true" value={this.state.decryptionKey} onChange={this.onChangeDescriptionKeyVal}/>
-                            <div className="input-group-append">
-                                <input type="button" className="btn btn-primary form-control showDecryptionKeyBtn" value={this.state.showDecryptionKey ? 'Hide' : 'Show'} onClick={this.toggleShowDecryptionKey} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {this.state.decryptionKey &&
-                <div>
-                    {resourceData.success &&
-                    <Blaze template="stringifyp" data={resourceData.data} />
-                    }
-                    {!resourceData.success &&
-                    <div className="my-2">Failed to decrypt with entered key</div>
-                    }
-                </div>
-                }
-                {!this.state.decryptionKey &&
-                <div className="mt-2">Enter a decryption key to resource data</div>
-                }
-            </div>
-        );
-    }
-}
-
-
 export default withTracker(()=>{
     var resourceName = FlowRouter.getParam('resourceName') || '';
     var clusterId = FlowRouter.getParam('clusterId') || '';
+    var orgId = Session.get('currentOrgId');
     var subs = [
-        Meteor.subscribe('resources.byName', resourceName, clusterId),
+        Meteor.subscribe('resources.byName', orgId, resourceName, clusterId),
         Meteor.subscribe('clusters.id', clusterId),
+        Meteor.subscribe('resourceData.byName', orgId, resourceName, clusterId),
     ];
     var resource = Resources.findOne({
         cluster_id: clusterId,

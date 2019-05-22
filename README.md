@@ -1,5 +1,7 @@
 # Razeedash
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/razee-io/Razeedash.svg)](https://greenkeeper.io/)
+
 ![Travis Build Status](https://api.travis-ci.com/razee-io/Razeedash.svg?branch=master)
 <https://travis-ci.com/razee-io/razeedash>
 

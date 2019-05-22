@@ -1,12 +1,9 @@
 import React from 'react';
-import moment from 'moment';
 import _ from 'lodash';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from "meteor/meteor";
 import { Resources } from '../../../api/resource/resources';
-import { ResourcesSingle } from './resourcesSingle';
-import { Session } from "meteor/session";
-import Blaze from "meteor/blaze";
+import { Session } from 'meteor/session';
 import Moment from '/imports/ui/components/moment';
 
 class ResourceKindConfigMap extends React.Component {

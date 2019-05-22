@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { Resources } from '../../../api/resource/resources';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import moment from 'moment';
-import utils from '../../../both/utils';
 import resourceKinds from './resourceKindComponents';
 
 export class ResourcesSingle extends React.Component {

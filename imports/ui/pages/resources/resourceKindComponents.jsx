@@ -174,6 +174,49 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
     }
 }
 
+class ResourceKindDeploymentTypeReplicasCard extends React.Component{
+    render(){
+        var kind = this.props.data.kind;
+        var data = this.props.data;
+        var attrs = [
+            { name: 'Defined', attrPath: 'spec.replicas', },
+            { name: 'Available', attrPath: 'status.availableReplicas', },
+            { name: 'Current', attrPath: 'status.replicas', },
+            { name: 'Updated', attrPath: 'status.updatedReplicas', },
+        ];
+        if(_.includes(['DaemonSet'], kind)){
+            attrs = [
+                { name: 'Defined', attrPath: 'status.desiredNumberScheduled' },
+                { name: 'Available', attrPath: 'status.currentNumberScheduled' },
+                { name: 'Updated', attrPath: 'status.numberReady' },
+            ];
+        }
+
+        _.each(attrs, (attrObj)=>{
+            attrObj.val = _.get(data, attrObj.attrPath, '--');
+        });
+        return (
+            <div class="card mb-3">
+                <h4 class="card-header text-muted">
+                    <i className="fa fa-files-o" aria-hidden="true"></i> Replicas
+                </h4>
+                <div class="card-body">
+                    <div class="d-flex justify-content-around">
+                        {_.map(attrs, (attrObj)=>{
+                            return (
+                                <div class="d-flex flex-column text-center">
+                                    <div>{attrObj.val}</div>
+                                    <small class="text-muted">{attrObj.name}</small>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
 var ResourceKindDeploymentType =  withTracker((props)=>{
     console.log(2222, props)
     var deploymentName = props.resource.searchableData.name;
@@ -199,6 +242,13 @@ var ResourceKindDeploymentType =  withTracker((props)=>{
             <div>
                 <ResourceKindDeploymentTypeContainersCard {...this.props} />
                 <ResourceKindDeploymentTypeConditionsCard {...this.props} />
+
+                <div class="row">
+                    <div class="col-4">
+                        <ResourceKindDeploymentTypeReplicasCard {...this.props} />
+                    </div>
+                </div>
+
             </div>
         );
     }

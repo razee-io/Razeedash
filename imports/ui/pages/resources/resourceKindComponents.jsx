@@ -155,6 +155,82 @@ var ResourceKindDeploymentType =  withTracker((props)=>{
 
         return (
             <div>
+                <div class="card my-3">
+                    <h3 class="card-header">Containers</h3>
+                    <div class="card-body p-0">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Image</th>
+                                    <th>Ports</th>
+                                    <th>Volume Mounts</th>
+                                    <th>Envs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {_.map(_.get(this.props, 'data.spec.template.spec.containers', []), (container)=>{
+                                    return (
+                                        <tr>
+                                            <td>{container.name}</td>
+                                            <td>{container.image}</td>
+                                            <td>{_.map(container.ports, 'containerPort').join(', ')}</td>
+                                            <td>
+                                                {_.map(_.get(container, 'volumeMounts', []), (volumeMount)=>{
+                                                    return (
+                                                        <div>
+                                                            {volumeMount.name} - {volumeMount.mountPath}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </td>
+                                            <td class="p-0">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="p-1">Name</th>
+                                                            <th class="p-1">Value Type</th>
+                                                            <th class="p-1">Value</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {container.env.length > 0 &&
+                                                        _.map(container.env, (envObj)=>{
+                                                            var valType = 'string';
+                                                            var val = envObj.value;
+                                                            if(envObj.valueFrom){
+                                                                var firstObjName = _.keys(envObj.valueFrom)[0];
+                                                                var firstObj = envObj.valueFrom[firstObjName];
+                                                                valType = firstObjName;
+                                                                if(_.includes(['configMapKeyRef', 'secretKeyRef'], firstObjName)){
+                                                                    val = `${firstObj.name}:${firstObj.key}`;
+                                                                } else if(_.includes(['fieldRef'], firstObjName)){
+                                                                    val = `${firstObj.apiVersion}:${firstObj.fieldPath}`;
+                                                                }
+                                                            }
+                                                            return (
+                                                                <tr>
+                                                                    <td class="p-1">{envObj.name}</td>
+                                                                    <td class="p-1">{valType}</td>
+                                                                    <td class="p-1">{val}</td>
+                                                                </tr>
+                                                            );
+                                                        })
+                                                    }
+                                                    {container.env.length == 0 &&
+                                                        <span class="text-muted">None</span>
+                                                    }
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div className="card">
                     <h3 className="card-header">Recent Deployments of "{this.props.deploymentName}"</h3>
                     <div className="card-body p-0">

@@ -141,9 +141,11 @@
 
 
 <template name="Resources_single">
-    <div>
-        {{> React component=ResourcesSingle}}
-    </div>
+    {{#if orgIdFound }}
+        <div>
+            {{> React component=ResourcesSingle}}
+        </div>
+    {{/if}}
 </template>
 
 <template name="Resources_single_default">

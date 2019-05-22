@@ -44,30 +44,6 @@ var decryptStr = (encrypted, token)=>{
 
 
 export class ResourcesSingle extends React.Component {
-    componentWillMount(){
-        this.getResourceData = this.getResourceData.bind(this);
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot){
-        if(_.get(prevProps, 'resource._id') != _.get(this.props, 'resource._id')){
-            this.getResourceData();
-        }
-    }
-
-    getResourceData(){
-        if(!this.props.resource){
-            this.setState({
-                resourceDataJson: null,
-            });
-            return;
-        }
-        Meteor.call('getResourceData', this.props.clusterId, this.props.resource.selfLink, (err, data)=>{
-            this.setState({
-                resourceDataJson: err || data,
-            });
-        });
-    }
-
     render() {
         if(this.props.isLoading){
             return (
@@ -101,7 +77,7 @@ export class ResourcesSingle_default extends React.Component{
                 <ResourceKindAttrTable {...this.props} />
 
                 {KindResourceTagName &&
-                <KindResourceTagName {...this.props} />
+                    <KindResourceTagName {...{data, ...this.props}} />
                 }
 
                 <div className="card mt-0">

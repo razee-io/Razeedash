@@ -37,97 +37,139 @@ class ResourceKindDaemonSet extends React.Component {
     }
 }
 
-class RecentDeploymentRow extends React.Component{
+class ResourceKindDeploymentTypeContainersCard extends React.Component {
     render(){
-        var deployment = this.props.deployment;
-        deployment = {
-            cluster_id: '1234',
-            cluster_name: 'cluster_name',
-            containers: [
-                {
-                    image: 'org/imageName:latest'
-                },
-                {
-                    image: 'org/imageName:latest2'
-                }
-            ]
-        };
+        var containers = _.get(this.props, 'data.spec.template.spec.containers', []);
         return (
-            <tr>
-                <td>
-                    {deployment.cluster_id}
-                    {deployment.cluster_name}
-                </td>
-                <td>
-                    {_.map(deployment.containers, (container, idx)=>{
-                        return (
-                            <div className="row" key={idx}>
-                                <div className="col text-nowrap text-truncate d-none d-md-table-cell" style={{ maxWidth: '95%'}}>
-                                    {container.image}
-                                </div>
-                                <div className="col text-nowrap text-truncate d-md-none" style={{ maxWidth: '95%' }}>
-                                    {container.image}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </td>
-                <td>
-                    {_.map(deployment.containers, (container, idx)=>{
-                        return (
-                            <div className="row" key={idx}>
-                                <div className="col text-nowrap text-truncate" style={{maxWidth: '95%'}}>
-                                    commit link
-                                </div>
-                            </div>
-                        );
-                    })}
-                </td>
-                <td>
-                    <Moment datetime={978325200000}/>
-                </td>
-                {/*<td>*/}
-                {/*    {{#if notRecent}}*/}
-                {/*    {{> datawarning_deployment deployment=deployment}}*/}
-                {/*    {{/if}}*/}
-                {/*        <a href="{{pathFor 'cluster.tab' id=deployment.cluster_id tabId='resources'}}"> {{deployment.cluster_name}} </a>*/}
-                {/*    {{#if deployment.cluster_locked}}*/}
-                {/*        <span class="float-right">*/}
-                {/*        <i class="fa fa-lock fa-lg" aria-hidden="true"></i>*/}
-                {/*        </span>*/}
-                {/*    {{/if}}*/}
-                {/*        </td>*/}
-                {/*        <td>*/}
-                {/*        {{#each container in deployment.containers}}*/}
-                {/*        <div class="row">*/}
-                {/*        <div class="col text-nowrap text-truncate d-none d-md-table-cell" style="max-width: 95%">*/}
-                {/*        <span class="d-inline-block">{{> React component=VAStatus container=container }}</span>*/}
-                {/*        {{getImage container.image}}*/}
-                {/*        </div>*/}
-                {/*        <div class="col text-nowrap text-truncate d-md-none" style="max-width: 95%">*/}
-                {/*        <span class="d-inline-block">{{> React component=VAStatus container=container }}</span>*/}
-                {/*        {{getShortImage container.image}}*/}
-                {/*        </div>*/}
-                {/*        </div>*/}
-                {/*        {{/each}}*/}
-                {/*        </td>*/}
+            <div className="card my-3">
+                <h4 className="card-header text-muted">Containers</h4>
+                <div className="card-body p-0">
+                    <table className="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Image</th>
+                                <th>Ports</th>
+                                <th>Volume Mounts</th>
+                                <th>Envs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {_.map(containers, (container)=>{
+                                return (
+                                    <tr>
+                                        <td>{container.name}</td>
+                                        <td>{container.image}</td>
+                                        <td>
+                                            {_.map(container.ports, 'containerPort').join(', ')}
+                                            {_.get(container, 'ports', []).length == 0 &&
+                                                <span>None</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            {_.map(_.get(container, 'volumeMounts', []), (volumeMount)=>{
+                                                return (
+                                                    <div>
+                                                        {volumeMount.name} - {volumeMount.mountPath}
+                                                    </div>
+                                                );
+                                            })}
+                                            {_.get(container, 'volumeMounts', []).length == 0 &&
+                                            <span>None</span>
+                                            }
+                                        </td>
+                                        <td className={container.env.length > 0 ? 'p-0' : ''}>
+                                            {container.env.length > 0 &&
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th className="p-1">Name</th>
+                                                        <th className="p-1">Value Type</th>
+                                                        <th className="p-1">Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {_.map(container.env, (envObj)=>{
+                                                        var valType = 'string';
+                                                        var val = envObj.value;
+                                                        if(envObj.valueFrom){
+                                                            var firstObjName = _.keys(envObj.valueFrom)[0];
+                                                            var firstObj = envObj.valueFrom[firstObjName];
+                                                            valType = firstObjName;
+                                                            if(_.includes(['configMapKeyRef', 'secretKeyRef'], firstObjName)){
+                                                                val = `${firstObj.name}:${firstObj.key}`;
+                                                            } else if(_.includes(['fieldRef'], firstObjName)){
+                                                                val = `${firstObj.apiVersion}:${firstObj.fieldPath}`;
+                                                            }
+                                                        }
+                                                        return (
+                                                            <tr>
+                                                                <td className="p-1">{envObj.name}</td>
+                                                                <td className="p-1">{valType}</td>
+                                                                <td className="p-1">{val}</td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                            }
+                                            {container.env.length == 0 &&
+                                                <span>None</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    }
+}
 
-                {/*        <td>*/}
-                {/*        {{#each container in deployment.containers}}*/}
-                {/*        <div class="row">*/}
-                {/*        <div class="col text-nowrap text-truncate" style="max-width: 95%">*/}
-                {/*        {{> commitLink commit=(getTag container.image) deployment=deployment }}*/}
-                {/*        </div>*/}
-                {/*        </div>*/}
-                {/*        {{/each}}*/}
-                {/*        </td>*/}
-
-                {/*        <td class="d-none d-md-table-cell">{{> commitLink commit=deployment.launchDarklyVersion deployment=deployment}}</td>*/}
-
-                {/*        <td>*/}
-                {/*        {{> history_dropdown _lastUpdated=(lastUpdated deployment) _imageHistory=(imageHistory deployment) deployment=deployment}}*/}
-                {/*        </td>*/}
-            </tr>
+class ResourceKindDeploymentTypeConditionsCard extends React.Component {
+    render(){
+        var conditions = _.get(this.props.data, 'status.conditions', []);
+        return (
+            <div class="card my-3">
+                <h4 className="card-header text-muted">
+                    <i className="fa fa-heartbeat" aria-hidden="true"></i> Conditions
+                </h4>
+                <div class="card-body p-0">
+                    <table className="table table-striped mb-0">
+                        <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Last Update</th>
+                            <th>Message</th>
+                            <th>Reason</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {_.map(conditions, (condition)=>{
+                                return (
+                                    <tr>
+                                        <td>{condition.type}</td>
+                                        <td>{condition.status}</td>
+                                        <td>
+                                            <Moment datetime={condition.lastUpdateTime}/>
+                                        </td>
+                                        <td>{condition.message}</td>
+                                        <td>{condition.reason}</td>
+                                    </tr>
+                                );
+                            })}
+                            {conditions.length <= 0 &&
+                                <tr>
+                                    <td colSpan="5"> No conditions</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         );
     }
 }
@@ -155,109 +197,8 @@ var ResourceKindDeploymentType =  withTracker((props)=>{
 
         return (
             <div>
-                <div class="card my-3">
-                    <h3 class="card-header">Containers</h3>
-                    <div class="card-body p-0">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Image</th>
-                                    <th>Ports</th>
-                                    <th>Volume Mounts</th>
-                                    <th>Envs</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {_.map(_.get(this.props, 'data.spec.template.spec.containers', []), (container)=>{
-                                    return (
-                                        <tr>
-                                            <td>{container.name}</td>
-                                            <td>{container.image}</td>
-                                            <td>{_.map(container.ports, 'containerPort').join(', ')}</td>
-                                            <td>
-                                                {_.map(_.get(container, 'volumeMounts', []), (volumeMount)=>{
-                                                    return (
-                                                        <div>
-                                                            {volumeMount.name} - {volumeMount.mountPath}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </td>
-                                            <td class="p-0">
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="p-1">Name</th>
-                                                            <th class="p-1">Value Type</th>
-                                                            <th class="p-1">Value</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {container.env.length > 0 &&
-                                                        _.map(container.env, (envObj)=>{
-                                                            var valType = 'string';
-                                                            var val = envObj.value;
-                                                            if(envObj.valueFrom){
-                                                                var firstObjName = _.keys(envObj.valueFrom)[0];
-                                                                var firstObj = envObj.valueFrom[firstObjName];
-                                                                valType = firstObjName;
-                                                                if(_.includes(['configMapKeyRef', 'secretKeyRef'], firstObjName)){
-                                                                    val = `${firstObj.name}:${firstObj.key}`;
-                                                                } else if(_.includes(['fieldRef'], firstObjName)){
-                                                                    val = `${firstObj.apiVersion}:${firstObj.fieldPath}`;
-                                                                }
-                                                            }
-                                                            return (
-                                                                <tr>
-                                                                    <td class="p-1">{envObj.name}</td>
-                                                                    <td class="p-1">{valType}</td>
-                                                                    <td class="p-1">{val}</td>
-                                                                </tr>
-                                                            );
-                                                        })
-                                                    }
-                                                    {container.env.length == 0 &&
-                                                        <span class="text-muted">None</span>
-                                                    }
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div className="card">
-                    <h3 className="card-header">Recent Deployments of "{this.props.deploymentName}"</h3>
-                    <div className="card-body p-0">
-                        <table className="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Cluster name</th>
-                                <th>Container</th>
-                                <th>Version</th>
-                                <th>Changed</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {_.map(this.props.recentDeployments, (deployment, idx)=>{
-                                return (<RecentDeploymentRow { ...{ deployment } } key={idx}/>);
-                            })}
-                            {this.props.recentDeployments.length < 1 &&
-                            <tr>
-                                <td colSpan="4" className="text-center">
-                                    No deployments found
-                                </td>
-                            </tr>
-                            }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <ResourceKindDeploymentTypeContainersCard {...this.props} />
+                <ResourceKindDeploymentTypeConditionsCard {...this.props} />
             </div>
         );
     }

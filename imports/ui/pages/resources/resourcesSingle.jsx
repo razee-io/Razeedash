@@ -81,7 +81,7 @@ export class ResourcesSingle_default extends React.Component{
                 }
 
                 <div className="card mt-0">
-                    <h5 className="card-header">Razee data</h5>
+                    <h4 className="card-header text-muted">Yaml data</h4>
                     <div className="card-body">
                         <Blaze template="stringifyp" data={JSON.parse(this.props.resource.data)} />
                     </div>
@@ -109,8 +109,8 @@ class ResourceKindAttrTable extends React.Component{
         });
 
         return (
-            <div className="card mb-4">
-                <h5 className="card-header">Attributes</h5>
+            <div className="card mb-3">
+                <h4 className="card-header text-muted">Attributes</h4>
                 <div className="card-body p-0">
                     <table className="table table-striped mb-0">
                         <tbody>

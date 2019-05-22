@@ -21,6 +21,7 @@ import './component.html';
 import { Resources } from '/imports/api/resource/resources.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 
 Template.deployments.helpers({
     resources() {

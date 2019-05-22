@@ -48,3 +48,13 @@ body {
 .table.table-sm td, .table.table-sm th, .table-responsive td, .table-responsive th {
     padding-left: $table-left-padding;
 }
+
+/* hides email+pass login since we dont do that */
+#login-buttons #login-dropdown-list{
+    .or{
+        display:none;
+    }
+    .login-password-form{
+        display:none;
+    }
+}

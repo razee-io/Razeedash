@@ -20,12 +20,12 @@ import { Meteor } from 'meteor/meteor';
 import uuid from 'uuid';
 import { Orgs } from './orgs.js';
 import ghe from '../lib/ghe.js';
-import { requireOrgAdmin } from './utils';
 
 Meteor.methods({
     hasOrgs() {
-        const orgsInMeteor = Orgs.find({}).count();
-        if(orgsInMeteor === 0) {
+        var userOrgNames = _.map(_.get(Meteor.user(), 'github.orgs', []), 'name');
+        var userOrgsInMeteor = Orgs.find({ name: { $in: userOrgNames } }).count();
+        if(userOrgsInMeteor === 0) {
             return false;
         } else {
             return true;
@@ -40,54 +40,48 @@ Meteor.methods({
     },
     reloadUserOrgList(){
         var userObj = Meteor.users.findOne({ _id: Meteor.userId() });
-        var orgs = ghe.listOrgs(userObj);
-        Meteor.users.update({ _id: userObj._id}, { $set: { 'profile.orgs': orgs } });
+        if(userObj) {
+            var orgs = ghe.listOrgs(userObj);
+            Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
+        }
     },
     registerOrg(name){
         check( name, String );
         var userObj = Meteor.user();
-        var userOrgs = _.get(userObj, 'profile.orgs');
+        var userOrgs = _.get(userObj, 'github.orgs');
         var userOrg = _.find(userOrgs, (org)=>{
             return (org.name == name);
         });
         if(!userOrg || userOrg.role != 'admin'){
-            throw new Meteor.Error(`You must be a GHE "${name}" org admin to register it.`);
+            throw new Meteor.Error(`You must be a GitHub "${name}" org admin to register it.`);
         }
         var org = Orgs.findOne({ name });
         if(org){
             throw new Meteor.Error(`org "${name}" already exists`);
         }
 
-        var apiKey = `orgApiKey-${uuid()}`;
+        var orgKey = `orgApiKey-${uuid()}`;
         Orgs.insert({
             name,
             creatorUserId: userObj._id,
-            apiKey: apiKey,
+            orgKeys: [orgKey],
             gheOrgId: userOrg.gheOrgId,
             created: new Date(),
             updated: new Date()
         });
         return true;
     },
-    saveOrgYamlTemplate(orgId, template) {
-        check( orgId, String );
-        check( template, String );
-
-        requireOrgAdmin(orgId);
-
-        Orgs.update({ _id: orgId }, { $set: { orgYaml: template, updated: new Date() } } );
-        return 'updated';
-    },
-    setOrgYamlCustomVar(orgId, attrName, val){
-        check( orgId, String );
-        check( attrName, String );
-        check( val, String );
-
-        requireOrgAdmin(orgId);
-
-        Orgs.update(
-            { _id: orgId },
-            { $set: { [`orgYamlCustomVars.${attrName}`]: val } }
-        );
+    deRegisterOrg(name){
+        check( name, String );
+        var userObj = Meteor.user();
+        var userOrgs = _.get(userObj, 'github.orgs');
+        var userOrg = _.find(userOrgs, (org)=>{
+            return (org.name == name);
+        });
+        if(!userOrg || userOrg.role != 'admin'){
+            throw new Meteor.Error(`You must be a GitHub "${name}" org admin to de-register it.`);
+        }
+        Orgs.remove({ name: name });
+        return true;
     },
 });

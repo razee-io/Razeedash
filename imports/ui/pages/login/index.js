@@ -16,29 +16,3 @@
 
 import './page.scss';
 import './page.html';
-import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Meteor } from 'meteor/meteor';
-import { Template } from 'meteor/templating';
-
-
-Template.Login.created = function() {
-    if (Meteor.user()) {
-        FlowRouter.redirect('home');
-    }
-};
-
-Template.Login.events({
-    'click .razee-login' () {
-        if (!Meteor.user()) {
-            Meteor.loginWithGithub({ requestPermissions: ['read:user', 'read:org'] }, function() {
-                Meteor.call('reloadUserOrgList', ()=> {
-                    FlowRouter.go('welcome');
-                });
-            });
-        } else {
-            Meteor.logout(function() {
-                FlowRouter.go('/login');
-            });
-        }
-    }
-});

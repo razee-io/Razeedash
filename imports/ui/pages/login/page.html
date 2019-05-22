@@ -15,20 +15,17 @@
 -->
 
 <template name="Login">
+
   <div class="container-fluid">
-    <div class="jumbotron">
-      <h1 class="d-block d-md-none text-center">Welcome to RazeeDash</h1>
-      <h1 class="d-none display-4 d-md-block text-center">Welcome to RazeeDash</h1>
-      <p class="text-center">
-        <img class="razee-logo" src="/img/razeedash.svg">
-      </p>
-      <p class="lead text-center">To get started, you'll first need to sign in.</p>
-      <p class="text-center">
-        <a href="#" class="btn btn-primary razee-login razee-login-button justify-content-end ml-auto">
-          <i class="fa fa-github align-middle" aria-hidden="true"></i>
-          <span class="align-middle">Login with GitHub</span>
-        </a>
-      </p>
-    </div>
+      <div class="login-header text-center">
+          <img class="center razee-logo" src="/img/razeedash.svg"> 
+          <span class="login-app-name">Razee</span>
+      </div>
+      <div class="card mx-auto login-card">
+          <p class="heading text-center">Welcome to RazeeDash</p>
+          <p class="details text-center">To get started, you'll first need to sign in.</p>
+          <p class="text-center">{{> loginButtons}}</p>
+      </div>
   </div>
+
 </template>

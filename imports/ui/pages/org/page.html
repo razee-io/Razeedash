@@ -54,78 +54,40 @@
                             Api Key
                         </label>
                         <div class="col-sm-10">
-                            <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{org.apiKey}}" readonly />
+                            {{#each orgKey in org.orgKeys}}
+                                <input class="form-control keyDisplay" id="org_api_key" type="text" value="{{orgKey}}" readonly />
+                            {{/each}}
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="org_command" class="col-sm-2 col-form-label">
-                            Install Cluster-updater
+                            Install Inventory
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f "{{inventoryYamlUrl (firstOrgKey org)}}"</code>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{inventoryYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="org_command" class="col-sm-2 col-form-label">
+                            Install Kapitan
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{yamlUrl org.name org.apiKey}}</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f "{{kapitanYamlUrl (firstOrgKey org)}}"</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{yamlUrl org.name org.apiKey}}">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{kapitanYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {{#if hasMustacheVars}}
-                        <div class="row">
-                            <div class="col-2">Yaml Template Used Vars</div>
-                            <div class="col-10">
-                                <div class="card mb-2 varNamesCard">
-                                    <div class="card-body p-0">
-
-                                        <table class="table table-striped mb-0">
-                                            <tbody>
-                                                {{#each item in getMustacheVarsFromTemplate}}
-                                                    <tr class="">
-                                                        <td>{{item.name}}</td>
-                                                        <td>
-                                                            {{#if item.isUndefined}}
-                                                                <div class="input-group">
-                                                                    <input type="text" class="form-control customYamlVar" data-lpignore="true" yamlvarname="{{item.name}}" value="{{customVarVal item.name}}" />
-                                                                    <div class="input-group-append">
-                                                                        <div class="input-group-text">
-                                                                            {{#if equals (customVarSaveStatus item.name) 'unknown'}}
-                                                                                &nbsp;
-                                                                            {{else if equals (customVarSaveStatus item.name) 'saving'}}
-                                                                                <i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;Saving...
-                                                                            {{else if equals (customVarSaveStatus item.name) 'saved'}}
-                                                                                <i class="fa fa-check text-success" aria-hidden="true"></i>&nbsp;Saved
-                                                                            {{else if equals (customVarSaveStatus item.name) 'error'}}
-                                                                                <i class="fa fa-times text-danger" aria-hidden="true"></i>&nbsp;Failed to save
-                                                                            {{/if}}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            {{else}}
-                                                                {{item.val}}
-                                                            {{/if}}
-                                                        </td>
-                                                    </tr>
-                                                {{/each}}
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {{/if}}
-
-                    <div class="form-group row">
-                        <label for="editor" class="col-sm-2 col-form-label">
-                            Cluster-updater template
-                            <button type="submit" class="btn btn-primary" {{disabled}}>Save</button>
-                        </label>
-                        <div class="col-sm-10">
-                            <pre id="editor" class="border rounded"></pre>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>

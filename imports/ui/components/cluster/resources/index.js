@@ -38,6 +38,6 @@ Template.deployments.helpers({
 
 Template.deployments.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('resources.byCluster', Template.currentData().cluster_id);
+        this.subscribe('resources.byCluster', Session.get('currentOrgId'), Template.currentData().cluster_id);
     });
 });

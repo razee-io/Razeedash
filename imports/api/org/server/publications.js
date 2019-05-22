@@ -30,10 +30,10 @@ Meteor.publish('orgs', function(names){
 
 Meteor.publish('orgsForUser', function(){
     // prevent server errors when the user clicks Logout
-    if(!Meteor.user()){
+    if(!Meteor.user() || !Meteor.user().github){
         return;
     }
-    var orgNames = _.map(Meteor.user().profile.orgs || [], 'name');
+    var orgNames = _.map(Meteor.user().github.orgs || [], 'name');
     return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1 });
 });
 

@@ -360,7 +360,6 @@ Template.Resources_single.onCreated(function() {
     this.autorun(() => {
         this.subscribe('resources.byName', this.getResourceName(), this.getClusterId());
         this.subscribe('clusters.id', this.getClusterId());
-        this.subscribe('resourceData.byName', this.getResourceName(), this.getClusterId());
     });
 });
 

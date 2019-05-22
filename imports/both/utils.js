@@ -123,6 +123,7 @@ exports.buildSearchForResourcesName = (orgId, searchStr = '', fromTime, toTime) 
     }
     ands.push({
         org_id: orgId,
+        deleted: { $ne: true } 
     });
     var search = {
         $and: ands,

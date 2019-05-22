@@ -19,6 +19,7 @@
 </template>
 
 <template name="deployments">
+ {{#if orgIdFound}}
   <div class='deployments'>
     <table class="table table-sm table-hover">
       <thead>
@@ -38,6 +39,7 @@
       {{/if}}
     </table>
   </div>
+ {{/if}}
 </template>
 
 <template name="deploymenttemplate">

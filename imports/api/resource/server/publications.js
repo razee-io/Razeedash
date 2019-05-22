@@ -21,9 +21,13 @@ import { Resources } from '../resources.js';
 import utils from '/imports/both/utils.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 
-Meteor.publish('resources.byCluster', function(clusterId) {
+Meteor.publish('resources.byCluster', function(orgId, clusterId) {
     check( clusterId, String );
-    return Resources.find({ cluster_id: clusterId });
+    return Resources.find({ 
+        cluster_id: clusterId,
+        org_id: orgId,
+        deleted: { $ne: true } 
+    });
 });
 
 Meteor.publish('resources.recent', function(orgId) {

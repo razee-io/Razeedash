@@ -24,18 +24,17 @@ import moment from 'moment';
 import _ from 'lodash';
 
 Meteor.methods({
-    getResourceData(clusterId, resourceName){
+    getResourceData(orgId, clusterId, resourceName){
+        check( orgId, String );
         check( clusterId, String );
         check( resourceName, String );
-        var resource = Resources.findOne({ cluster_id: clusterId, selfLink: resourceName });
-        if(!resource){
-            return null;
+        requireOrgAccess(orgId);
+        var resource = Resources.findOne({ org_id: orgId, cluster_id: clusterId, selfLink: resourceName });
+        try{
+            return JSON.parse(_.get(resource, 'data'));
+        }catch(e){
+            return e;
         }
-        var org = Orgs.findOne({ _id: resource.org_id });
-        if(!org){
-            throw new Meteor.Error(`couldnt find org id "${resource.org_id}" from resource._id "${resource._id}"`);
-        }
-        return tokenCrypt.decrypt(resource.data, org.orgKeys[0]);
     },
     async getActiveDepsPerService(orgId){
         requireOrgAccess(orgId);

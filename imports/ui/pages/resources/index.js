@@ -348,7 +348,7 @@ Template.Resources_single.onRendered(function() {
         if(!resource){
             return;
         }
-        Meteor.call('getResourceData', clusterId, resource.selfLink, (err, data)=>{
+        Meteor.call('getResourceData', Session.get('currentOrgId'), clusterId, resource.selfLink, (err, data)=>{
             resourceDataJson.set(err || data);
         });
     });
@@ -360,6 +360,7 @@ Template.Resources_single.onCreated(function() {
     this.autorun(() => {
         this.subscribe('resources.byName', this.getResourceName(), this.getClusterId());
         this.subscribe('clusters.id', this.getClusterId());
+        this.subscribe('resourceData.byName', this.getResourceName(), this.getClusterId());
     });
 });
 
@@ -406,6 +407,9 @@ Template.Resources_single_default.helpers({
     },
     showDecryptionKeyBtnText(){
         return (showDecryptionKey.get() ? 'Hide' : 'Show');
+    },
+    resourceDataJson(){
+        return resourceDataJson.get();
     },
 });
 Template.Resources_single_default.onRendered(function(){

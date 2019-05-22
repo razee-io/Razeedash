@@ -141,18 +141,11 @@
 
 
 <template name="Resources_single">
-    <div class="card m-2">
-        <div class="card-header">
-            <h4 class="mb-0">Resource {{resourceName}} on {{clusterName}}</h4>
+    {{#if orgIdFound }}
+        <div>
+            {{> React component=ResourcesSingle}}
         </div>
-        <div class="card-body">
-            {{#if Template.subscriptionsReady}}
-                {{> Template.dynamic template=decideTemplate data=templateData}}
-            {{else}}
-                {{> loading}}
-            {{/if}}
-        </div>
-    </div>
+    {{/if}}
 </template>
 
 <template name="Resources_single_default">

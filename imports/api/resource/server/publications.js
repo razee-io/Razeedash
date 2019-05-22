@@ -61,6 +61,27 @@ Meteor.publish('resources.byName', function(resourceName, clusterId) {
     return Resources.find(search, options);
 });
 
+Meteor.publish('resourceData.byName', function(orgId, resourceName, clusterId) {
+    check( orgId, String );
+    check( resourceName, String );
+    check( clusterId, Match.Maybe( String ));
+
+    requireOrgAccess(orgId);
+
+    var search = {
+        'searchableData.name': resourceName,
+        cluster_id: clusterId,
+    };
+    var options = {
+        fields: {
+            data: 1,
+        },
+        limit: 25,
+        sort: { 'created': -1 }
+    };
+    return Resources.find(search, options);
+});
+
 Meteor.publish('resourcesSearch', function(orgId, searchStr='', limit=50, fromTime, toTime) {
     requireOrgAccess(orgId);
     check( orgId, String );

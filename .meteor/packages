@@ -41,5 +41,6 @@ practicalmeteor:chai
 lmieulet:meteor-coverage@3.1.1
 meteortesting:mocha@1.1.1
 meteortesting:mocha-core@5.2.0_3
+gadicc:blaze-react-component
 accounts-github@1.4.2
 github-config-ui

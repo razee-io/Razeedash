@@ -55,9 +55,9 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {_.map(containers, (container)=>{
+                            {_.map(containers, (container, idx)=>{
                                 return (
-                                    <tr>
+                                    <tr key={idx}>
                                         <td>{container.name}</td>
                                         <td>{container.image}</td>
                                         <td>
@@ -67,9 +67,9 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                             }
                                         </td>
                                         <td>
-                                            {_.map(_.get(container, 'volumeMounts', []), (volumeMount)=>{
+                                            {_.map(_.get(container, 'volumeMounts', []), (volumeMount, idx)=>{
                                                 return (
-                                                    <div>
+                                                    <div key={idx}>
                                                         {volumeMount.name} - {volumeMount.mountPath}
                                                     </div>
                                                 );
@@ -103,7 +103,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                                             }
                                                         }
                                                         return (
-                                                            <tr>
+                                                            <tr key={envObj.name}>
                                                                 <td className="p-1">{envObj.name}</td>
                                                                 <td className="p-1">{valType}</td>
                                                                 <td className="p-1">{val}</td>
@@ -132,11 +132,11 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
     render(){
         var conditions = _.get(this.props.data, 'status.conditions', []);
         return (
-            <div class="card my-3">
+            <div className="card my-3">
                 <h4 className="card-header text-muted">
                     <i className="fa fa-heartbeat" aria-hidden="true"></i> Conditions
                 </h4>
-                <div class="card-body p-0">
+                <div className="card-body p-0">
                     <table className="table table-striped mb-0">
                         <thead>
                         <tr>
@@ -148,9 +148,9 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                            {_.map(conditions, (condition)=>{
+                            {_.map(conditions, (condition, idx)=>{
                                 return (
-                                    <tr>
+                                    <tr key={idx}>
                                         <td>{condition.type}</td>
                                         <td>{condition.status}</td>
                                         <td>
@@ -196,17 +196,17 @@ class ResourceKindDeploymentTypeReplicasCard extends React.Component{
             attrObj.val = _.get(data, attrObj.attrPath, '--');
         });
         return (
-            <div class="card mb-3">
-                <h4 class="card-header text-muted">
+            <div className="card mb-3">
+                <h4 className="card-header text-muted">
                     <i className="fa fa-files-o" aria-hidden="true"></i> Replicas
                 </h4>
-                <div class="card-body">
-                    <div class="d-flex justify-content-around">
-                        {_.map(attrs, (attrObj)=>{
+                <div className="card-body">
+                    <div className="d-flex justify-content-around">
+                        {_.map(attrs, (attrObj, idx)=>{
                             return (
-                                <div class="d-flex flex-column text-center">
+                                <div className="d-flex flex-column text-center" key={idx}>
                                     <div>{attrObj.val}</div>
-                                    <small class="text-muted">{attrObj.name}</small>
+                                    <small className="text-muted">{attrObj.name}</small>
                                 </div>
                             );
                         })}
@@ -218,7 +218,6 @@ class ResourceKindDeploymentTypeReplicasCard extends React.Component{
 }
 
 var ResourceKindDeploymentType =  withTracker((props)=>{
-    console.log(2222, props)
     var deploymentName = props.resource.searchableData.name;
 
     var subs = [
@@ -236,15 +235,13 @@ var ResourceKindDeploymentType =  withTracker((props)=>{
     };
 })(class extends React.Component {
     render(){
-        console.log(11111, this.props)
-
         return (
             <div>
                 <ResourceKindDeploymentTypeContainersCard {...this.props} />
                 <ResourceKindDeploymentTypeConditionsCard {...this.props} />
 
-                <div class="row">
-                    <div class="col-4">
+                <div className="row">
+                    <div className="col-4">
                         <ResourceKindDeploymentTypeReplicasCard {...this.props} />
                     </div>
                 </div>

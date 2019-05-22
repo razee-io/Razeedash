@@ -66,9 +66,9 @@
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{inventoryYamlUrl (firstOrgKey org)}}</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f "{{inventoryYamlUrl (firstOrgKey org)}}"</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{inventoryYamlUrl (firstOrgKey org)}}">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{inventoryYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
                                 </div>
                             </div>
                         </div>
@@ -80,9 +80,9 @@
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f {{kapitanYamlUrl (firstOrgKey org)}}</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl create -f "{{kapitanYamlUrl (firstOrgKey org)}}"</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f {{kapitanYamlUrl (firstOrgKey org)}}">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{kapitanYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
                                 </div>
                             </div>
                         </div>

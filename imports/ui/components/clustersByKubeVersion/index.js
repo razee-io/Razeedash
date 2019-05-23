@@ -68,8 +68,6 @@ Template.clustersByKubeVersion.onRendered(function() {
             dataIsLoaded.set(true);
             if(data.length === 0) {
                 noDataFound.set(true);
-                layout.height = 50;
-                modeBarButtons = null;
             }
             
             data = data.map( d => {
@@ -102,19 +100,22 @@ Template.clustersByKubeVersion.onRendered(function() {
                     labels: y,
                     textinfo: 'value',
                 }];
-                Plotly.newPlot('clustersByKubeVersionChart', initalPlotData, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
-                Plotly.animate('clustersByKubeVersionChart',
-                    {
-                        data: plotdata
-                    }, {
-                        transition: {
-                            duration: 500,
-                            easing: 'cubic-in-out'
-                        },
-                        frame: {
-                            duration: 500
-                        }
-                    });
+                if(data.length > 0) {
+                    Plotly.newPlot('clustersByKubeVersionChart', initalPlotData, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
+                    Plotly.animate('clustersByKubeVersionChart',
+                        {
+                            data: plotdata
+                        }, {
+                            transition: {
+                                duration: 500,
+                                easing: 'cubic-in-out'
+                            },
+                            frame: {
+                                duration: 500
+                            }
+                        });
+
+                }
             } 
         });
     });

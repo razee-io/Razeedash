@@ -102,18 +102,15 @@ Template.activeDeployments.onRendered(function() {
                 let modeBarButtons = [[ 'toImage' ]];
                 if(data.length === 0) {
                     noDataFound.set(true);
-                    layout.height = 50;
-                    layout.xaxis = null;
-                    layout.yaxis = null;
-                    modeBarButtons = null;
-                } 
-                Plotly.newPlot('plotlychart', plotdata, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
-                document.getElementById('plotlychart').on('plotly_click', function(selected_data){
-                    const orgName = FlowRouter.getParam('baseOrgName');
-                    const params = { baseOrgName: orgName };
-                    const queryParams = { q: selected_data.points[0].y };
-                    FlowRouter.go('resources.search', params, queryParams);
-                });
+                }  else {
+                    Plotly.newPlot('plotlychart', plotdata, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
+                    document.getElementById('plotlychart').on('plotly_click', function(selected_data){
+                        const orgName = FlowRouter.getParam('baseOrgName');
+                        const params = { baseOrgName: orgName };
+                        const queryParams = { q: selected_data.points[0].y };
+                        FlowRouter.go('resources.search', params, queryParams);
+                    });
+                }
             }
         });
     });

@@ -34,14 +34,14 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+_[0-9]{3}
+      condition: ${TRAVIS_TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+_[0-9]{3}$
   - provider: releases
     file: /tmp/resource.yaml
     skip_cleanup: true
     draft: true
     on:
       tags: true
-      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+_[0-9]{3}
+      condition: ${TRAVIS_TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+_[0-9]{3}$
     api_key:
       secure: "${GITHUB_TOKEN}"
 
@@ -51,12 +51,12 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+
+      condition: ${TRAVIS_TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+$
   - provider: releases
     file: /tmp/resource.yaml
     skip_cleanup: true
     on:
       tags: true
-      condition: ${TRAVIS_TAG} =~ [0-9]+\.[0-9]+\.[0-9]+
+      condition: ${TRAVIS_TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+$
     api_key:
       secure: "${GITHUB_TOKEN}"

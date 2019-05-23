@@ -18,7 +18,14 @@
   <div class="card">
     {{> portletHeader title=title}}
     <div class="card-body p-1">
-      <div id="clustersByKubeVersionChart"></div>
+        {{#if chartIsLoading}}
+            {{> loading}}
+        {{/if}}
+        <div id="clustersByKubeVersionChart">
+            {{#if noData}}
+                <div class="m-3">No active clusters are reporting to Razee</div>
+            {{/if}}
+        </div>
     </div>
   </div>
 </template>

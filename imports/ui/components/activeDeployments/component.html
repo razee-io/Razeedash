@@ -17,6 +17,13 @@
 <template name="activeDeployments">
   <div class="card">
     {{> portletHeader title='Active deployments'}}
-    <div id="plotlychart" class="card-body p-1"></div>
+    {{#if chartIsLoading}}
+        {{> loading}}
+    {{/if}}
+    <div id="plotlychart" class="card-body p-1">
+        {{#if noData}}
+            <div class="m-3">No active deployments were found in Razee</div>
+        {{/if}}
+    </div>
   </div>
 </template>

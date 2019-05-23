@@ -16,15 +16,31 @@
 
 import './component.html';
 import { Meteor } from 'meteor/meteor';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Plotly from 'plotly.js-dist';
 import '../../components/portlet';
 import { Session } from 'meteor/session';
 
+let dataIsLoaded = new ReactiveVar(false);
+let noDataFound = new ReactiveVar(false);
+
+Template.activeDeployments.helpers({
+    chartIsLoading: () => {
+        const isFinished = dataIsLoaded.get();
+        return isFinished ? false : true;
+    },
+    noData: () => {
+        return noDataFound.get() ? true : false;
+    },
+}); 
+
 Template.activeDeployments.onRendered(function() {
     this.autorun(()=>{
+        dataIsLoaded.set(false);
         Meteor.call('getActiveDepsPerService', Session.get('currentOrgId'), (error, data) => {
+            dataIsLoaded.set(true);
             if (data){
                 const y = data.map(d => d.id.name);
                 const x = data.map(d => d.count);
@@ -83,14 +99,18 @@ Template.activeDeployments.onRendered(function() {
                         pad: 0,
                     },
                 };
-                const modeBarButtons = [[ 'toImage' ]];
-                Plotly.newPlot('plotlychart', plotdata, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
-                document.getElementById('plotlychart').on('plotly_click', function(selected_data){
-                    const orgName = FlowRouter.getParam('baseOrgName');
-                    const params = { baseOrgName: orgName };
-                    const queryParams = { q: selected_data.points[0].y };
-                    FlowRouter.go('resources.search', params, queryParams);
-                });
+                let modeBarButtons = [[ 'toImage' ]];
+                if(data.length === 0) {
+                    noDataFound.set(true);
+                }  else {
+                    Plotly.newPlot('plotlychart', plotdata, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
+                    document.getElementById('plotlychart').on('plotly_click', function(selected_data){
+                        const orgName = FlowRouter.getParam('baseOrgName');
+                        const params = { baseOrgName: orgName };
+                        const queryParams = { q: selected_data.points[0].y };
+                        FlowRouter.go('resources.search', params, queryParams);
+                    });
+                }
             }
         });
     });

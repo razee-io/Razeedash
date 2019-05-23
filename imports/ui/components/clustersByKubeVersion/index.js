@@ -22,12 +22,23 @@ import Plotly from 'plotly.js-dist';
 import '../../components/portlet';
 import { Session } from 'meteor/session';
 
+
+let dataIsLoaded = new ReactiveVar(false);
+let noDataFound = new ReactiveVar(false);
+
 Template.clustersByKubeVersion.onCreated( () => {
+    dataIsLoaded.set(false);
     Template.instance().title = new ReactiveVar( 'Active clusters by version' );
 });
 
 Template.clustersByKubeVersion.helpers({
-    title: () => Template.instance().title.get()
+    title: () => Template.instance().title.get(),
+    chartIsLoading: () => {
+        return dataIsLoaded.get() ? false : true;
+    },
+    noData: () => {
+        return noDataFound.get() ? true : false;
+    },
 });
 
 Template.clustersByKubeVersion.onRendered(function() {
@@ -52,9 +63,13 @@ Template.clustersByKubeVersion.onRendered(function() {
                 pad: 0,
             },
         };
-        const modeBarButtons = [[ 'toImage' ]];
-        Plotly.newPlot('clustersByKubeVersionChart', initalPlotData, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
+        let modeBarButtons = [[ 'toImage' ]];
         Meteor.call('getClusterCountByKubeVersion', Session.get('currentOrgId'), (error, data) => {
+            dataIsLoaded.set(true);
+            if(data.length === 0) {
+                noDataFound.set(true);
+            }
+            
             data = data.map( d => {
                 if ( d.id.version.gitVersion ) {
                     const version = d.id.version.gitVersion.split('.');
@@ -85,19 +100,23 @@ Template.clustersByKubeVersion.onRendered(function() {
                     labels: y,
                     textinfo: 'value',
                 }];
-                Plotly.animate('clustersByKubeVersionChart',
-                    {
-                        data: plotdata
-                    }, {
-                        transition: {
-                            duration: 500,
-                            easing: 'cubic-in-out'
-                        },
-                        frame: {
-                            duration: 500
-                        }
-                    });
-            }
+                if(data.length > 0) {
+                    Plotly.newPlot('clustersByKubeVersionChart', initalPlotData, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
+                    Plotly.animate('clustersByKubeVersionChart',
+                        {
+                            data: plotdata
+                        }, {
+                            transition: {
+                                duration: 500,
+                                easing: 'cubic-in-out'
+                            },
+                            frame: {
+                                duration: 500
+                            }
+                        });
+
+                }
+            } 
         });
     });
 });

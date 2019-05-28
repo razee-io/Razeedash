@@ -27,6 +27,7 @@ import './popper';
 import './main.html';
 import './toastr';
 import { Orgs } from '/imports/api/org/orgs';
+import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
 
@@ -305,6 +306,13 @@ Template.registerHelper('getClusterName', (cluster) => {
         clusterName = cluster.metadata.name;
     }
     return clusterName;
+});
+Template.registerHelper('getClusterNameById', (clusterId) => {
+    const cluster = Clusters.findOne({ cluster_id: clusterId});
+    if(!cluster){
+        return clusterId;
+    } 
+    return cluster.metadata.name || clusterId;
 });
 
 import './routes.js';

@@ -117,7 +117,7 @@
             </a>
         </td>
         <td>
-            <a href="{{pathFor 'cluster.tab' id=resource.cluster_id tabId='resources'}}">{{{boldifySearchMatches searchStr resource.cluster_id}}}</a>
+            <a href="{{pathFor 'cluster.tab' id=resource.cluster_id tabId='resources'}}">{{{boldifySearchMatches searchStr (getClusterNameById resource.cluster_id) }}}</a>
         </td>
         <td>
             {{{boldifySearchMatches searchStr resource.searchableData.namespace}}}

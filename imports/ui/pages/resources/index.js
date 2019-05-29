@@ -25,7 +25,6 @@ import ResourcesSingle from './resourcesSingle';
 // eslint-disable-next-line
 import datepicker from 'bootstrap-datepicker';
 
-import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -35,7 +34,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import debounce from 'debounce';
 import { Resources } from '/imports/api/resource/resources.js';
-import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
 import utils from '/imports/both/utils';
 
 var displayLimit = new ReactiveVar(25); // how many items the user can see
@@ -268,6 +266,11 @@ Template.page_resources.events({
 });
 
 Template.page_resources_resource.helpers({
+    resourceLinkQuery(resource){
+        return {
+            selfLink: resource.selfLink,
+        };
+    },
     filterResourceForDates(resource){
     // filters the resource to only have `image_history` items that fall between fromTime and toTime
         resource = _.cloneDeep(resource);
@@ -313,143 +316,10 @@ Template.page_resource_id.helpers({
     },
 });
 
-var decryptStr = (encrypted, token)=>{
-    var success = false;
-    var str;
-    try{
-        str = utils.tokenCrypt.decrypt(encrypted, token);
-        success = true;
-    }catch(e){
-        success = false;
-    }
 
-    var out = { success, str, };
-    return out;
-};
-
-var localOrgKeySave = {
-    keyName: 'savedOrgKeys',
-    getFullObj:()=>{
-        var obj = JSON.parse(localStorage.getItem(localOrgKeySave.keyName)||'{}')||{};
-        return obj;
-    },
-    set:(name, val)=>{
-        var obj = localOrgKeySave.getFullObj();
-        obj[name]=val;
-        localStorage.setItem(localOrgKeySave.keyName, JSON.stringify(obj));
-    },
-    get:(name)=>{
-        var obj = localOrgKeySave.getFullObj();
-        return obj[name];
-    },
-};
-
-var decryptionKey = new ReactiveVar('');
-var resourceDataJson = new ReactiveVar(null);
-
-Template.Resources_single.onRendered(function() {
-    this.autorun(()=>{
-        var clusterId = Template.instance().getClusterId();
-        var resourceName = Template.instance().getResourceName();
-        var resource = Resources.findOne({ cluster_id: clusterId, 'searchableData.name': resourceName} );
-        if(!resource){
-            return;
-        }
-        Meteor.call('getResourceData', clusterId, resource.selfLink, (err, data)=>{
-            resourceDataJson.set(err || data);
-        });
-    });
-});
-
-Template.Resources_single.onCreated(function() {
-    this.getResourceName = () => FlowRouter.getParam('resourceName');
-    this.getClusterId = () => FlowRouter.getParam('clusterId');
-    this.autorun(() => {
-        this.subscribe('resources.byName', this.getResourceName(), this.getClusterId());
-        this.subscribe('clusters.id', this.getClusterId());
-    });
-});
 
 Template.Resources_single.helpers({
-    resource(){
-        return Resources.findOne({});
-    },
-    templateData(){
-        var resource = Template.Resources_single.__helpers.get('resource').call(Template.instance());
-        var resourceData = null;
-        if(resource){
-            resourceData = decryptStr(resource.data, decryptionKey.get());
-        }
-        return { resource, resourceData };
-    },
-    decideTemplate(){
-        return 'Resources_single_default';
-    },
-    clusterName(){
-        var clusterId = Template.instance().getClusterId();
-        return _.get(Clusters.findOne({ cluster_id: clusterId }), 'cluster_name', clusterId);
-    },
     ResourcesSingle(){
         return ResourcesSingle;
     },
-});
-Template.Resources_single.events({
-    'keyup .decryptionKey': (e)=>{
-        var $el = $(e.target).closest('.decryptionKey');
-        var val = $el.val();
-        decryptionKey.set(val);
-        var orgName = Meteor.settings.public.DEFAULT_ORG;
-        localOrgKeySave.set(orgName, val);
-    }
-});
-
-var showDecryptionKey = new ReactiveVar(false);
-Template.Resources_single_default.helpers({
-    decryptionKey(){
-        return decryptionKey.get();
-    },
-    showDecryptionKey(){
-        return showDecryptionKey.get();
-    },
-    decryptionKeyInputType(){
-        return (showDecryptionKey.get() ? 'input' : 'password');
-    },
-    showDecryptionKeyBtnText(){
-        return (showDecryptionKey.get() ? 'Hide' : 'Show');
-    },
-});
-Template.Resources_single_default.onRendered(function(){
-    var orgName = Meteor.settings.public.DEFAULT_ORG;
-    var savedDecryptionKey = localOrgKeySave.get(orgName);
-    $('.decryptionKey').val(savedDecryptionKey);
-    decryptionKey.set(savedDecryptionKey);
-});
-Template.Resources_single_default.events({
-    'click .showDecryptionKeyBtn':()=>{
-        showDecryptionKey.set(!showDecryptionKey.get());
-        return false;
-    },
-});
-
-Template.Resources_single_dump_searchable_attrs.helpers({
-    searchableDataAsArr(){
-        return _.filter(_.map(Template.currentData().resource.searchableData||{}, (val, key)=>{
-            if(_.isNull(val)){
-                return null;
-            }
-            return { key, val };
-        }));
-    },
-    formatVal(key, val){
-        if(_.isNumber(val)){
-            if(_.isInteger(val) && key.match(/time/i)){
-                return `${moment(val < 3000000000 ? val * 1000: val ).format('LLL')} (int ${val})`;
-            }
-            return val;
-        }
-        if(_.isObject(val)){
-            return val;
-        }
-        return val;
-    }
 });

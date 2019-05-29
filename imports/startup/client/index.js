@@ -15,6 +15,8 @@
 */
 
 // Import client startup through a single index entry point
+import './react';
+
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Blaze } from 'meteor/blaze';

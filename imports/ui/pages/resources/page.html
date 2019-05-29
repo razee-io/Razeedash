@@ -112,7 +112,7 @@
     <tr id="{{resource._id}}">
         <td>
             {{> kindIcon kind=resource.searchableData.kind}}
-            <a href="{{pathFor 'resource.cluster' resourceName=resource.searchableData.name clusterId=resource.cluster_id}}">
+            <a href="{{pathFor 'resource.cluster' clusterId=resource.cluster_id query=(resourceLinkQuery resource)}}">
                 {{{boldifySearchMatches searchStr resource.searchableData.name}}}
             </a>
         </td>
@@ -146,45 +146,4 @@
             {{> React component=ResourcesSingle}}
         </div>
     {{/if}}
-</template>
-
-<template name="Resources_single_default">
-    <h5>Searchable Data</h5>
-    {{>Resources_single_dump_searchable_attrs resource=resource}}
-
-    <h5>Razee data</h5>
-    {{>stringifyp data=resource}}
-
-    <h5>Resource JSON</h5>
-    <div class="form-group row m-0">
-        <label class="col-form-label">Decryption Key:</label>
-        <div class="col-sm-10">
-            <div class="input-group">
-                <input type="{{decryptionKeyInputType}}" class="decryptionKey form-control" data-lpignore="true" />
-                <div class="input-group-append">
-                    <input type="button" class="btn btn-primary form-control showDecryptionKeyBtn" value="{{showDecryptionKeyBtnText}}" />
-                </div>
-            </div>
-        </div>
-    </div>
-    {{#if decryptionKey}}
-        {{#if resourceData.success}}
-            {{>stringifyp data=(jsonparse resourceData.str)}}
-        {{else}}
-            <div class="my-2">Failed to decrypt with entered key</div>
-        {{/if}}
-    {{else}}
-        <div class="mt-2">Enter a decryption key to show resource data</div>
-    {{/if}}
-</template>
-
-<template name="Resources_single_dump_searchable_attrs">
-    <table>
-        {{#each item in searchableDataAsArr}}
-            <tr>
-                <td>{{item.key}}</td>
-                <td>{{>stringifyp data=(formatVal item.key item.val) classes='m-0'}}</td>
-            </tr>
-        {{/each}}
-    </table>
 </template>

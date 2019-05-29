@@ -74,7 +74,12 @@ Template.breadcrumbs.helpers({
     },
     getDisplayName(crumb){
         if(crumb.routeName === 'resource.cluster') {
-            return crumb.params.resourceName;
+            var name = '';
+            try{
+                name = crumb.route._queryParams.get('selfLink');
+                name = _.last(_.filter(name.split('/')));
+            }catch(e){} // eslint-disable-line no-empty
+            return name;
         }
         if(_.includes(['cluster.tab'], crumb.routeName)){
             // if a crumb for the single cluster page, then find()s it so we can display its name
@@ -95,6 +100,13 @@ Template.breadcrumbs.helpers({
             if(clustersSearch_q){
                 qs.q = clustersSearch_q;
             }
+        }
+        if(crumb.routeName == 'resource.cluster'){
+            var selfLink = '';
+            try{
+                selfLink = crumb.route._queryParams.get('selfLink');
+            }catch(e){} // eslint-disable-line no-empty
+            qs.selfLink = selfLink;
         }
         return FlowRouter.path(crumb.route.name, FlowRouter.current().params, qs);
     },

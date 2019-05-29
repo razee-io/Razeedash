@@ -39,17 +39,10 @@ Template.OrgSingle.helpers({
     org(){
         return Orgs.findOne({ name: Template.instance().orgName });
     },
-    inventoryYamlUrl(key){
-        var url = Meteor.absoluteUrl(`api/install/inventory?orgKey=${key}`);
+    clusterYamlUrl(key){
+        var url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
         if(Meteor.settings.public.RAZEEDASH_API_URL){
-            url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/inventory?orgKey=${key}`;
-        }
-        return url;
-    },
-    kapitanYamlUrl(key){
-        var url = Meteor.absoluteUrl(`api/install/kapitan?orgKey=${key}`);
-        if(Meteor.settings.public.RAZEEDASH_API_URL){
-            url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/kapitan?orgKey=${key}`;
+            url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/cluster?orgKey=${key}`;
         }
         return url;
     },

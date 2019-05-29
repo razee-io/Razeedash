@@ -21,6 +21,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
 import { Orgs } from '/imports/api/org/orgs';
 import Clipboard from 'clipboard';
+import _ from 'lodash';
 
 Template.OrgSingle.onCreated( () => {
     const template = Template.instance();
@@ -28,6 +29,11 @@ Template.OrgSingle.onCreated( () => {
         var orgName = FlowRouter.getParam('baseOrgName');
         template.orgName = orgName;
         template.org = Orgs.findOne({ name: orgName, });
+
+        var creatorId = Template.OrgSingle.__helpers.get('creatorId').call(Template.instance());
+        if(creatorId){
+            Meteor.subscribe('users.byId', creatorId);
+        }
     });
 });
 
@@ -36,6 +42,16 @@ Template.OrgSingle.onRendered( () => {
 });
 
 Template.OrgSingle.helpers({
+    creatorId(){
+        var org = Template.OrgSingle.__helpers.get('org').call(Template.instance());
+        return _.get(org, 'creatorUserId', null);
+    },
+    creatorNameAndId(){
+        var creatorId = Template.OrgSingle.__helpers.get('creatorId').call(Template.instance());
+        var user = Meteor.users.findOne({ _id: creatorId });
+        var userName = _.get(user, 'profile.name');
+        return userName ? `${userName} (${creatorId})` : creatorId;
+    },
     org(){
         return Orgs.findOne({ name: Template.instance().orgName });
     },

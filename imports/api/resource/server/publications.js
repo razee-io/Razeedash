@@ -36,15 +36,16 @@ Meteor.publish('resources.recent', function(orgId) {
     return Resources.find({ org_id: orgId },{ sort: { updated: -1 }, limit: 10 });
 });
 
-Meteor.publish('resources.byName', function(resourceName, clusterId) {
-    check( resourceName, String );
-    check( clusterId, Match.Maybe( String ));
+Meteor.publish('resources.bySelfLink', function(orgId, clusterId, selfLink) {
+    check( orgId, String );
+    check( clusterId, String );
+    check( selfLink, String );
+    requireOrgAccess(orgId);
+
     var search = {
-        'searchableData.name': resourceName 
+        selfLink,
+        cluster_id: clusterId,
     };
-    if(clusterId){
-        search.cluster_id = clusterId;
-    }
     var options = {
         fields: {
             cluster_id: 1,
@@ -61,15 +62,15 @@ Meteor.publish('resources.byName', function(resourceName, clusterId) {
     return Resources.find(search, options);
 });
 
-Meteor.publish('resourceData.byName', function(orgId, resourceName, clusterId) {
+Meteor.publish('resourceData.bySelfLink', function(orgId, clusterId, selfLink) {
     check( orgId, String );
-    check( resourceName, String );
     check( clusterId, Match.Maybe( String ));
+    check( selfLink, String );
 
     requireOrgAccess(orgId);
 
     var search = {
-        'searchableData.name': resourceName,
+        selfLink,
         cluster_id: clusterId,
     };
     var options = {

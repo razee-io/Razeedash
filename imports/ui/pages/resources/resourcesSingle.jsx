@@ -6,6 +6,7 @@ import { Resources } from '../../../api/resource/resources';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import moment from 'moment';
 import resourceKinds from './resourceKindComponents';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 export class ResourcesSingle extends React.Component {
     render() {
@@ -14,13 +15,21 @@ export class ResourcesSingle extends React.Component {
                 <Blaze template="loading" />
             );
         }
+        var resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
         return (
             <div className="card m-2">
                 <div className="card-header">
-                    <h4 className="mb-0">Resource {this.props.resourceName} on {this.props.clusterId}</h4>
+                    <h4 className="mb-0 text-muted">
+                        Resource "{resourceName}" on <a href={FlowRouter.path('cluster', { id: this.props.clusterId })}>{this.props.clusterId}</a>
+                    </h4>
                 </div>
                 <div className="card-body">
-                    <ResourcesSingle_default resource={this.props.resource} />
+                    {this.props.resource &&
+                        <ResourcesSingle_default resource={this.props.resource} />
+                    }
+                    {!this.props.resource &&
+                        <div>Resource "{this.props.selfLink}" not found</div>
+                    }
                 </div>
             </div>
         );
@@ -93,23 +102,23 @@ class ResourceKindAttrTable extends React.Component{
 }
 
 export default withTracker(()=>{
-    var resourceName = FlowRouter.getParam('resourceName') || '';
+    var selfLink = FlowRouter.getQueryParam('selfLink') || '';
     var clusterId = FlowRouter.getParam('clusterId') || '';
     var orgId = Session.get('currentOrgId');
     var subs = [
-        Meteor.subscribe('resources.byName', orgId, resourceName, clusterId),
+        Meteor.subscribe('resources.bySelfLink', orgId, clusterId, selfLink),
         Meteor.subscribe('clusters.id', clusterId),
-        Meteor.subscribe('resourceData.byName', orgId, resourceName, clusterId),
+        Meteor.subscribe('resourceData.bySelfLink', orgId, clusterId, selfLink),
     ];
     var resource = Resources.findOne({
         cluster_id: clusterId,
-        'searchableData.name': resourceName,
+        selfLink,
     });
     var isLoading = _.some(subs, (sub)=>{
         return !sub.ready();
     });
     return {
-        resourceName, clusterId, isLoading,
+        selfLink, clusterId, isLoading,
         resource,
     };
 })(ResourcesSingle);

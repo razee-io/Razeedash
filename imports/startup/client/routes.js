@@ -122,12 +122,12 @@ orgedRoutes.route('/resources', {
     }
 });
 
-orgedRoutes.route('/resources/:resourceName/:clusterId', {
+orgedRoutes.route('/resources/:clusterId', {
     name: 'resource.cluster',
     title: 'Resource Cluster :clusterId',
     parent: 'resources.search',
-    action(params) {
-        BlazeLayout.render('Base_layout', { main: 'Resources_single', resourceName: params.resourceName, clusterId: params.clusterId });
+    action(params, queryParams) {
+        BlazeLayout.render('Base_layout', { main: 'Resources_single', selfLink: queryParams.selfLink, clusterId: params.clusterId });
     },
 });
 

@@ -42,3 +42,11 @@ Template.deployments.onCreated(function() {
         this.subscribe('resources.byCluster', Session.get('currentOrgId'), Template.currentData().cluster_id);
     });
 });
+
+Template.deploymenttemplate.helpers({
+    resourceLinkQuery(resource){
+        return {
+            selfLink: resource.selfLink,
+        };
+    }
+});

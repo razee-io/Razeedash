@@ -68,6 +68,9 @@ Template.SelectOrg.events({
 });
 
 Template.SelectOrg_register.onCreated(function(){
+    this.autorun(()=>{
+        this.subscribe('orgsForUser');
+    });
     this.isRegistering = new ReactiveVar(false);
 });
 
@@ -85,6 +88,7 @@ Template.SelectOrg_register.events({
         inst.isRegistering.set(true);
         Meteor.call('registerOrg', orgName, (err)=>{
             inst.isRegistering.set(false);
+            Meteor.subscribe('orgsForUser');
             if(err){
                 throw err;
             }
@@ -95,6 +99,9 @@ Template.SelectOrg_register.events({
 });
 
 Template.SelectOrg_deregister.onCreated(function(){
+    this.autorun(()=>{
+        this.subscribe('orgsForUser');
+    });
     this.isDeRegistering = new ReactiveVar(false);
 });
 
@@ -110,6 +117,7 @@ Template.SelectOrg_deregister.events({
 
         inst.isDeRegistering.set(true);
         Meteor.call('deRegisterOrg', orgName, (err)=>{
+            Meteor.subscribe('orgsForUser');
             if(err){
                 throw err;
             }

@@ -28,14 +28,7 @@
           </thead>
           <tbody>
             {{#each deployment in recentDeployments}}
-            <tr>
-              <td><a href="{{pathFor 'cluster.tab' id=deployment.cluster_id tabId='resources'}}">{{deployment.cluster_id}}</a></td>
-              <td>
-                  {{> kindIcon kind=deployment.searchableData.kind}}
-                  <a href="{{pathFor 'resources.search' query=(generateQueryString deployment.searchableData.name)}}">{{deployment.searchableData.name}}</a>
-              </td>
-              <td>{{> history_dropdown _lastUpdated=(lastUpdated deployment) }}</td>
-            </tr>
+                {{> recentDeployments_row deployment=deployment}}
             {{else}}
             <span class="pl-3">There are no recent deployments</span>
             {{/each}}
@@ -45,4 +38,17 @@
       {{> loading}} 
     {{/if}}
     </div>
+</template>
+
+<template name="recentDeployments_row">
+    {{#if Template.subscriptionsReady}}
+    <tr>
+        <td><a href="{{pathFor 'cluster.tab' id=deployment.cluster_id tabId='resources'}}">{{getClusterNameById deployment.cluster_id}}</a></td>
+        <td>
+            {{> kindIcon kind=deployment.searchableData.kind}}
+            <a href="{{pathFor 'resources.search' query=(generateQueryString deployment.searchableData.name)}}">{{deployment.searchableData.name}}</a>
+        </td>
+        <td>{{> history_dropdown _lastUpdated=(lastUpdated deployment) }}</td> 
+    </tr>
+    {{/if}}
 </template>

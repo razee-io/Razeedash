@@ -30,3 +30,9 @@ Template.recentDeployments.onCreated(function() {
         this.subscribe('resources.recent', Session.get('currentOrgId'));
     });
 });
+
+Template.recentDeployments_row.onCreated(function() {
+    this.autorun(() => {
+        this.subscribe('clusters.id', this.data.deployment.cluster_id);
+    });
+});

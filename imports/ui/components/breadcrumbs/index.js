@@ -16,10 +16,10 @@
 
 import './breadcrumbs.html';
 import './breadcrumbs.scss';
+import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 import toastr from 'toastr';
 
@@ -72,14 +72,6 @@ Template.breadcrumbs.helpers({
         var crumbs = Template.breadcrumbs.__helpers.get('getBreadcrumbs').call(this);
         return (crumbs.length > 0);
     },
-    getClusterNameById(clusterId){
-        var cluster = Clusters.findOne({ cluster_id: clusterId});
-        if(!cluster){
-            // if not found, just returns the cluster id
-            return `${clusterId}`;
-        }
-        return cluster.metadata.name || clusterId;
-    },
     getDisplayName(crumb){
         if(crumb.routeName === 'resource.cluster') {
             var name = '';
@@ -92,8 +84,13 @@ Template.breadcrumbs.helpers({
         if(_.includes(['cluster.tab'], crumb.routeName)){
             // if a crumb for the single cluster page, then find()s it so we can display its name
             var id = crumb.params.id || crumb.params.clusterId;
-            return Template.breadcrumbs.__helpers.get('getClusterNameById').call(this, id);
-        }
+            const cluster = Clusters.findOne({ cluster_id: id});
+            if(cluster){
+                return cluster.metadata.name || id;
+            } else {
+                return id;
+            }
+        } 
         return crumb.title;
     },
     getUrl(crumb){

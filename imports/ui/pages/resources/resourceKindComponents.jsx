@@ -77,7 +77,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                         </td>
                                         <td className={container.env.length > 0 ? 'p-0' : ''}>
                                             {container.env.length > 0 &&
-                                            <table>
+                                            <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th className="p-1">Name</th>

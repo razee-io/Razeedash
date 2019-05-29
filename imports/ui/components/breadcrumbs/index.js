@@ -78,7 +78,7 @@ Template.breadcrumbs.helpers({
             try{
                 name = crumb.route._queryParams.get('selfLink');
                 name = _.last(_.filter(name.split('/')));
-            }catch(e){}
+            }catch(e){} // eslint-disable-line no-empty
             return name;
         }
         if(_.includes(['cluster.tab'], crumb.routeName)){
@@ -105,7 +105,7 @@ Template.breadcrumbs.helpers({
             var selfLink = '';
             try{
                 selfLink = crumb.route._queryParams.get('selfLink');
-            }catch(e){}
+            }catch(e){} // eslint-disable-line no-empty
             qs.selfLink = selfLink;
         }
         return FlowRouter.path(crumb.route.name, FlowRouter.current().params, qs);

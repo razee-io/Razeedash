@@ -25,7 +25,6 @@ import ResourcesSingle from './resourcesSingle';
 // eslint-disable-next-line
 import datepicker from 'bootstrap-datepicker';
 
-import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -35,7 +34,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import debounce from 'debounce';
 import { Resources } from '/imports/api/resource/resources.js';
-import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
 import utils from '/imports/both/utils';
 
 var displayLimit = new ReactiveVar(25); // how many items the user can see

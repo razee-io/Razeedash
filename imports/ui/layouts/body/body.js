@@ -83,7 +83,11 @@ Template.nav.helpers({
         }
     },
     showCounters() {
-        return Session.get('currentOrgName') ? true : false;
+        if(Session.get('currentOrgName') && Session.get('currentOrgId')) {
+            return true;
+        } else {
+            return false;
+        }
     },
     clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
     deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString()

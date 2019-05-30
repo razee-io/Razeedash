@@ -18,6 +18,7 @@
   <div class="card">
     {{> portletHeader title='Recent deployments' }}
     {{#if Template.subscriptionsReady}}
+      {{#if hasRecentDeployments}}
         <table class="table table-sm table-responsive-sm">
           <thead>
             <tr>
@@ -29,11 +30,12 @@
           <tbody>
             {{#each deployment in recentDeployments}}
                 {{> recentDeployments_row deployment=deployment}}
-            {{else}}
-            <span class="pl-3">There are no recent deployments</span>
             {{/each}}
           </tbody>
         </table>
+      {{else}}
+            <span class="m-3">There are no recent deployments</span>
+      {{/if}}
     {{else}}
       {{> loading}} 
     {{/if}}

@@ -18,6 +18,7 @@
   <div class="card">
     {{> portletHeader title='Inactive clusters' }}
     {{#if Template.subscriptionsReady}}
+      {{#if hasZombieClusters}}
         <table class="table table-sm table-responsive-sm">
           <thead>
             <tr>
@@ -31,11 +32,12 @@
               <td><a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">{{getClusterName cluster}}</a></td>
               <td>{{moment cluster.updated}}</td>
             </tr>
-            {{else}}
-            <span class="pl-3">Looks like your clusters are all current</span>
             {{/each}}
           </tbody>
         </table>
+      {{else}}
+            <span class="m-3">Looks like your clusters are all current</span>
+      {{/if}}
     {{else}}
       {{> loading}} 
     {{/if}}

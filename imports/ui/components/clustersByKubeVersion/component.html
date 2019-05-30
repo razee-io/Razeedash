@@ -17,6 +17,7 @@
 <template name="clustersByKubeVersion">
   <div class="card">
     {{> portletHeader title=title}}
+    {{#if Template.subscriptionsReady}}
     <div class="card-body p-1">
         {{#if chartIsLoading}}
             {{> loading}}
@@ -27,5 +28,8 @@
             {{/if}}
         </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
   </div>
 </template>

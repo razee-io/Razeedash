@@ -16,7 +16,7 @@
 
 <template name="Base_layout">
     {{#if Template.subscriptionsReady}}
-
+      {{#unless loggingIn}}
         {{#if currentUser}}
             {{> nav}}
                 <div class="container-fluid px-0">
@@ -27,6 +27,6 @@
         {{else}}
             {{> Login }}
         {{/if}}
-
+      {{/unless}}
     {{/if}}
 </template>

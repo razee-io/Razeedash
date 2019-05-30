@@ -23,6 +23,10 @@ import { Session } from 'meteor/session';
 
 Template.recentDeployments.helpers({
     recentDeployments: () => Resources.find({}, { sort: { 'updated': -1 }, limit: 10 }),
+    hasRecentDeployments: () => {
+        const deploymentCount = Resources.find({}, { sort: { 'updated': -1 }, limit: 10 }).count();
+        return (deploymentCount > 0) ? true: false;
+    }
 });
 
 Template.recentDeployments.onCreated(function() {

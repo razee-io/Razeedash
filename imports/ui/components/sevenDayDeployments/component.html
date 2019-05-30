@@ -17,7 +17,8 @@
 <template name="sevenDayDeployments">
   <div class="card">
     {{> portletHeader title='Deployments over the past 7 days' }}
-    <div class="card-body p-0">
+    {{#if Template.subscriptionsReady}}
+    <div class="card-body p-3">
       {{#if recentDepsPerService}}
       <table class="table table-sm">
         <thead>
@@ -40,8 +41,11 @@
         </tbody>
       </table>
       {{else}}
-        {{> loading}}
+        <span>There are no deployments within the last 7 days</span>
       {{/if}}
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
   </div>
 </template>

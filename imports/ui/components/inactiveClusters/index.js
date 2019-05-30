@@ -23,6 +23,10 @@ import { Session } from 'meteor/session';
 
 Template.inactiveClusters.helpers({
     zombieClusters: () => Clusters.find({ updated: { $lt: new moment().subtract(1, 'day').toDate() } }, { sort: { updated: -1 } }),
+    hasZombieClusters: () => {
+        const zombies = Clusters.find({ updated: { $lt: new moment().subtract(1, 'day').toDate() } }, { sort: { updated: -1 } }).count();
+        return (zombies > 0) ? true : false; 
+    },
 });
 
 Template.inactiveClusters.onCreated(function() {

@@ -28,6 +28,7 @@ let noDataFound = new ReactiveVar(false);
 
 Template.clustersByKubeVersion.onCreated( () => {
     dataIsLoaded.set(false);
+    noDataFound.set(false);
     Template.instance().title = new ReactiveVar( 'Active clusters by version' );
 });
 

@@ -14,4 +14,22 @@
 * limitations under the License.
 */
 
+import { Template } from 'meteor/templating';
 import './component.html';
+
+Template.cluster_metadata.helpers({
+    metadata: () => {
+        const instance = Template.instance();
+        const cluster = instance.data.cluster;
+        if(!cluster || !cluster.metadata) {
+            return;
+        }
+        const metadata = [];
+        for(let key in cluster.metadata) {
+            if(typeof cluster.metadata[key] !== 'object') {
+                metadata.push({name: key, value: cluster.metadata[key] });
+            }
+        }
+        return metadata;
+    },
+});

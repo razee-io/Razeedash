@@ -14,32 +14,6 @@
 * limitations under the License.
 */
 
-  .recentDeployments {
-    .dropdown {
-      width: 75px;
-      margin-right: 5px;
-      // line-height: 70px;
-      // border: 1px solid #0BCFD8;
-      // border-radius: 50%;
-      background-color: #0BCFD8;
-    }
-    a#dropdownHistoryButton {
-        font-size: 2em;
-        margin: 25%;
-        font-family: sans-serif;
-        font-weight: bold;
-        color: #0F3659;
-    }
-    h5, h6 {
-      margin-bottom: 0rem;
-    }
-    h6 {
-      a {
-        color: grey;
-      }
-    }
-}
-
 .animated {
 -webkit-animation-duration: 3s;
 animation-duration: 3s;

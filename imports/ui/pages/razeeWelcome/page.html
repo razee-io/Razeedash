@@ -50,8 +50,8 @@
                                 <div class="col col-sm-6 col-md-7 col-lg-8 my-auto">
                                     {{#if orgExists org.name}}
                                         {{> SelectOrg_deregister org=org}}
-                                        <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm">Manage</a>
-                                        <a href="{{pathFor 'welcome' baseOrgName=org.name}}" class="ml-2 btn btn-success btn-sm">Launch</a>
+                                        <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0">Manage</a>
+                                        <a href="{{pathFor 'welcome' baseOrgName=org.name}}" class="ml-2 btn btn-success btn-sm rounded-0">Launch</a>
                                     {{else}}
                                         {{#if isAdminOfOrg org.name}}
                                             {{> SelectOrg_register org=org}}
@@ -83,7 +83,7 @@
 </template>
 
 <template name="SelectOrg_register">
-    <button class="ml-2 btn btn-primary btn-sm registerOrgBtn" {{outputDisabled isRegistering}}>
+    <button class="ml-2 btn btn-primary btn-sm registerOrgBtn rounded-0" {{outputDisabled isRegistering}}>
         Register
         {{#if isRegistering}}
             <i class="fa fa-spinner fa-spin"></i>
@@ -93,7 +93,7 @@
 
 
 <template name="SelectOrg_deregister">
-    <button class="ml-2 btn btn-warning btn-sm deRegisterOrgBtn" {{outputDisabled isRegistering}}>
+    <button class="ml-2 btn btn-warning btn-sm deRegisterOrgBtn rounded-0" {{outputDisabled isRegistering}}>
         Remove
         {{#if isDeRegistering}}
             <i class="fa fa-spinner fa-spin"></i>

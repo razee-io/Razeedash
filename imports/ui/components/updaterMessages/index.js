@@ -16,13 +16,13 @@
 
 import './component.html';
 import { Template } from 'meteor/templating';
-import { UpdaterMessages } from '/imports/api/message/updaterMessages/updaterMessages.js';
+import { Messages } from '/imports/api/message/messages.js';
 import '../../components/portlet';
 import { Session } from 'meteor/session';
 import moment from 'moment';
 
 Template.updaterMessages.helpers({
-    recentUpdaterMessages: () => UpdaterMessages.find({ updated: { $gte: new moment().subtract(5, 'minutes').toDate() } }, { sort: { updated: -1 } }),
+    recentUpdaterMessages: () => Messages.find({ updated: { $gte: new moment().subtract(5, 'minutes').toDate() } }, { sort: { updated: -1 } }),
     getMessageType: (m) => {
         // let returnValue = 'success';
         let returnValue = 'info';
@@ -50,6 +50,6 @@ Template.updaterMessages.helpers({
 
 Template.updaterMessages.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('updater_messages.past5Minutes', Session.get('currentOrgId'));
+        this.subscribe('messages.past5Minutes', Session.get('currentOrgId'));
     });
 });

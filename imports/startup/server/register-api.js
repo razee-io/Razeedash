@@ -22,7 +22,7 @@ import '../../api/cluster/clusters/server/publications.js';
 
 import '../../api/webhook/server/publications.js';
 
-import '../../api/message/updaterMessages/server/publications.js';
+import '../../api/message/server/publications.js';
 
 import '../../api/org/server/publications.js';
 import '../../api/org/methods.js';

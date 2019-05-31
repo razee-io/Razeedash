@@ -22,7 +22,7 @@ import '../../components/cluster/updaterMessages';
 import '../../components/cluster/webhooks';
 import '../../components/cluster/comments';
 import moment from 'moment';
-import { UpdaterMessages } from '/imports/api/message/updaterMessages/updaterMessages.js';
+import { Messages } from '/imports/api/message/messages.js';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
@@ -31,19 +31,19 @@ Template.cluster.helpers({
         return !Template.currentData().notCollapsable;
     },
     updaterMessagesByClusterId(clusterId) {
-        return UpdaterMessages.find({
+        return Messages.find({
             cluster_id: clusterId,
             updated: { $gte: new moment().subtract(1, 'hour').toDate() }
         }, { sort: { updated: -1 } });
     },
     hasUpdaterMessages(clusterId) {
-        return UpdaterMessages.find({
+        return Messages.find({
             cluster_id: clusterId,
             updated: { $gte: new moment().subtract(1, 'hour').toDate() }
         }).count() > 0;
     },
     updaterMessagesByClusterIdCountStr(clusterId) {
-        var count = UpdaterMessages.find({ cluster_id: clusterId }).count();
+        var count = Messages.find({ cluster_id: clusterId }).count();
         if (count > 99) {
             // stops at 99 because we have a limit 100 on the publisher
             count = '99+';
@@ -67,6 +67,6 @@ Template.cluster.helpers({
 Template.cluster.onCreated(function() {
     this.autorun(() => {
         const clusterId = Template.currentData().cluster.cluster_id;
-        this.subscribe('updater_messages.byCluster', clusterId);
+        this.subscribe('messages.byCluster', clusterId);
     });
 });

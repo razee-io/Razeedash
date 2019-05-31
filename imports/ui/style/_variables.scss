@@ -172,8 +172,8 @@ $theme-colors: (
 // //
 // // Settings for the `<body>` element.
 //
-$body-bg:       $color__gray-3;
-$body-color:    $color__blue-90;
+// $body-bg:       $color__gray-3;
+// $body-color:    $color__blue-90;
 //
 // // Links
 // //
@@ -237,7 +237,7 @@ $body-color:    $color__blue-90;
 // $border-width: 1px !default;
 // $border-color: $gray-200 !default;
 //
-//$border-radius:          3px;
+$border-radius:          0px;
 //$border-radius-lg:       3px;
 //$border-radius-sm:       3px;
 //

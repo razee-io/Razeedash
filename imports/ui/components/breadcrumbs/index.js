@@ -32,7 +32,7 @@ Template.breadcrumbs.onCreated(function(){
             if(_.includes(['cluster'], crumb.routeName)){
                 // if theres a crumb to go to a single cluster page, then subscribes so it can find() it
                 var id = crumb.params.id || crumb.params.clusterId;
-                this.subscribe('clusters.id', id);
+                this.subscribe('clusters.id', Session.get('currentOrgId'), id);
             }
         });
         setTitleToLastCrumb(breadcrumbs);

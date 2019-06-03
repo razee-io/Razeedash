@@ -37,6 +37,6 @@ Template.recentDeployments.onCreated(function() {
 
 Template.recentDeployments_row.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('clusters.id', this.data.deployment.cluster_id);
+        this.subscribe('clusters.id', Session.get('currentOrgId'), this.data.deployment.cluster_id);
     });
 });

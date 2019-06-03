@@ -161,7 +161,7 @@ Template.page_clusters.events({
 
 Template.page_cluster_id.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('clusters.id', FlowRouter.getParam('id'));
+        this.subscribe('clusters.id', Session.get('currentOrgId'), FlowRouter.getParam('id'));
     });
 });
 

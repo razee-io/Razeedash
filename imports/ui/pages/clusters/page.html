@@ -96,15 +96,17 @@
 </template>
 
 <template name="page_cluster_id">
-  <div class="m-2">
-    {{#if Template.subscriptionsReady}} 
-        {{#if getCluster}} 
-            {{>cluster cluster=getCluster notCollapsable=1}} 
-        {{else}} 
-            Cluster not found 
-        {{/if}} 
-    {{else}} 
-        {{> loading }} 
-    {{/if}}
-  </div>
+  {{#if orgIdFound }}
+    <div class="m-2">
+      {{#if Template.subscriptionsReady}}
+          {{#if getCluster}}
+              {{>cluster cluster=getCluster notCollapsable=1}}
+          {{else}}
+              Cluster not found
+          {{/if}}
+      {{else}}
+          {{> loading }}
+      {{/if}}
+    </div>
+  {{/if}}
 </template>

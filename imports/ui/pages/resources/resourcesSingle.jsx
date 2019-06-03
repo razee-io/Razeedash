@@ -7,6 +7,7 @@ import Blaze from 'meteor/gadicc:blaze-react-component';
 import moment from 'moment';
 import resourceKinds from './resourceKindComponents';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Session } from "meteor/session";
 
 export class ResourcesSingle extends React.Component {
     render() {
@@ -107,7 +108,7 @@ export default withTracker(()=>{
     var orgId = Session.get('currentOrgId');
     var subs = [
         Meteor.subscribe('resources.bySelfLink', orgId, clusterId, selfLink),
-        Meteor.subscribe('clusters.id', clusterId),
+        Meteor.subscribe('clusters.id', Session.get('currentOrgId'), clusterId),
         Meteor.subscribe('resourceData.bySelfLink', orgId, clusterId, selfLink),
     ];
     var resource = Resources.findOne({

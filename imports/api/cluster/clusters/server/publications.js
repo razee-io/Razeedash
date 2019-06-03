@@ -41,9 +41,11 @@ Meteor.publish('clusters.zombie', function(orgId) {
     });
 });
 
-Meteor.publish('clusters.id', function(clusterId) {
+Meteor.publish('clusters.id', function(orgId, clusterId) {
+    check( orgId, String );
     check( clusterId, String );
-    return Clusters.find({ cluster_id: clusterId });
+    requireOrgAccess(orgId);
+    return Clusters.find({ org_id: orgId, cluster_id: clusterId });
 });
 
 Meteor.publish('clusterSearch', function(orgId, searchStr, limit=50) {

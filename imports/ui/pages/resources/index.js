@@ -299,14 +299,14 @@ Template.page_resources_resource.helpers({
 
 Template.page_resources_resource.onCreated(function() {
     this.autorun(() => {
-        this.subscribe('clusters.id', this.data.resource.cluster_id);
+        this.subscribe('clusters.id', Session.get('currentOrgId'), this.data.resource.cluster_id);
     });
 });
 
 Template.page_resource_id.onCreated(function() {
     this.autorun(() => {
         var clusterId = FlowRouter.getParam('id');
-        this.subscribe('clusters.id', clusterId);
+        this.subscribe('clusters.id', Session.get('currentOrgId'), clusterId);
     });
 });
 

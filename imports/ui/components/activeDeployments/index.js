@@ -103,7 +103,7 @@ Template.activeDeployments.onRendered(function() {
                 if(data.length === 0) {
                     noDataFound.set(true);
                 }  else {
-                    Plotly.newPlot('plotlychart', plotdata, layout, {responsive: true, modeBarButtons: modeBarButtons, displaylogo: false });
+                    Plotly.newPlot('plotlychart', plotdata, layout, {modeBarButtons: modeBarButtons, displaylogo: false });
                     document.getElementById('plotlychart').on('plotly_click', function(selected_data){
                         const orgName = FlowRouter.getParam('baseOrgName');
                         const params = { baseOrgName: orgName };

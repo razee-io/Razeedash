@@ -33,12 +33,15 @@
                                 readonly>
                             <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
                         </div>
+
+                        {{#if currentUser.services.github.email}}
                         <div class="form-group">
                             <label for="inputEmail">Email address</label>
-                            <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email" value="{{currentUser.services.github.email}}"
+                            <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="email" value="{{currentUser.services.github.email}}"
                                 readonly>
                             <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
                         </div>
+                        {{/if}}
 
                         <div class="form-group">
                             <label for="inputUserid">User ID</label>

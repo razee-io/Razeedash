@@ -54,7 +54,7 @@ Meteor.startup(()=>{
     // envs copied over to client
     Meteor.settings.public.GITHUB_URL = process.env.GITHUB_URL || 'https://github.com/';
     Meteor.settings.public.GITHUB_API = process.env.GITHUB_API || 'https://api.github.com/';
-    Meteor.settings.public.RAZEE_GHE_URL = 'https://github.com/razee-io/razeedash';
+    Meteor.settings.public.RAZEE_GITHUB_URL = 'https://github.com/razee-io/razeedash';
     Meteor.settings.public.RAZEEDASH_API_URL = process.env.RAZEEDASH_API_URL || null;
 
     const versionInfo = {

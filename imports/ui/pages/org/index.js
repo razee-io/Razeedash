@@ -55,14 +55,4 @@ Template.OrgSingle.helpers({
     org(){
         return Orgs.findOne({ name: Template.instance().orgName });
     },
-    clusterYamlUrl(key){
-        var url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
-        if(Meteor.settings.public.RAZEEDASH_API_URL){
-            url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/cluster?orgKey=${key}`;
-        }
-        return url;
-    },
-    firstOrgKey(org){
-        return org.orgKeys[0];
-    }
 });

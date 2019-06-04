@@ -29,9 +29,12 @@ import './page.html';
 import './page.scss';
 
 import { Meteor } from 'meteor/meteor';
+import Clipboard from 'clipboard';
 
 var hasOrgAccess = new ReactiveVar(false);
 import { Session } from 'meteor/session';
+import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
+import { Orgs } from '/imports/api/org/orgs.js';
 
 Template.page_welcome.onCreated(function() {
     this.autorun(()=>{
@@ -51,6 +54,7 @@ Template.page_welcome.onCreated(function() {
     this.autorun(() => {
         if(Session.get('currentOrgId')) {
             this.subscribe('resourceStats', Session.get('currentOrgId'));
+            this.subscribe('clusters.org', Session.get('currentOrgId'));
         }
         // if has access, sets the user's currentOrgName attr
         if(hasOrgAccess.get()){
@@ -59,8 +63,22 @@ Template.page_welcome.onCreated(function() {
     });
 });
 
+
+Template.page_welcome.onRendered( () => {
+    new Clipboard('.copy-button');
+});
+
 Template.page_welcome.helpers({
     hasOrgAccess(){
         return hasOrgAccess.get();
+    },
+    hasClusters() {
+        return Clusters.find({ org_id: Session.get('currentOrgId')}).count();
+    },
+    org() {
+        if(hasOrgAccess.get()){
+            const org = Orgs.findOne({ name: Session.get('currentOrgName') } );
+            return org;
+        }
     }
 });

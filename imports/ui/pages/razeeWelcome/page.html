@@ -25,8 +25,6 @@
 </template>
 
 <template name="SelectOrg">
-    <h1>Welcome to RazeeDash</h1>
-
     <h2 class="text-muted mt-3 pb-2">
         <i class="fa fa-github" aria-hidden="true"></i> Select an org
         <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh GitHub Orgs">
@@ -38,16 +36,17 @@
         {{#if Template.subscriptionsReady}}
             {{#each org in orgNames}}
             <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="row px-2">
-                                <div class="col col-sm-4 col-md-3 col-lg-2">
+                    <li class="list-group-item pr-0">
+                        <div class="row">
+                                <div class="col-md">
                                     <a class="org-link {{#unless orgExists org.name}}grayscale{{/unless}}" href="{{githubUrl}}{{org.name}}" target="_blank"> 
                                         <img class="img-thumbnail org-image my-1 {{#unless orgExists org.name}}grayscale{{/unless}}" src="{{org.avatarUrl}}">
                                         {{org.name}}
                                     </a>
                                 </div>
                                 
-                                <div class="col col-sm-6 col-md-7 col-lg-8 my-auto">
+                                <div class="col-md my-auto">
+                                    <div class="float-md-right">
                                     {{#if orgExists org.name}}
                                         {{> SelectOrg_deregister org=org}}
                                         <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0">Manage</a>
@@ -59,6 +58,7 @@
                                             <i>You must be a GitHub "{{org.name}}" org admin to register it in RazeeDash.</i>
                                         {{/if}}
                                     {{/if}}
+                                    </div>
                                 </div>
                         </div>
                     </li>
@@ -83,7 +83,7 @@
 </template>
 
 <template name="SelectOrg_register">
-    <button class="ml-2 btn btn-primary btn-sm registerOrgBtn rounded-0" {{outputDisabled isRegistering}}>
+    <button class="btn btn-primary btn-sm registerOrgBtn rounded-0" {{outputDisabled isRegistering}}>
         Register
         {{#if isRegistering}}
             <i class="fa fa-spinner fa-spin"></i>
@@ -93,7 +93,7 @@
 
 
 <template name="SelectOrg_deregister">
-    <button class="ml-2 btn btn-warning btn-sm deRegisterOrgBtn rounded-0" {{outputDisabled isRegistering}}>
+    <button class="btn btn-warning btn-sm deRegisterOrgBtn rounded-0" {{outputDisabled isRegistering}}>
         Remove
         {{#if isDeRegistering}}
             <i class="fa fa-spinner fa-spin"></i>

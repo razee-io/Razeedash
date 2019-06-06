@@ -25,7 +25,7 @@ if [[ $DELAY ]]; then
 fi
 
 # Honour already existing PORT setup
-export PORT=${PORT:-80}
+export PORT=${PORT:-3000}
 export NODE_ENV=production
 cd /app
 

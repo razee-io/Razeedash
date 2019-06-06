@@ -65,12 +65,12 @@ items:
             imagePullPolicy: Always
             name: razeedash
             ports:
-            - containerPort: 80
+            - containerPort: 3000
               protocol: TCP
             livenessProbe:
               httpGet:
                 path: /login
-                port: 80
+                port: 3000
               initialDelaySeconds: 3
               periodSeconds: 20
               timeoutSeconds: 5
@@ -78,6 +78,6 @@ items:
             readinessProbe:
               httpGet:
                 path: /login
-                port: 80
+                port: 3000
               initialDelaySeconds: 3
               periodSeconds: 20

@@ -43,6 +43,18 @@ Meteor.setInterval(function() {
 
 export let hasOrgsDefined = new ReactiveVar(true);
 
+Template.registerHelper('clusterYamlUrl', (key) => {
+    let url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
+    if(Meteor.settings.public.RAZEEDASH_API_URL){
+        url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/cluster?orgKey=${key}`;
+    }
+    return url;
+});
+
+Template.registerHelper('firstOrgKey', (org) => {
+    return org.orgKeys[0];
+});
+
 Template.registerHelper('orgIdFound', () => {
     const orgName = Session.get('currentOrgName');
     const foundOrg = Orgs.findOne({ name: orgName });

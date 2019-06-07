@@ -24,7 +24,7 @@ RUN apk update \
 	&& apk del --purge ${BUILD_PACKAGES} \
     && $METEORD_DIR/clean-final.sh
 
-EXPOSE 3000
+EXPOSE 80
 ENV BUILD_ID=${BUILD_ID}
 ENV LAST_COMMIT_ID=${LAST_COMMIT_ID}
 ENTRYPOINT sh $METEORD_DIR/run_app.sh

@@ -25,6 +25,7 @@
       <thead>
         <tr>
           <th class="pl-3">Resource</th>
+          <th class="">Version</th>
           <th class="">Changed</th>
           <th class="d-table-cell d-lg-none"></th>
         </tr>
@@ -57,7 +58,7 @@
         <a class="dropdown-item" href="{{pathFor 'resources.search' query=(generateQueryString resource.searchableData.name)}}">Show {{resource.searchableData.name}} resources</a>
       </div>
     </td>
-
+    <td>{{> commitLink }}</td>
     <td>
       {{> history_dropdown _lastUpdated=(lastUpdated resource) }}
     </td>

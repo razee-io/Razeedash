@@ -100,6 +100,7 @@ Meteor.publish('resourcesSearch', function(orgId, searchStr='', limit=50, fromTi
             created: 1,
             updated: 1,
             searchableData: 1,
+            data: 1
         }
     };
     let search = {org_id: orgId};

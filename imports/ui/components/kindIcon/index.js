@@ -43,6 +43,8 @@ Template.kindIcon.helpers({
             return 'J';
         case 'Namespace':
             return 'Ns';
+        case 'NetworkPolicy':
+            return 'NP';
         case 'Node':
             return 'No';
         case 'Pod':
@@ -53,6 +55,8 @@ Template.kindIcon.helpers({
             return 'PC';
         case 'ReplicaSet':
             return 'RS';
+        case 'RemoteResource':
+            return 'RR';
         case 'Secret':
             return 'Sec';
         case 'Service':

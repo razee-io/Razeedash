@@ -70,7 +70,7 @@ npm install
 
 ### Local development with Minikube
 
-- [local dev with minikube](https://github.com/razee-io/Razeedash/wiki/Local-RazeeDash-development-using-Minikube)
+[local dev with minikube](https://github.com/razee-io/Razeedash/wiki/Local-RazeeDash-development-using-Minikube)
 
 ### NPM Commands
 

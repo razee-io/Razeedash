@@ -14,8 +14,12 @@
 * limitations under the License.
 */
 
+import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './component.html';
+import _ from 'lodash';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.cluster_metadata.helpers({
     metadata: () => {
@@ -31,5 +35,24 @@ Template.cluster_metadata.helpers({
             }
         }
         return metadata;
+    },
+});
+
+Template.cluster_info.helpers({
+    clusterId(){
+        return FlowRouter.getParam('id');
+    },
+    gitVersion(cluster){
+        return _.get(cluster, 'metadata.kube_version.gitVersion');
+    }
+});
+Template.cluster_info.events({
+    'click #requestClusterResync'(){
+        var clusterId = Template.cluster_info.__helpers.get('clusterId').call(Template.instance());
+        Meteor.call('requestClusterResync', Session.get('currentOrgId'), clusterId, (err)=>{
+            if(err){
+                throw err;
+            }
+        });
     },
 });

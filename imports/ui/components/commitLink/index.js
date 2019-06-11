@@ -20,27 +20,16 @@ import { Blaze } from 'meteor/blaze';
 
 Template.commitLink.helpers({
     gitData() {
-        const resourceData = JSON.parse(this.resource.data);
-        if(resourceData && resourceData.metadata && resourceData.metadata.annotations) {
-            const annotations = resourceData.metadata.annotations;
-            // we need to split on the '/' character in the metadata -> annotations keys 
-            // to see which annotations are for commit-sha and git-repo.
-            // "metadata": {
-            //    "annotations": {
-            //        "deployment.kubernetes.io/revision": "1",
-            //        "razee.io/commit-sha": "64b7bbaaf97fdded24b86b9c1dd1a95cb3aa59f8",
-            //        "razee.io/git-repo": "https://github.com/razee-io/Watch-keeper.git",
-            //    }
-            // }
+        const resourceData = this.resource.searchableData;
+        if(resourceData) {
             let gitRepo;
             let commitSHA;
-            for (const fullKey in annotations) {
-                const key = fullKey.split('/');
-                if(key[1] === 'commit-sha') {
-                    commitSHA = annotations[fullKey];
+            for (const key in resourceData) {
+                if(key === 'annotations_razee_io_commit_sha') {
+                    commitSHA = resourceData[key];
                 }
-                if(key[1] === 'git-repo') {
-                    gitRepo = annotations[fullKey];
+                if(key === 'annotations_razee_io_git_repo') {
+                    gitRepo = resourceData[key];
                 }
             }
             if(gitRepo && commitSHA) {
@@ -48,11 +37,7 @@ Template.commitLink.helpers({
                     'link': gitRepo.split('.git')[0] + '/commit/' + commitSHA,
                     'text': Blaze._globalHelpers.trimCommit(commitSHA)
                 };
-            } else {
-                return null;
-            }
-        } else {
-            return null;
+            } 
         } 
     }, 
 });

@@ -71,4 +71,18 @@ Meteor.methods({
         });
         return out;
     },
+    requestClusterResync(orgId, clusterId){
+        check( orgId, String );
+        check( clusterId, String );
+        requireOrgAccess(orgId);
+
+        var search = {
+            org_id: orgId,
+            cluster_id: clusterId,
+        };
+        var sets = {
+            dirty: true,
+        };
+        Clusters.update(search, { $set: sets });
+    }
 });

@@ -39,23 +39,31 @@
                     <li class="list-group-item pr-0">
                         <div class="row">
                                 <div class="col-md">
-                                    <a class="org-link {{#unless orgExists org.name}}grayscale{{/unless}}" href="{{githubUrl}}{{org.name}}" target="_blank"> 
-                                        <img class="img-thumbnail org-image my-1 {{#unless orgExists org.name}}grayscale{{/unless}}" src="{{org.avatarUrl}}">
-                                        {{org.name}}
-                                    </a>
+                                    {{#if orgExists org.name}}
+                                        <a class="org-link" href="{{pathFor 'welcome' baseOrgName=org.name}}"> 
+                                            <img class="img-thumbnail org-image my-1"  src="{{org.avatarUrl}}">
+                                            {{org.name}}
+                                        </a>
+                                    {{else}}
+                                        <span class="org-link"> 
+                                            <img class="img-thumbnail org-image my-1 grayscale" src="{{org.avatarUrl}}">
+                                            <span class="text-muted">{{org.name}}</span> 
+                                        </span>
+                                    {{/if}}
                                 </div>
                                 
                                 <div class="col-md my-auto">
                                     <div class="float-md-right">
                                     {{#if orgExists org.name}}
                                         {{> SelectOrg_deregister org=org}}
-                                        <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0">Manage</a>
-                                        <a href="{{pathFor 'welcome' baseOrgName=org.name}}" class="ml-2 btn btn-success btn-sm rounded-0">Launch</a>
+                                        <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0 action-button">Manage</a>
+                                        {{> SelectOrg_git org=org}}
                                     {{else}}
                                         {{#if isAdminOfOrg org.name}}
                                             {{> SelectOrg_register org=org}}
+                                            {{> SelectOrg_git org=org}}
                                         {{else}}
-                                            <i>You must be a GitHub "{{org.name}}" org admin to register it in RazeeDash.</i>
+                                            <i>You must be a GitHub <a href="{{githubUrl}}{{org.name}}">{{org.name}}</a> org admin to register it in RazeeDash.</i>
                                         {{/if}}
                                     {{/if}}
                                     </div>
@@ -73,7 +81,7 @@
             {{/each}}
 
             <div class="m-3">
-                <a href="{{authMoreOrgsLink}}" target="_blank" class="">Authorize more of your github orgs.</a>
+                <a href="{{authMoreOrgsLink}}" target="_blank">Authorize more of your github orgs.</a>
                 <span class="text-muted">Click Grant next to each org you'd like to authorize.</span>
             </div>
         {{else}}
@@ -83,7 +91,7 @@
 </template>
 
 <template name="SelectOrg_register">
-    <button class="btn btn-primary btn-sm registerOrgBtn rounded-0" {{outputDisabled isRegistering}}>
+    <button class="btn btn-primary btn-sm registerOrgBtn rounded-0 action-button" {{outputDisabled isRegistering}} alt="Register this org in RazeeDash">
         Register
         {{#if isRegistering}}
             <i class="fa fa-spinner fa-spin"></i>
@@ -93,10 +101,15 @@
 
 
 <template name="SelectOrg_deregister">
-    <button class="btn btn-warning btn-sm deRegisterOrgBtn rounded-0" {{outputDisabled isRegistering}}>
+    <button class="btn btn-warning btn-sm deRegisterOrgBtn rounded-0 action-button" {{outputDisabled isRegistering}} alt="Un-register this org from RazeeDash">
         Remove
         {{#if isDeRegistering}}
             <i class="fa fa-spinner fa-spin"></i>
         {{/if}}
     </button>
+</template>
+
+
+<template name="SelectOrg_git">
+    <a href="{{githubUrl}}{{org.name}}" class="ml-2 btn btn-sm btn-light fa fa-github rounded-0 git-img action-button" alt="{{org.name}} github link"></a>
 </template>

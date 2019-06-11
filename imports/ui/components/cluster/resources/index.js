@@ -16,6 +16,7 @@
 
 import '../../historyDropdown';
 import '../../kindIcon';
+import '../../commitLink';
 import './component.scss';
 import './component.html';
 import { Resources } from '/imports/api/resource/resources.js';

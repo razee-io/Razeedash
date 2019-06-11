@@ -67,6 +67,7 @@
                             Cluster {{#if sortedBy "cluster_name" }}
                             <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
                         </th>
+                        <th nowrap>Version</th>
                         <th nowrap class="sortable-header" data-column="namespace">
                             Namespace {{#if sortedBy "namespace" }}
                             <i class="fa {{sortDirFAClassName}} text-muted" aria-hidden="true"></i>{{/if}}
@@ -119,6 +120,7 @@
         <td>
             <a href="{{pathFor 'cluster.tab' id=resource.cluster_id tabId='resources'}}">{{{boldifySearchMatches searchStr (getClusterNameById resource.cluster_id) }}}</a>
         </td>
+        <td>{{ > commitLink }}</td>
         <td>
             {{{boldifySearchMatches searchStr resource.searchableData.namespace}}}
         </td>

@@ -19,6 +19,7 @@
 import './page.html';
 import './page.scss';
 import '../../components/kindIcon';
+import '../../components/commitLink';
 import '/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
 import ResourcesSingle from './resourcesSingle';
 

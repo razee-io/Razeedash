@@ -3,7 +3,7 @@
 1. clone and run [razeedash](https://github.com/razee-io/Razeedash.git)
 
 ```bash
-    git clone razeedash
+    git clone https://github.com/razee-io/Razeedash.git
     cd razeedash
     meteor npm install
     meteor
@@ -12,7 +12,7 @@
 1. clone and run [razeedash-api](https://github.com/razee-io/Razeedash-api.git)
 
 ```bash
-    git clone razeedash-api
+    git clone https://github.com/razee-io/Razeedash-api.git
     cd razeedash-api
     npm install
     npm start

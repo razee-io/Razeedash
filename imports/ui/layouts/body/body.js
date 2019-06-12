@@ -113,6 +113,7 @@ Template.nav.onCreated(function() {
         }
         if(Session.get('currentOrgId')) {
             this.subscribe('resourceStats', Session.get('currentOrgId'));
+            Meteor.call('updateResourceStats', Session.get('currentOrgId'));
         }
         this.subscribe('userData');
     });

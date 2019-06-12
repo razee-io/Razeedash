@@ -28,6 +28,7 @@ import '../../api/org/server/publications.js';
 import '../../api/org/methods.js';
 
 import '../../api/stat/server/publications.js';
+import '../../api/stat/methods.js';
 
 import '../../api/user/server/publications.js';
 import '../../api/user/methods.js';

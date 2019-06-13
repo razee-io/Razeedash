@@ -73,10 +73,17 @@ class ResourceKindAttrTable extends React.Component{
             if(_.isDate(val)){
                 val = moment(resource.updated-0).format('lll');
             }
-            var name = attrName.replace(/(^|[^A-Z])([A-Z])/g, '$1 $2');
-            name = name.replace(/(^| )([a-z])/, (z, space, letter)=>{
-                return `${space}${letter.toUpperCase()}`;
-            });
+            let name; 
+            if(attrName === 'annotations_razee_io_commit_sha') {
+                name = 'Annotation: razee.io/commit-sha'
+            } else if(attrName === 'annotations_razee_io_git_repo') {
+                name = 'Annotation: razee.io/git-repo'
+            } else {
+                name = attrName.replace(/(^|[^A-Z])([A-Z])/g, '$1 $2');
+                name = name.replace(/(^| )([a-z])/, (z, space, letter)=>{
+                    return `${space}${letter.toUpperCase()}`;
+                });
+            }
             return {
                 name, val,
             };

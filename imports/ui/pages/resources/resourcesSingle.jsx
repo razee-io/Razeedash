@@ -67,7 +67,10 @@ export class ResourcesSingle_default extends React.Component{
 
 class ResourceKindAttrTable extends React.Component{
     render(){
-        var attrNames = _.keys(this.props.resource.searchableData);
+        var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => { 
+            // the annotations keys won't look good when displayed in the table so we remove them here
+            return item.indexOf('annotations_') !== 0
+        });
         var rows = _.map(attrNames, (attrName)=>{
             var val = this.props.resource.searchableData[attrName];
             if(_.isDate(val)){
@@ -81,7 +84,14 @@ class ResourceKindAttrTable extends React.Component{
                 name, val,
             };
         });
-
+        
+        const resourceData = JSON.parse(this.props.resource.data);
+        if(resourceData.metadata && resourceData.metadata.annotations) {
+            for (let attrKey in resourceData.metadata.annotations) {
+                rows.push({ name: `Annotation: ${attrKey}`, val: resourceData.metadata.annotations[attrKey] })
+            }
+        }
+        
         return (
             <div className="card mb-3">
                 <h4 className="card-header text-muted">Attributes</h4>

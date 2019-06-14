@@ -21,7 +21,7 @@ export class ResourcesSingle extends React.Component {
             <div className="card m-2">
                 <div className="card-header">
                     <h4 className="mb-0 text-muted">
-                        Resource "{resourceName}" on <a href={FlowRouter.path('cluster', { id: this.props.clusterId })}>{this.props.clusterId}</a>
+                        Resource "{resourceName}" on <a href={FlowRouter.path('cluster.tab', { id: this.props.clusterId, tabId: 'resources' })}>{this.props.clusterId}</a>
                     </h4>
                 </div>
                 <div className="card-body">

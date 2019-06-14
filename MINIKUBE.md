@@ -2,33 +2,33 @@
 
 1. clone and run [razeedash](https://github.com/razee-io/Razeedash.git)
 
-```bash
+    ```bash
     git clone https://github.com/razee-io/Razeedash.git
     cd razeedash
     meteor npm install
     meteor
-```
+    ```
 
 1. clone and run [razeedash-api](https://github.com/razee-io/Razeedash-api.git)
 
-```bash
+    ```bash
     git clone https://github.com/razee-io/Razeedash-api.git
     cd razeedash-api
     npm install
     npm start
-```
+    ```
 
 1. edit your hosts file (/etc/hosts on mac and linux) and add:
 
-```bash
+    ```bash
     192.168.99.1 minikube-host
-```
+    ```
 
 1. [Install minikube on your laptop](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 
-For macs:
+    For macs:
 
-```bash
+    ```bash
     brew cask install virtualbox
     brew cask install minikube
     minikube start
@@ -40,15 +40,15 @@ For macs:
     🔄  Relaunching Kubernetes v1.14.2 using kubeadm ...
     ⌛  Verifying: apiserver proxy etcd scheduler controller dns
     🏄  Done! kubectl is now configured to use "minikube"
-```
+    ```
 
 1. Configure minikube
 
-- Make sure your KUBECONFIG is pointing to your minikube cluster
-- `kubectl create namespace razee`
-- kubectl apply this yaml:
+    - Make sure your KUBECONFIG is pointing to your minikube cluster
+    - `kubectl create namespace razee`
+    - kubectl apply this yaml:
 
-```yaml
+    ```yaml
     kind: Service
     apiVersion: v1
     metadata:
@@ -57,7 +57,7 @@ For macs:
     spec:
         type: ExternalName
         externalName: minikube-host
-```
+    ```
 
 1. Access the [welcome screen](http://localhost:3000) of your RazeeDash instance.
 
@@ -117,28 +117,28 @@ For macs:
 
 1. update the watch-keeper-config to point to your local razeedash api (change the value of `RAZEEDASH_URL`):
 
-`kubectl edit -n razee cm/watch-keeper-config`
+    `kubectl edit -n razee cm/watch-keeper-config`
 
-```yaml
-apiVersion: v1
-data:
-  RAZEEDASH_URL: http://minikube-host:3333/api/v2
-  START_DELAY_MAX: "0"
-kind: ConfigMap
-metadata:
-  creationTimestamp: "2019-06-05T15:55:39Z"
-  name: watch-keeper-config
-  namespace: razee
-  resourceVersion: "4564"
-  selfLink: /api/v1/namespaces/razee/configmaps/watch-keeper-config
-  uid: 5d447e9c-87aa-11e9-a98b-6ae9411411a9
-```
+    ```yaml
+    apiVersion: v1
+    data:
+        RAZEEDASH_URL: http://minikube-host:3333/api/v2
+        START_DELAY_MAX: "0"
+    kind: ConfigMap
+    metadata:
+        creationTimestamp: "2019-06-05T15:55:39Z"
+        name: watch-keeper-config
+        namespace: razee
+        resourceVersion: "4564"
+        selfLink: /api/v1/namespaces/razee/configmaps/watch-keeper-config
+        uid: 5d447e9c-87aa-11e9-a98b-6ae9411411a9
+    ```
 
 1. restart watch-keeper so the config-map changes will be put in place
 
-```bash
-kubectl delete pod -n razee $(k get pods -n razee | grep watch-keeper | awk '{ print $1}')
-```
+    ```bash
+    kubectl delete pod -n razee $(k get pods -n razee | grep watch-keeper | awk '{ print $1}')
+    ```
 
 1. From the RazeeDash console click the `RazeeDash` link in the header to open the RazeeDash details page and verify that you can see deployment information for your Watch Keeper pod.
 
@@ -165,6 +165,6 @@ kubectl delete pod -n razee $(k get pods -n razee | grep watch-keeper | awk '{ p
 
 - If you ever find yourself on localhost and are not able to authenticate with github then you may need to delete the document from the `meteor_accounts_loginServiceConfiguration` collection.  Deleting this document will force RazeeDash to show you the `Configure GitHub Login` screen again.  At this point you would need to enter your GitHub OAuth apps `Client ID` and `Client Secret` again.
 
-## removing Razee components from a cluster
+## Removing Razee components from a cluster
 
-1. remove all of the CRDs from the razee namespace
+- remove all of the CRDs from the razee namespace

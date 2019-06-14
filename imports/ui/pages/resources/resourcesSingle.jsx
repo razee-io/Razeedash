@@ -67,28 +67,31 @@ export class ResourcesSingle_default extends React.Component{
 
 class ResourceKindAttrTable extends React.Component{
     render(){
-        var attrNames = _.keys(this.props.resource.searchableData);
+        var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => { 
+            // the annotations keys won't look good when displayed in the table so we remove them here
+            return item.indexOf('annotations_') !== 0
+        });
         var rows = _.map(attrNames, (attrName)=>{
             var val = this.props.resource.searchableData[attrName];
             if(_.isDate(val)){
                 val = moment(resource.updated-0).format('lll');
             }
-            let name; 
-            if(attrName === 'annotations_razee_io_commit_sha') {
-                name = 'Annotation: razee.io/commit-sha'
-            } else if(attrName === 'annotations_razee_io_git_repo') {
-                name = 'Annotation: razee.io/git-repo'
-            } else {
-                name = attrName.replace(/(^|[^A-Z])([A-Z])/g, '$1 $2');
-                name = name.replace(/(^| )([a-z])/, (z, space, letter)=>{
-                    return `${space}${letter.toUpperCase()}`;
-                });
-            }
+            var name = attrName.replace(/(^|[^A-Z])([A-Z])/g, '$1 $2');
+            name = name.replace(/(^| )([a-z])/, (z, space, letter)=>{
+                return `${space}${letter.toUpperCase()}`;
+            });
             return {
                 name, val,
             };
         });
-
+        
+        const resourceData = JSON.parse(this.props.resource.data);
+        if(resourceData.metadata && resourceData.metadata.annotations) {
+            for (let attrKey in resourceData.metadata.annotations) {
+                rows.push({ name: `Annotation: ${attrKey}`, val: resourceData.metadata.annotations[attrKey] })
+            }
+        }
+        
         return (
             <div className="card mb-3">
                 <h4 className="card-header text-muted">Attributes</h4>

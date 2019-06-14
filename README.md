@@ -68,6 +68,10 @@ Requirements:
 npm install
 ```
 
+### Local development with Minikube
+
+[local dev with minikube](https://github.com/razee-io/Razeedash/MINIKUBE.md)
+
 ### NPM Commands
 
 | Name                          | Description |

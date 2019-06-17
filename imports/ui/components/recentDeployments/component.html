@@ -19,7 +19,8 @@
     {{> portletHeader title='Recent deployments' }}
     {{#if Template.subscriptionsReady}}
       {{#if hasRecentDeployments}}
-        <table class="table table-sm table-responsive-sm">
+       <div class="table-responsive-sm">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Cluster</th>
@@ -33,6 +34,7 @@
             {{/each}}
           </tbody>
         </table>
+        </div>
       {{else}}
             <span class="m-3">There are no recent deployments</span>
       {{/if}}

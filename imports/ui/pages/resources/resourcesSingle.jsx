@@ -95,7 +95,7 @@ class ResourceKindAttrTable extends React.Component{
         return (
             <div className="card mb-3">
                 <h4 className="card-header text-muted">Attributes</h4>
-                <div className="card-body p-0">
+                <div className="card-body p-0 table-responsive">
                     <table className="table table-striped mb-0">
                         <tbody>
                         {_.map(rows, (item)=>{

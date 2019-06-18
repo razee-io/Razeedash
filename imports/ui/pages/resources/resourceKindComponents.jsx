@@ -40,7 +40,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
         return (
             <div className="card my-3">
                 <h4 className="card-header text-muted">Containers</h4>
-                <div className="card-body p-0">
+                <div className="card-body p-0 table-responsive">
                     <table className="table table-striped mb-0">
                         <thead>
                             <tr>
@@ -133,7 +133,7 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
                 <h4 className="card-header text-muted">
                     <i className="fa fa-heartbeat" aria-hidden="true"></i> Conditions
                 </h4>
-                <div className="card-body p-0">
+                <div className="card-body p-0 table-responsive">
                     <table className="table table-striped mb-0">
                         <thead>
                         <tr>
@@ -238,7 +238,7 @@ var ResourceKindDeploymentType =  withTracker((props)=>{
                 <ResourceKindDeploymentTypeConditionsCard {...this.props} />
 
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col">
                         <ResourceKindDeploymentTypeReplicasCard {...this.props} />
                     </div>
                 </div>

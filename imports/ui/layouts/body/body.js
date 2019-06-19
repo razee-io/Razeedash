@@ -63,6 +63,20 @@ Template.Base_layout.helpers({
         }
         return Blaze._globalHelpers.orgIdFound();
     },
+    hasInvalidOrgWhenRequired(){
+        var subHasLoaded = Template.Base_layout.__helpers.get('orgIdSubHasLoaded').call(Template.instance());
+        var loadedOrgIdIfRequired = Template.Base_layout.__helpers.get('loadedOrgIdIfRequired').call(Template.instance());
+        if(subHasLoaded && !loadedOrgIdIfRequired){
+            return true;
+        }
+        return false;
+    },
+    orgIdSubHasLoaded(){
+        return Template.instance().subscriptionsReady();
+    },
+    currentOrgName(){
+        return Session.get('currentOrgName');
+    },
 });
 
 Template.nav.helpers({

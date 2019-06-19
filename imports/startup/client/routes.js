@@ -41,7 +41,7 @@ Routes.route('/', {
     name: 'root',
     title: 'Welcome',
     action() {
-        BlazeLayout.render('Base_layout', { main: 'Razee_welcome' });
+        BlazeLayout.render('Base_layout', { main: 'Razee_welcome', doesntRequireOrgIdLoaded: true });
     },
 });
 
@@ -50,7 +50,7 @@ Routes.route('/profile', {
     title: 'Profile',
     parent: 'welcome',
     action() {
-        BlazeLayout.render('Base_layout', { main: 'UserProfile_home', dcId: null });
+        BlazeLayout.render('Base_layout', { main: 'UserProfile_home', doesntRequireOrgIdLoaded: true });
     },
 });
 
@@ -133,6 +133,6 @@ orgedRoutes.route('/resources/:clusterId', {
 
 FlowRouter.notFound = {
     action() {
-        BlazeLayout.render('Base_layout', { main: 'App_notFound' });
+        BlazeLayout.render('Base_layout', { main: 'App_notFound', doesntRequireOrgIdLoaded: true });
     },
 };

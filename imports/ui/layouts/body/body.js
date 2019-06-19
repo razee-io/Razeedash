@@ -30,6 +30,7 @@ import { Stats } from '/imports/api/stat/stats.js';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
 import { hasOrgsDefined } from '../../../startup/client';
+import { Blaze } from "meteor/blaze";
 
 let currentRoute = new ReactiveVar(true);
 
@@ -51,6 +52,17 @@ Template.Base_layout.onRendered(function() {
             hasOrgsDefined.set(result);
         });
     });
+});
+
+Template.Base_layout.helpers({
+    loadedOrgIdIfRequired(){
+        // add `doesntRequireOrgIdLoaded: true` to the route to make it not require loading the org id
+        var doesntRequireOrgIdLoaded = !!((Template.currentData().doesntRequireOrgIdLoaded || (()=>{return false}))());
+        if(doesntRequireOrgIdLoaded){
+            return true;
+        }
+        return Blaze._globalHelpers.orgIdFound();
+    },
 });
 
 Template.nav.helpers({
@@ -90,7 +102,7 @@ Template.nav.helpers({
         }
     },
     clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
-    deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString()
+    deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString(),
 });
 
 Template.nav.events({

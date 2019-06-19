@@ -15,46 +15,44 @@
 -->
 
 <template name="page_welcome">
-  {{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
     {{#if hasOrgAccess}}
-      {{#if orgIdFound }}
         <div class="container-fluid">
-         {{#if hasClusters}}
-            <div class="row pt-3">
-                <div class="col-12 col-md-6 mb-3">
-                    {{> clustersByKubeVersion }}
-                </div>
-                <div class="col-12 col-md-6 mb-3">
-                    {{> activeDeployments }}
-                </div>
-                <div class="col-12 col-md-6 mb-3">
-                    {{> sevenDayDeployments }}
-                </div>
-                <div class="col-12 col-md-6 mb-3">
-                    {{> recentDeployments }}
-                </div>
-                <div class="col-12 col-md-6 mb-3">
-                    {{> inactiveClusters}}
-                </div>
-                <div class="col-12">
-                    {{> updaterMessagesCard }}
-                </div>
-            </div>
-          {{else}}
-            <div class="container row mb-2 mt-4">To view cluster data in RazeeDash you'll first need to run this command in your cluster:</div>
-            <div class="row">
-                <div class="col-sm-10">
-                    <div class="input-group mb-3">
-                        <code class="form-control text-truncate">kubectl create -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
-                        <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
+            {{#if hasClusters}}
+                <div class="row pt-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        {{> clustersByKubeVersion }}
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        {{> activeDeployments }}
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        {{> sevenDayDeployments }}
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        {{> recentDeployments }}
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        {{> inactiveClusters}}
+                    </div>
+                    <div class="col-12">
+                        {{> updaterMessagesCard }}
                     </div>
                 </div>
-            </div>
-          {{/if}}
+            {{else}}
+                <div class="container row mb-2 mt-4">To view cluster data in RazeeDash you'll first need to run this command in your cluster:</div>
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="input-group mb-3">
+                            <code class="form-control text-truncate">kubectl create -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
+                            <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
         </div>
-      {{/if}}
     {{/if}}
-  {{else}}
-    {{> loading}}
-  {{/if}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>

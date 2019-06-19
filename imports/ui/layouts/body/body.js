@@ -30,7 +30,7 @@ import { Stats } from '/imports/api/stat/stats.js';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
 import { hasOrgsDefined } from '../../../startup/client';
-import { Blaze } from "meteor/blaze";
+import { Blaze } from 'meteor/blaze';
 
 let currentRoute = new ReactiveVar(true);
 
@@ -57,7 +57,7 @@ Template.Base_layout.onRendered(function() {
 Template.Base_layout.helpers({
     loadedOrgIdIfRequired(){
         // add `doesntRequireOrgIdLoaded: true` to the route to make it not require loading the org id
-        var doesntRequireOrgIdLoaded = !!((Template.currentData().doesntRequireOrgIdLoaded || (()=>{return false}))());
+        var doesntRequireOrgIdLoaded = !!((Template.currentData().doesntRequireOrgIdLoaded || (()=>{return false;}))());
         if(doesntRequireOrgIdLoaded){
             return true;
         }

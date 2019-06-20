@@ -20,26 +20,28 @@
     {{#if Template.subscriptionsReady}}
     <div>
       {{#if recentDepsPerService}}
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th>Namespace</th>
-            <th>Name</th>
-            <th>Updates</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each item in recentDepsPerService}}
-          <tr>
-            <td>{{item.id.namespace}}</td>
-            <td>
-              <a href="{{pathFor 'resources.search' query=(generateQueryString item.id.name)}}">{{item.id.name}}</a>
-            </td>
-            <td>{{item.deployments}}</td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
+      <div class="table-responsive-sm">
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>Namespace</th>
+                <th>Name</th>
+                <th>Updates</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each item in recentDepsPerService}}
+            <tr>
+                <td>{{item.id.namespace}}</td>
+                <td>
+                <a href="{{pathFor 'resources.search' query=(generateQueryString item.id.name)}}">{{item.id.name}}</a>
+                </td>
+                <td>{{item.deployments}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+      </div>
       {{else}}
         <span>There are no deployments within the last 7 days</span>
       {{/if}}

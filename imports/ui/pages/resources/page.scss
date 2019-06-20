@@ -17,3 +17,12 @@
 .decryptionKey{
     max-width: 500px;
 }
+
+@media only screen and (max-width: 767px) {
+    .stacked td {
+        display: block;
+    }
+    .stacked td.smallHeader {
+        font-weight: bolder;
+    }
+}

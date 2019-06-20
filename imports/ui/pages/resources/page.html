@@ -15,7 +15,6 @@
 -->
 
 <template name="page_resources">
-  {{#if orgIdFound }}
     <div class="card m-2">
         <div class="card-header">
             <div class="row align-items-center justify-content-between">
@@ -106,7 +105,6 @@
             {{/if}}
         </div>
     </div>
-  {{/if}}
 </template>
 
 <template name="page_resources_resource">
@@ -143,9 +141,7 @@
 
 
 <template name="Resources_single">
-    {{#if orgIdFound }}
-        <div>
-            {{> React component=ResourcesSingle}}
-        </div>
-    {{/if}}
+    <div>
+        {{> React component=ResourcesSingle}}
+    </div>
 </template>

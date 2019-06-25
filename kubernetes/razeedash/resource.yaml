@@ -82,3 +82,10 @@ items:
                 port: 3000
               initialDelaySeconds: 3
               periodSeconds: 20
+            resources:
+              requests:
+                cpu: 100m
+                memory: 80Mi
+              limits:
+                cpu: 500m
+                memory: 256Mi

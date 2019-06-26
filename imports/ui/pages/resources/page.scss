@@ -19,10 +19,48 @@
 }
 
 @media only screen and (max-width: 767px) {
-    .stacked td {
+    .stacked > table > tbody > tr > td {
         display: block;
     }
-    .stacked td.smallHeader {
+    .stacked > table > tbody > tr > td.smallHeader {
         font-weight: bolder;
+    }
+}
+
+
+table.tableCollapse{
+    .colName{
+        display:none;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    table.tableCollapse {
+        display:block;
+
+        > thead{
+            display:none;
+        }
+        > tbody {
+            display:block;
+
+            > tr {
+                display: grid;
+                grid-template-columns: 90px auto;
+                max-width: 100%;
+
+                > td {
+                    padding-left: 6px;
+                    padding-right: 2px;
+                    overflow:scroll;
+
+                    &.colName {
+                        overflow: hidden;
+                        font-weight: bold;
+                        display:block;
+                    }
+                }
+            }
+        }
     }
 }

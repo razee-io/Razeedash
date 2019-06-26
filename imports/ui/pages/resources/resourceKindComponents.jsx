@@ -41,7 +41,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
             <div className="card my-3">
                 <h4 className="card-header text-muted">Containers</h4>
                 <div className="card-body p-0 table-responsive">
-                    <table className="table table-striped mb-0">
+                    <table className="table table-striped mb-0 tableCollapse">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -55,14 +55,18 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                             {_.map(containers, (container, idx)=>{
                                 return (
                                     <tr key={idx}>
+                                        <td class="colName">Name</td>
                                         <td>{container.name}</td>
+                                        <td className="colName">Image</td>
                                         <td>{container.image}</td>
+                                        <td className="colName">Ports</td>
                                         <td>
                                             {_.map(container.ports, 'containerPort').join(', ')}
                                             {_.get(container, 'ports', []).length == 0 &&
                                                 <span>None</span>
                                             }
                                         </td>
+                                        <td className="colName">Volumes</td>
                                         <td>
                                             {_.map(_.get(container, 'volumeMounts', []), (volumeMount, idx)=>{
                                                 return (
@@ -72,9 +76,10 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                                 );
                                             })}
                                             {_.get(container, 'volumeMounts', []).length == 0 &&
-                                            <span>None</span>
+                                                <span>None</span>
                                             }
                                         </td>
+                                        <td className="colName">Envs</td>
                                         <td className={container.env.length > 0 ? 'p-0' : ''}>
                                             {container.env.length > 0 &&
                                             <table className="table table-striped mb-0">
@@ -134,7 +139,7 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
                     <i className="fa fa-heartbeat" aria-hidden="true"></i> Conditions
                 </h4>
                 <div className="card-body p-0 table-responsive">
-                    <table className="table table-striped mb-0">
+                    <table className="table table-striped mb-0 tableCollapse">
                         <thead>
                         <tr>
                             <th>Type</th>
@@ -148,12 +153,17 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
                             {_.map(conditions, (condition, idx)=>{
                                 return (
                                     <tr key={idx}>
+                                        <td class="colName">Type</td>
                                         <td>{condition.type}</td>
+                                        <td className="colName">Status</td>
                                         <td>{condition.status}</td>
+                                        <td className="colName">Last Update</td>
                                         <td>
                                             <Moment datetime={condition.lastUpdateTime}/>
                                         </td>
+                                        <td className="colName">Message</td>
                                         <td>{condition.message}</td>
+                                        <td className="colName">Reason</td>
                                         <td>{condition.reason}</td>
                                     </tr>
                                 );

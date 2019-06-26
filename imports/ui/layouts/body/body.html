@@ -16,17 +16,36 @@
 
 <template name="Base_layout">
     {{#if Template.subscriptionsReady}}
-      {{#unless loggingIn}}
-        {{#if currentUser}}
-            {{> nav}}
-                <div class="container-fluid px-0">
-                    {{> breadcrumbs }}
-                    {{> Template.dynamic template=main}}
-                </div>
-            {{> footer}} 
-        {{else}}
-            {{> Login }}
-        {{/if}}
-      {{/unless}}
+        {{#unless loggingIn}}
+            {{#if loadedOrgIdIfRequired}}
+                {{#if currentUser}}
+                    {{> nav}}
+                        <div class="container-fluid px-0">
+                            {{> breadcrumbs }}
+                            {{> Template.dynamic template=main}}
+                        </div>
+                    {{> footer}}
+                {{else}}
+                    {{> Login }}
+                {{/if}}
+            {{else if hasInvalidOrgWhenRequired}}
+                {{#if currentUser}}
+                    {{> nav}}
+                    <div class="container-fluid px-0">
+                        {{> breadcrumbs }}
+                        <div class="m-2">
+                            <div class="alert alert-danger" role="alert">
+                                Org "{{currentOrgName}}" not found
+                            </div>
+                        </div>
+                    </div>
+                    {{> footer}}
+                {{else}}
+                    {{> Login }}
+                {{/if}}
+            {{else}}
+                {{> loading text="Loading Org Data..."}}
+            {{/if}}
+        {{/unless}}
     {{/if}}
 </template>

@@ -7,6 +7,7 @@ metadata:
     version: "{{TRAVIS_COMMIT}}"
     razee.io/git-repo: "{{{GIT_REMOTE}}}"
     razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
+type: array
 items:
   - apiVersion: extensions/v1beta1
     kind: Deployment
@@ -81,3 +82,10 @@ items:
                 port: 3000
               initialDelaySeconds: 3
               periodSeconds: 20
+            resources:
+              requests:
+                cpu: 100m
+                memory: 80Mi
+              limits:
+                cpu: 500m
+                memory: 256Mi

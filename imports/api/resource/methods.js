@@ -76,7 +76,7 @@ Meteor.methods({
         return out;
     },
     pruneClusterResources(orgId, clusterId){
-        check(orgId, String)
+        check(orgId, String);
         check(clusterId, String);
         requireOrgAccess(orgId);
         Resources.remove({ cluster_id: clusterId});

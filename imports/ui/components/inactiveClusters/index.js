@@ -17,7 +17,6 @@
 import './component.html';
 import { Template } from 'meteor/templating';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
-import { Resources } from '/imports/api/resource/resources';
 import '../../components/portlet';
 import moment from 'moment';
 import { Session } from 'meteor/session';
@@ -39,14 +38,14 @@ Template.inactiveClusters.onCreated(function() {
 
 Template.inactiveClusters.events({
     'click .delete'(event){
-        var confirmation = confirm("Are you sure?")
+        var confirmation = confirm('Are you sure?');
         if (confirmation){
-            Meteor.call("pruneCluster", Session.get('currentOrgId'), event.target.attributes['cluster_id'].value, (err) => {
+            Meteor.call('pruneCluster', Session.get('currentOrgId'), event.target.attributes['cluster_id'].value, (err) => {
                 if (err){
                     throw err;
                 }
             });
-            Meteor.call("pruneClusterResources", Session.get('currentOrgId'), event.target.attributes['cluster_id'].value, (err) => {
+            Meteor.call('pruneClusterResources', Session.get('currentOrgId'), event.target.attributes['cluster_id'].value, (err) => {
                 if (err) {
                     throw err;
                 }
@@ -54,4 +53,4 @@ Template.inactiveClusters.events({
         }
     }
         
-})
+});

@@ -29,9 +29,12 @@
                     <form>
                         <div class="form-group">
                             <label for="inputName">Name</label>
-                            <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Enter email" value="{{currentUser.profile.name}}"
-                                readonly>
-                            <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
+                            {{#if localUser}}
+                                <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Email" value="{{localUserName}}" readonly>
+                            {{else}}
+                                <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Email" value="{{currentUser.profile.name}}" readonly>
+                                <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
+                            {{/if}}
                         </div>
 
                         {{#if currentUser.services.github.email}}

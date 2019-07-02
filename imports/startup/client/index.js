@@ -44,6 +44,15 @@ Meteor.setInterval(function() {
 
 export let hasOrgsDefined = new ReactiveVar(true);
 
+Template.registerHelper('localUserName', () => {
+    let loggedInUser = '';
+    let userName= _.get(Meteor.user(), 'emails', []);
+    if(userName[0] && userName[0].address) {
+        loggedInUser = userName[0].address;
+    }
+    return loggedInUser;
+});
+
 Template.registerHelper('localUser', () => {
     return localUser();
 });

@@ -35,6 +35,9 @@ Template.SelectOrg.onCreated(function(){
 });
 
 Template.SelectOrg.helpers({
+    hasOrgs(orgCount) {
+        return (orgCount > 0); 
+    },
     refreshStatus(){
         return refreshStatus.get();
     },
@@ -73,7 +76,7 @@ Template.SelectOrg.events({
     }
 });
 
-Template.LocalOrg.events( {
+Template.AddLocalOrg.events( {
     'submit .js-new-org'(){
         refreshStatus.set('fa-spin');
         const textInput = document.getElementById('new-org');

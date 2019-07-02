@@ -79,7 +79,12 @@
                 </ul>
             {{else}}
                 {{#if localUser}}
-                    {{> LocalOrg}}
+                    <div>
+                        <div class="m-3">
+                            You don't appear to belong to any organizations. You can create a new organization using the form below.<br />
+                        </div>
+                    </div>
+                    {{> AddLocalOrg}}
                 {{else}}
                     <div>
                         <div class="m-3">
@@ -94,16 +99,20 @@
                     </div>
                 {{/if}}
             {{/each}}
+            {{#let orgCount=orgNames.length}}
             {{#if localUser}}
-                {{> LocalOrg}}
+                {{#if hasOrgs orgCount}}
+                    {{> AddLocalOrg}}
+                {{/if}}
             {{/if}}
+            {{/let}}
         {{else}}
             <div>{{>loading}}</div>
         {{/if}}
     </div>
 </template>
 
-<template name="LocalOrg">
+<template name="AddLocalOrg">
     <div class="ml-3">
         <h4 class="text-muted mt-3">Add a new org</h4>
         <form class="js-new-org">

@@ -17,9 +17,11 @@
 import './component.html';
 import { Template } from 'meteor/templating';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
+import { Resources } from '/imports/api/resource/resources';
 import '../../components/portlet';
 import moment from 'moment';
 import { Session } from 'meteor/session';
+import { Meteor } from 'meteor/meteor';
 
 Template.inactiveClusters.helpers({
     zombieClusters: () => Clusters.find({ updated: { $lt: new moment().subtract(1, 'day').toDate() } }, { sort: { updated: -1 } }),
@@ -34,3 +36,22 @@ Template.inactiveClusters.onCreated(function() {
         this.subscribe('clusters.zombie', Session.get('currentOrgId'));
     });
 });
+
+Template.inactiveClusters.events({
+    'click .delete'(event){
+        var confirmation = confirm("Are you sure?")
+        if (confirmation){
+            Meteor.call("pruneCluster", Session.get('currentOrgId'), event.target.attributes['cluster_id'].value, (err) => {
+                if (err){
+                    throw err;
+                }
+            });
+            Meteor.call("pruneClusterResources", Session.get('currentOrgId'), event.target.attributes['cluster_id'].value, (err) => {
+                if (err) {
+                    throw err;
+                }
+            });
+        }
+    }
+        
+})

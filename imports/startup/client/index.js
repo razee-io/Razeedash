@@ -32,6 +32,7 @@ import { Orgs } from '/imports/api/org/orgs';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
+import { localUser } from '/imports/api/lib/login.js';
 
 Accounts.ui.config( { requestPermissions: { github: ['read:user', 'read:org'] } } );
 
@@ -42,6 +43,10 @@ Meteor.setInterval(function() {
 }, 10000);
 
 export let hasOrgsDefined = new ReactiveVar(true);
+
+Template.registerHelper('localUser', () => {
+    return localUser();
+});
 
 Template.registerHelper('clusterYamlUrl', (key) => {
     let url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
@@ -294,7 +299,14 @@ Template.registerHelper('boldifySearchMatches', (searchStr, str) => {
 
 
 Template.registerHelper('iconForOrgName', (orgName) => {
-    var orgs = _.get(Meteor.user(), 'github.orgs', []);
+
+    let orgs;
+    if(localUser()) {
+        orgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch();
+    } else {
+        orgs = _.get(Meteor.user(), 'github.orgs', []);
+    } 
+
     var selectedOrg = _.find(orgs, (org)=>{
         return (_.get(org, 'name') == orgName);
     });

@@ -26,10 +26,14 @@
 
 <template name="SelectOrg">
     <h2 class="text-muted mt-3 pb-2">
-        <i class="fa fa-github" aria-hidden="true"></i> Select an org
-        <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh GitHub Orgs">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
-        </span>
+        {{#if localUser}}
+            <span>Select an org</span>
+        {{else}}
+            <i class="fa fa-github" aria-hidden="true"></i> Select an org
+            <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh GitHub Orgs">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </span>
+        {{/if}}
     </h2>
 
     <div class="container-fluid m-0 my-1 p-0">
@@ -57,7 +61,9 @@
                                     {{#if orgExists org.name}}
                                         {{> SelectOrg_deregister org=org}}
                                         <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0 action-button">Manage</a>
-                                        {{> SelectOrg_git org=org}}
+                                        {{#unless localUser}}
+                                            {{> SelectOrg_git org=org}}
+                                        {{/unless}}
                                     {{else}}
                                         {{#if isAdminOfOrg org.name}}
                                             {{> SelectOrg_register org=org}}
@@ -72,21 +78,47 @@
                     </li>
                 </ul>
             {{else}}
-                <div>
-                    <div class="m-3">
-                        You don't appear to belong to any organizations. Try refreshing.<br />
-                        You can also <a href="https://github.com/organizations/new" target="_blank">create a new github organization</a>.
+                {{#if localUser}}
+                    {{> LocalOrg}}
+                {{else}}
+                    <div>
+                        <div class="m-3">
+                            You don't appear to belong to any organizations. Try refreshing.<br />
+                            You can also <a href="https://github.com/organizations/new" target="_blank">create a new github organization</a>.
+                        </div>
                     </div>
-                </div>
-            {{/each}}
 
-            <div class="m-3">
-                <a href="{{authMoreOrgsLink}}" target="_blank">Authorize more of your github orgs.</a>
-                <span class="text-muted">Click Grant next to each org you'd like to authorize.</span>
-            </div>
+                    <div class="m-3">
+                        <a href="{{authMoreOrgsLink}}" target="_blank">Authorize more of your github orgs.</a>
+                        <span class="text-muted">Click Grant next to each org you'd like to authorize.</span>
+                    </div>
+                {{/if}}
+            {{/each}}
+            {{#if localUser}}
+                {{> LocalOrg}}
+            {{/if}}
         {{else}}
             <div>{{>loading}}</div>
         {{/if}}
+    </div>
+</template>
+
+<template name="LocalOrg">
+    <div class="ml-3">
+        <h4 class="text-muted mt-3">Add a new org</h4>
+        <form class="js-new-org">
+                <div class="form-group row">
+                    <label for="new-org" class="col-sm-1">Name</label>
+                    <div class="col-sm-11">
+                        <div class="input-group mb-3">
+                            <input class="form-control text-truncate" id="new-org" type="text"/>
+                            <div class="input-group-append">
+                                <input type="submit" class="btn btn-primary" value="Add"/>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+        </form>
     </div>
 </template>
 

@@ -16,12 +16,21 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Orgs } from './orgs.js';
+import { localUser } from '/imports/api/lib/login.js';
 import _ from 'lodash';
 
 export const requireOrgAccess = (orgId)=>{
-    var accessibleOrgs = _.get(Meteor.user(), 'github.orgs', []);
-    var accessibleOrgNames = _.map(accessibleOrgs, 'name');
-    var org = Orgs.findOne({_id: orgId});
+    let accessibleOrgs;
+    let accessibleOrgNames;
+    if(localUser()) {
+        accessibleOrgNames = _.map(Orgs.find({ type: 'local' }, { name: 1 }).fetch(), 'name');
+        
+    } else {
+        accessibleOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        accessibleOrgNames = _.map(accessibleOrgs, 'name');
+    }
+
+    let org = Orgs.findOne({_id: orgId});
     if(org && _.includes(accessibleOrgNames, org.name)){
         return true;
     }

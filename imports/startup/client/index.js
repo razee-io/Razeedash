@@ -46,7 +46,11 @@ export let hasOrgsDefined = new ReactiveVar(true);
 Template.registerHelper('clusterYamlUrl', (key) => {
     let url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
     if(Meteor.settings.public.RAZEEDASH_API_URL){
-        url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/cluster?orgKey=${key}`;
+        let apiUrl = Meteor.settings.public.RAZEEDASH_API_URL;
+        if(apiUrl.substr(-1) !== '/') {
+            apiUrl += '/';
+        }
+        url = `${apiUrl}api/install/cluster?orgKey=${key}`;
     }
     return url;
 });

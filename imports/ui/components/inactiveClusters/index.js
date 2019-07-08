@@ -50,6 +50,7 @@ Template.inactiveClusters.events({
                     throw err;
                 }
             });
+            Meteor.call('updateResourceStats', Session.get('currentOrgId'));
         }
     }
         

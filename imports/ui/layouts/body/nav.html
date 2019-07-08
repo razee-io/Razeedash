@@ -58,7 +58,11 @@
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{currentUser.profile.name}}
+            {{#if localUser}}
+                {{localUserName}}
+            {{else}}
+                {{currentUser.profile.name}}
+            {{/if}}
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
             {{#if hasOrgsDefined }}
@@ -67,7 +71,7 @@
             {{/if}}
             <a class="dropdown-item" target="_blank" href="{{meteorSetting 'RAZEE_GITHUB_URL'}}">
               <i class="text-muted fa fa-github" aria-hidden="true"></i> Razee on GitHub</a>
-            <a class="dropdown-item razee-login" href="#">
+            <a class="dropdown-item razee-logout" href="#">
               <i class="text-muted fa fa-sign-out" aria-hidden="true"></i> Logout</a>
           </div>
         </li>

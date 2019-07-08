@@ -25,6 +25,7 @@
             <tr>
               <th>Cluster</th>
               <th>Last active</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -32,6 +33,7 @@
             <tr>
               <td><a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">{{getClusterName cluster}}</a></td>
               <td>{{moment cluster.updated}}</td>
+              <td><button class="btn btn-primary delete" cluster_id="{{cluster.cluster_id}}">Remove</button></td>
             </tr>
             {{/each}}
           </tbody>

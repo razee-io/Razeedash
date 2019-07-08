@@ -74,5 +74,11 @@ Meteor.methods({
             return item;
         });
         return out;
+    },
+    pruneClusterResources(orgId, clusterId){
+        check(orgId, String);
+        check(clusterId, String);
+        requireOrgAccess(orgId);
+        Resources.remove({ cluster_id: clusterId});
     }
 });

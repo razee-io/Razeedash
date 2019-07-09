@@ -84,5 +84,12 @@ Meteor.methods({
             dirty: true,
         };
         Clusters.update(search, { $set: sets });
+    },
+    pruneCluster(orgId, clusterId){
+        check(orgId, String);
+        check(clusterId, String);
+        requireOrgAccess(orgId);
+
+        Clusters.remove({ cluster_id: clusterId });
     }
 });

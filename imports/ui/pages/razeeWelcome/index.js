@@ -20,6 +20,7 @@ import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import { Orgs } from '/imports/api/org/orgs';
+import { localUser } from '/imports/api/lib/login.js';
 import _ from 'lodash';
 
 var refreshStatus = new ReactiveVar('');
@@ -34,11 +35,19 @@ Template.SelectOrg.onCreated(function(){
 });
 
 Template.SelectOrg.helpers({
+    hasOrgs(orgCount) {
+        return (orgCount > 0); 
+    },
     refreshStatus(){
         return refreshStatus.get();
     },
     orgNames(){
-        return _.get(Meteor.user(), 'github.orgs', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
+        if(localUser()) {
+            const localOrgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch().sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
+            return localOrgs;
+        } else {
+            return _.get(Meteor.user(), 'github.orgs', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
+        }
     },
     orgExists(name){
         return !!Orgs.findOne({ name });
@@ -64,7 +73,19 @@ Template.SelectOrg.events({
         Meteor.call('reloadUserOrgList', ()=>{
             refreshStatus.set('');
         });
-    },
+    }
+});
+
+Template.AddLocalOrg.events( {
+    'submit .js-new-org'(){
+        refreshStatus.set('fa-spin');
+        const textInput = document.getElementById('new-org');
+        Meteor.call('registerLocalOrg', textInput.value, () => {
+            textInput.value = '';
+            refreshStatus.set('');
+        });
+        return false;
+    }
 });
 
 Template.SelectOrg_register.onCreated(function(){

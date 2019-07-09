@@ -55,7 +55,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                             {_.map(containers, (container, idx)=>{
                                 return (
                                     <tr key={idx}>
-                                        <td class="colName">Name</td>
+                                        <td className="colName">Name</td>
                                         <td>{container.name}</td>
                                         <td className="colName">Image</td>
                                         <td>{container.image}</td>
@@ -153,7 +153,7 @@ class ResourceKindDeploymentTypeConditionsCard extends React.Component {
                             {_.map(conditions, (condition, idx)=>{
                                 return (
                                     <tr key={idx}>
-                                        <td class="colName">Type</td>
+                                        <td className="colName">Type</td>
                                         <td>{condition.type}</td>
                                         <td className="colName">Status</td>
                                         <td>{condition.status}</td>

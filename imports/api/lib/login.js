@@ -14,14 +14,17 @@
 * limitations under the License.
 */
 
-import './page.scss';
-import './page.html';
-
 import { Meteor } from 'meteor/meteor';
-import { Template } from 'meteor/templating';
+import _ from 'lodash';
 
-Template.Login.helpers({
-    showPasswordLogin() {
-        return Meteor.settings.public.ALLOW_PASSWORD_LOGIN;
-    },
-});
+// A user can logon with their github id or they can create a local id/password stored in mongo
+// `localUser` is used throughout our code so that we can skip calls to the github api for local users
+function localUser() {
+    if( _.has(Meteor.user(), 'github.orgs') ) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+export { localUser };

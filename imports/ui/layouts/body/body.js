@@ -120,8 +120,10 @@ Template.nav.helpers({
 });
 
 Template.nav.events({
-    'click .razee-login' () {
-        Meteor.logout();
+    'click .razee-logout' () {
+        Meteor.logout( () => {
+            FlowRouter.go('/');
+        });
     },
     'click a' () {
         $('.navbar-collapse').collapse('hide');

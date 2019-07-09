@@ -24,7 +24,11 @@
       <div class="card border-0 mx-auto login-card">
           <p class="heading text-center">Welcome to RazeeDash</p>
           <p class="details text-center">To get started, you'll first need to sign in.</p>
-          <p class="text-center">{{> loginButtons}}</p>
+          {{#if showPasswordLogin}}
+              <p class="text-center">{{> loginButtons}}</p>
+          {{else}}
+              <p class="text-center hide-login-form">{{> loginButtons}}</p>
+          {{/if}}
       </div>
   </div>
 

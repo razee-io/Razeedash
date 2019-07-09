@@ -32,6 +32,7 @@ import { Orgs } from '/imports/api/org/orgs';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
+import { localUser } from '/imports/api/lib/login.js';
 
 Accounts.ui.config( { requestPermissions: { github: ['read:user', 'read:org'] } } );
 
@@ -43,10 +44,27 @@ Meteor.setInterval(function() {
 
 export let hasOrgsDefined = new ReactiveVar(true);
 
+Template.registerHelper('localUserName', () => {
+    let loggedInUser = '';
+    let userName= _.get(Meteor.user(), 'emails', []);
+    if(userName[0] && userName[0].address) {
+        loggedInUser = userName[0].address;
+    }
+    return loggedInUser;
+});
+
+Template.registerHelper('localUser', () => {
+    return localUser();
+});
+
 Template.registerHelper('clusterYamlUrl', (key) => {
     let url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
     if(Meteor.settings.public.RAZEEDASH_API_URL){
-        url = `${Meteor.settings.public.RAZEEDASH_API_URL}api/install/cluster?orgKey=${key}`;
+        let apiUrl = Meteor.settings.public.RAZEEDASH_API_URL;
+        if(apiUrl.substr(-1) !== '/') {
+            apiUrl += '/';
+        }
+        url = `${apiUrl}api/install/cluster?orgKey=${key}`;
     }
     return url;
 });
@@ -294,7 +312,14 @@ Template.registerHelper('boldifySearchMatches', (searchStr, str) => {
 
 
 Template.registerHelper('iconForOrgName', (orgName) => {
-    var orgs = _.get(Meteor.user(), 'github.orgs', []);
+
+    let orgs;
+    if(localUser()) {
+        orgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch();
+    } else {
+        orgs = _.get(Meteor.user(), 'github.orgs', []);
+    } 
+
     var selectedOrg = _.find(orgs, (org)=>{
         return (_.get(org, 'name') == orgName);
     });

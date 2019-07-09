@@ -29,12 +29,14 @@ Meteor.publish('orgs', function(names){
 });
 
 Meteor.publish('orgsForUser', function(){
-    // prevent server errors when the user clicks Logout
-    if(!Meteor.user() || !Meteor.user().github){
-        return;
+    var orgNames = [];
+    if(Meteor.user() && Meteor.user().github) {
+        orgNames = _.map(Meteor.user().github.orgs || [], 'name');
+        return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs: 1 });
+    } else {
+        // local users should be able to see see all orgs with type local
+        return Orgs.find({ type: 'local' }, { name: 1, customSearchableAttrs: 1 });
     }
-    var orgNames = _.map(Meteor.user().github.orgs || [], 'name');
-    return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs:1 });
 });
 
 Meteor.publish('gheOrg', (orgName)=>{

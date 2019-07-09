@@ -35,6 +35,7 @@ var hasOrgAccess = new ReactiveVar(false);
 import { Session } from 'meteor/session';
 import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
 import { Orgs } from '/imports/api/org/orgs.js';
+import { localUser } from '/imports/api/lib/login.js';
 
 Template.page_welcome.onCreated(function() {
     this.autorun(()=>{
@@ -46,6 +47,10 @@ Template.page_welcome.onCreated(function() {
         var orgName = Session.get('currentOrgName');
         var userOrgs = _.get(Meteor.user(), 'github.orgs', []);
         var userOrgNames = _.map(userOrgs, 'name');
+        
+        if(localUser()) {
+            userOrgNames = _.map(Orgs.find({ type: 'local' }, { name: 1 }).fetch(), 'name');
+        } 
         hasOrgAccess.set(_.includes(userOrgNames, orgName));
     });
 

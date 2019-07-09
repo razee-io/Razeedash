@@ -79,6 +79,7 @@ Template.activeDeployments.onRendered(function() {
                         ticks: 'outside',
                         zeroline: false,
                         autorange: true,
+                        tickformat: ',d',
                     },
                     yaxis: {
                         showgrid: true,

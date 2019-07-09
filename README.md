@@ -25,6 +25,7 @@ Razeedash is an app to manage deployments on Kubernetes
 | GITHUB_API       | Optional | <https://api.github.com> | GitHub API URL |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
 | LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
+| ALLOW_PASSWORD_LOGIN  |   Optional    | false | Use `true` to enable local id/password logins instead of GitHub authentication |
 
 ### Register GitHub application
 
@@ -37,6 +38,10 @@ Example registration for running locally.
 | Description | Local development |
 | Homepage URL | <http://localhost:3000> |
 | User authorization callback URL | <http://localhost:3000/_oauth/github> |
+
+### Enable email/password authentication
+
+To use email/password authentication instead of GitHub authentication you need to create an `ALLOW_PASSWORD_LOGIN` environment variable and set it to `true`. If the environment variable is not set then you will only the `Sign in with GitHub` option.
 
 ### Deploy components
 

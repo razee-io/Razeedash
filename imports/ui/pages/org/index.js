@@ -168,9 +168,9 @@ Template.OrgManageSearchableAttrs.events({
         }
         customSearchableAttrsObj.set(obj);
     },
-    'click .saveBtn'(e){
+    'click .saveBtn'(){
         var attrObj = customSearchableAttrsObj.get();
-        Meteor.call('saveCustomSearchableAttrsObj', Session.get('currentOrgId'), attrObj, (err, data)=>{
+        Meteor.call('saveCustomSearchableAttrsObj', Session.get('currentOrgId'), attrObj, ()=>{
         });
     },
 });

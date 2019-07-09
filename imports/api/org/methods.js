@@ -65,7 +65,6 @@ Meteor.methods({
         });
 
         if(org){
-            console.log(`org "${name}" already exists`);
             throw new Meteor.Error(`org "${name}" already exists`);
         }
 
@@ -125,7 +124,6 @@ Meteor.methods({
                     ]
                 });
             } else {
-                console.log(`org "${name}" was not found`);
                 throw new Meteor.Error(`org "${name}" was not found.`);
             }
         } else {

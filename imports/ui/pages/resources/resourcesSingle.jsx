@@ -69,7 +69,7 @@ class ResourceKindAttrTable extends React.Component{
     render(){
         var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => { 
             // the annotations keys won't look good when displayed in the table so we remove them here
-            return item.indexOf('annotations_') !== 0
+            return item.indexOf('annotations[') !== 0
         });
         var rows = _.map(attrNames, (attrName)=>{
             var val = this.props.resource.searchableData[attrName];

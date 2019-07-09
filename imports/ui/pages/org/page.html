@@ -77,5 +77,96 @@
                 </form>
             </div>
         </div>
+
+        {{> OrgManageSearchableAttrs org=org }}
+
     {{/if}}
+</template>
+
+<template name="OrgManageSearchableAttrs">
+    <div class="card m-2">
+        <h4 class="card-header text-muted">Custom Searchable Attributes</h4>
+        <div class="card-body">
+            {{#if loadedKinds}}
+                <div class="mb-3">
+                    Select a kubernetes "kind" to track attribute history for:
+                    <div class="input-group">
+                        <div>
+                            <select class="form-control trackKindDropdown" style="width:200px;">
+                                {{#each kind in availableKinds}}
+                                    {{#if kindIsUsed kind}}
+                                        <option disabled value="{{kind}}">{{kind}} (already tracking)</option>
+                                    {{else}}
+                                        <option value="{{kind}}">{{kind}}</option>
+                                    {{/if}}
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary trackBtn">Track</button>
+                        </div>
+                    </div>
+                </div>
+
+                {{#if hasAnyUsedKinds}}
+                    <div>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary saveBtn" {{saveBtnDisabledAttr}}>Save Changes</button>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-xl-4 mb-2">
+                                <div class="card">
+                                    <h5 class="card-header text-muted">Example attributes</h5>
+                                    <div class="card-body">
+                                        <div class="text-muted mb-3">
+                                            Pass the javascript object path of the resource yaml attributes you want to track:
+                                        </div>
+                                        {{#each attrPath in exampleAttrPaths}}
+                                            <div class="input-group mb-2">
+                                                <input class="form-control" type="text" disabled value="{{attrPath}}"/>
+                                            </div>
+                                        {{/each}}
+                                        <div class="text-muted mt-3">
+                                            Tracks the name, namespace, first container image, and kube revision number (of, for instance, a deployment object).
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{#each kind in usedKinds}}
+                                <div class="col-12 col-md-6 col-xl-4 mb-2">
+                                    <div class="card">
+                                        <h5 class="card-header text-muted">"{{kind}}" attributes</h5>
+                                        <div class="card-body mb-0">
+                                            {{#each attrPath in (attrsUsedForKind kind)}}
+                                                <div class="input-group mb-2 attrPathContainer" kind="{{kind}}" idx="{{@index}}">
+                                                    <input type="text" value="{{attrPath}}" class="form-control attrPathItem"/>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-danger removeAttrPathBtn">X</button>
+                                                    </div>
+                                                </div>
+                                            {{/each}}
+                                            <div class="input-group mb-2 attrPathContainer" kind="{{kind}}" idx="new">
+                                                <input type="text" value="" class="form-control attrPathItem"/>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-danger">X</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary saveBtn" {{saveBtnDisabledAttr}}>Save Changes</button>
+                        </div>
+
+                    </div>
+                {{/if}}
+            {{else}}
+                {{> loading text='Loading resource kind list' }}
+            {{/if}}
+        </div>
+    </div>
 </template>

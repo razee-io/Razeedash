@@ -74,5 +74,12 @@ Meteor.methods({
             return item;
         });
         return out;
-    }
+    },
+    async getResourceKindsForOrg(orgId){
+        requireOrgAccess(orgId);
+        var out = await Resources.rawCollection().distinct('searchableData.kind');
+        out = _.filter(out);
+        out = _.sortBy(out);
+        return out;
+    },
 });

@@ -20,6 +20,7 @@ import { Meteor } from 'meteor/meteor';
 import uuid from 'uuid';
 import { Orgs } from './orgs.js';
 import ghe from '../lib/ghe.js';
+import { requireOrgAccess } from '/imports/api/org/utils.js';
 
 Meteor.methods({
     hasOrgs() {
@@ -83,5 +84,15 @@ Meteor.methods({
         }
         Orgs.remove({ name: name });
         return true;
+    },
+    saveCustomSearchableAttrsObj(orgId, data){
+        requireOrgAccess(orgId);
+        var search = {
+            _id: orgId,
+        };
+        var sets = {
+            'customSearchableAttrs': data,
+        };
+        Orgs.update(search, { $set: sets });
     },
 });

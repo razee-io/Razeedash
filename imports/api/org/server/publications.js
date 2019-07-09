@@ -20,7 +20,7 @@ import { Meteor } from 'meteor/meteor';
 import { Orgs } from '../orgs.js';
 
 Meteor.publish('orgIdByName', function(orgName){
-    return Orgs.find({ name: orgName }, { _id: 1, name: 1});
+    return Orgs.find({ name: orgName }, { _id: 1, name: 1, customSearchableAttrs: 1});
 });
 
 Meteor.publish('orgs', function(names){
@@ -34,7 +34,7 @@ Meteor.publish('orgsForUser', function(){
         return;
     }
     var orgNames = _.map(Meteor.user().github.orgs || [], 'name');
-    return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1 });
+    return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs:1 });
 });
 
 Meteor.publish('gheOrg', (orgName)=>{

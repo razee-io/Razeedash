@@ -16,15 +16,28 @@
 
 import { Meteor } from 'meteor/meteor';
 import _ from 'lodash';
+import { AccountsTemplates } from 'meteor/useraccounts:core';
 
-// A user can logon with their github id or they can create a local id/password stored in mongo
+AccountsTemplates.configure({
+    texts: {
+        socialIcons: {
+            'ghe': 'fa fa-github'
+        }
+    },
+});
+
+// A user can logon via github, github enterprise or they can create a local id/password stored in mongo
 // `localUser` is used throughout our code so that we can skip calls to the github api for local users
 function localUser() {
-    if( _.has(Meteor.user(), 'github.orgs') ) {
+    if( _.has(Meteor.user(), 'services.github') || _.has(Meteor.user(), 'services.ghe') ) {
         return false;
     } else {
         return true;
     }
 }
 
-export { localUser };
+function loginType() {
+    return Meteor.settings.public.LOGIN_TYPE;
+}
+
+export { localUser, loginType };

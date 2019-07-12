@@ -14,6 +14,22 @@
 * limitations under the License.
 */
 
+.accounts-dialog {
+    border-radius: 0;
+}
+#configure-login-service-dialog {
+    input {
+        border-radius: 0;
+    }
+}
+
+// customize the layout of the email/password login form
+.pwd-container {
+    margin:auto;
+    text-align: left;
+    width: 57%;
+}
+
 .razee-logo {
     width: 25px;
     height: 25px;

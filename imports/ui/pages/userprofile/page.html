@@ -37,14 +37,19 @@
                             {{/if}}
                         </div>
 
-                        {{#if currentUser.services.github.email}}
+                        {{#unless localUser}} 
                         <div class="form-group">
                             <label for="inputEmail">Email address</label>
-                            <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="email" value="{{currentUser.services.github.email}}"
-                                readonly>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="inputEmail" 
+                                   aria-describedby="emailHelp" 
+                                   placeholder="email" 
+                                   value="{{or currentUser.services.github.email currentUser.services.ghe.email}}" 
+                                   readonly>
                             <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
                         </div>
-                        {{/if}}
+                        {{/unless}}
 
                         <div class="form-group">
                             <label for="inputUserid">User ID</label>

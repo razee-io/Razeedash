@@ -44,6 +44,11 @@ Meteor.setInterval(function() {
 
 export let hasOrgsDefined = new ReactiveVar(true);
 
+// atForm and atOauth are part of the useraccounts:unstyled package. We override them so 
+// we can customize the UI and better control their logic while still using their helpers
+Template['customAtForm'].replaces('atForm');
+Template['customAtOauth'].replaces('atOauth');
+
 Template.registerHelper('localUserName', () => {
     let loggedInUser = '';
     let userName= _.get(Meteor.user(), 'emails', []);
@@ -55,6 +60,9 @@ Template.registerHelper('localUserName', () => {
 
 Template.registerHelper('localUser', () => {
     return localUser();
+});
+Template.registerHelper('loginType', () => {
+    return Meteor.settings.public.LOGIN_TYPE;
 });
 
 Template.registerHelper('clusterYamlUrl', (key) => {

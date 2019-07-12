@@ -21,11 +21,11 @@ Razeedash is an app to manage deployments on Kubernetes
 | ----             | -------- | -----                    | ----------- |
 | MONGO_URL        | Required | -                        | URL to your mongo instance |
 | OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
-| GITHUB_URL       | Optional | <https://github.com>     | GitHub URL |
-| GITHUB_API       | Optional | <https://api.github.com> | GitHub API URL |
+| GITHUB_URL       | Optional | <https://github.com>     | GitHub URL. Required if `LOGIN_TYPE=ghe` |
+| GITHUB_API       | Optional | <https://api.github.com> | GitHub API URL. Required if `LOGIN_TYPE=ghe` |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
 | LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
-| ALLOW_PASSWORD_LOGIN  |   Optional    | false | Use `true` to enable local id/password logins instead of GitHub authentication |
+| LOGIN_TYPE |   Optional    | github | Use `local` to enable local id/password logins. Use `ghe` for github enterprise instead of GitHub authentication |
 
 ### Register GitHub application
 
@@ -39,9 +39,15 @@ Example registration for running locally.
 | Homepage URL | <http://localhost:3000> |
 | User authorization callback URL | <http://localhost:3000/_oauth/github> |
 
+### Using GitHub enterprise for authentication
+- create the `LOGIN_TYPE` environment variable and set it to `ghe`. ex: `LOGIN_TYPE="ghe"`
+- create the `GITHUB_URL` environment variable and point it to your enterprise github url. `ex: GITHUB_URL="github.your_company.com"`
+- create the `GITHUB_API` environment variable and point it to your enterprise github url. `ex: GITHUB_API="github.your_company.com/api/v3"`
+
+
 ### Enable email/password authentication
 
-To use email/password authentication instead of GitHub authentication you need to create an `ALLOW_PASSWORD_LOGIN` environment variable and set it to `true`. If the environment variable is not set then you will only the `Sign in with GitHub` option.
+To use email/password authentication instead of GitHub authentication you need to create the `LOGIN_TYPE` environment variable and set it to `local`. If the environment variable is not set then you will only see the `Sign in with GitHub` option.
 
 ### Deploy components
 

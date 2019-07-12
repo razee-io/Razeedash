@@ -40,10 +40,12 @@ Example registration for running locally.
 | User authorization callback URL | <http://localhost:3000/_oauth/github> |
 
 ### Using GitHub enterprise for authentication
-- create the `LOGIN_TYPE` environment variable and set it to `ghe`. ex: `LOGIN_TYPE="ghe"`
-- create the `GITHUB_URL` environment variable and point it to your enterprise github url. `ex: GITHUB_URL="github.your_company.com"`
-- create the `GITHUB_API` environment variable and point it to your enterprise github url. `ex: GITHUB_API="github.your_company.com/api/v3"`
 
+- create the `LOGIN_TYPE` environment variable and set it to `ghe`. ex: `LOGIN_TYPE="ghe"`
+
+- create the `GITHUB_URL` environment variable and point it to your enterprise github url. `ex: GITHUB_URL="github.your_company.com"`
+
+- create the `GITHUB_API` environment variable and point it to your enterprise github url. `ex: GITHUB_API="github.your_company.com/api/v3"`
 
 ### Enable email/password authentication
 

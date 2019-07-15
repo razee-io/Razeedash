@@ -51,6 +51,8 @@ Example registration for running locally.
 
 To use email/password authentication instead of GitHub authentication you need to create the `LOGIN_TYPE` environment variable and set it to `local`. If the environment variable is not set then you will only see the `Sign in with GitHub` option.
 
+For password resets set a `MAIL_URL` variable as described [here](https://docs.meteor.com/api/email.html)
+
 ### Deploy components
 
 Follow [razeedash-api](https://github.com/razee-io/razeedash-api) instructions

@@ -49,3 +49,4 @@ useraccounts:core
 useraccounts:unstyled
 service-configuration
 aldeed:template-extension
+email

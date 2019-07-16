@@ -19,9 +19,40 @@ import './page.html';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
-Template.Login.helpers({
-    showPasswordLogin() {
-        return Meteor.settings.public.ALLOW_PASSWORD_LOGIN;
+// This is used in the customAtForm template to determine whether or not 
+// to show the email/password login formj:w
+Template.atForm.helpers({
+    showPwdForm() {
+        return Meteor.settings.public.LOGIN_TYPE === 'local';
     },
+});
+
+// This is used in the customAtOauth template 
+Template.atOauth.helpers({
+    // only show one login button at a time -- either Github or GitHub enterprise 
+    // depending Meteor.settings.public.LOGIN_TYPE
+    showService(service, authType) {
+        if(service._id === authType) {
+            return service;
+        }
+    },
+});
+
+Template.Login.events({
+    'click #at-ghe'(event) {
+        event.preventDefault();
+        if (!Meteor.user()) {
+            Meteor.loginWithGhe({ requestPermissions: ['read:user', 'read:org'] }, function() {
+                Meteor.call('reloadUserOrgList', ()=> {
+                    FlowRouter.go('welcome');
+                });
+            });
+        } else {
+            Meteor.logout(function() {
+                FlowRouter.go('/login');
+            });
+        }
+    }
 });

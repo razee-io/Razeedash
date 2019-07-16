@@ -56,7 +56,7 @@ Meteor.startup(()=>{
     Meteor.settings.public.GITHUB_API = process.env.GITHUB_API || 'https://api.github.com/';
     Meteor.settings.public.RAZEE_GITHUB_URL = 'https://github.com/razee-io/razeedash';
     Meteor.settings.public.RAZEEDASH_API_URL = process.env.RAZEEDASH_API_URL || null;
-    Meteor.settings.public.ALLOW_PASSWORD_LOGIN = process.env.ALLOW_PASSWORD_LOGIN || null;
+    Meteor.settings.public.LOGIN_TYPE = process.env.LOGIN_TYPE || 'github';  // github, ghe or local
 
     const versionInfo = {
         buildId: process.env.BUILD_ID || '$$BUILD_ID$$',

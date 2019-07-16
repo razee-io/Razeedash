@@ -19,10 +19,13 @@ import { OAuth } from 'meteor/oauth';
 import { HTTP } from 'meteor/http';
 import log from './log.js';
 import _ from 'lodash';
+import { loginType } from './login.js';
 
 function listOrgs(loggedInUserObj){
     const url = `${Meteor.settings.public.GITHUB_API}user/memberships/orgs?state=active`;
-    const token = OAuth.openSecret( loggedInUserObj.services.github.accessToken, loggedInUserObj._id );
+    const serviceName = loginType();
+    const token = OAuth.openSecret( loggedInUserObj.services[serviceName].accessToken, loggedInUserObj._id );
+    
     const options = {
         headers: {
             Authorization: `bearer ${token}`,

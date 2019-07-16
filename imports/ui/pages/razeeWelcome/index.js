@@ -19,8 +19,9 @@ import './page.html';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
+import { Accounts } from 'meteor/accounts-base';
 import { Orgs } from '/imports/api/org/orgs';
-import { localUser } from '/imports/api/lib/login.js';
+import { localUser, loginType } from '/imports/api/lib/login.js';
 import _ from 'lodash';
 
 var refreshStatus = new ReactiveVar('');
@@ -61,9 +62,16 @@ Template.SelectOrg.helpers({
     },
     authMoreOrgsLink(){
         // eslint-disable-next-line no-undef
-        var githubLoginService = Accounts.loginServiceConfiguration.findOne({service:'github'});
+        let gitUrl = 'github.com';
+        let serviceType = loginType();
+        
+        var githubLoginService = Accounts.loginServiceConfiguration.findOne({service: serviceType});
         var clientId = _.get(githubLoginService, 'clientId', '');
-        return `https://github.com/settings/connections/applications/${clientId}`;
+        if(serviceType === 'ghe') {
+            gitUrl = _.get(githubLoginService, 'gheURL', '');
+        }
+
+        return `https://${gitUrl}/settings/connections/applications/${clientId}`;
     },
 });
 

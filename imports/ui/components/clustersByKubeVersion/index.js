@@ -21,7 +21,7 @@ import { Template } from 'meteor/templating';
 import Plotly from 'plotly.js-dist';
 import '../../components/portlet';
 import { Session } from 'meteor/session';
-
+import _ from 'lodash';
 
 let dataIsLoaded = new ReactiveVar(false);
 let noDataFound = new ReactiveVar(false);
@@ -72,8 +72,12 @@ Template.clustersByKubeVersion.onRendered(function() {
             }
             
             data = data.map( d => {
-                if ( d.id.version.gitVersion ) {
-                    const version = d.id.version.gitVersion.split('.');
+                // the 'version' passed to us can be a version string (i.e. 'v1.12.9+IKS') or an obj (i.e. {major, minor, gitVersion: 'v1.12.9+IKS'})
+                // what we want to do is grab either that version string or the gitVersion from the obj
+                var gitVersion = d.id.version;
+                gitVersion = _.get(gitVersion, 'gitVersion', gitVersion);
+                if ( gitVersion ){
+                    const version = gitVersion.split('.');
                     d.major = version[0];
                     d.minor = version[1];
                     d.patch = version[2];

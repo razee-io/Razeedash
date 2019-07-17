@@ -12,17 +12,20 @@ before_install:
 install:
   - meteor npm i
 
+env:
+  - NAMESPACE=razee
+
 script:
  # Audit npm packages. Fail build whan a PR audit fails, otherwise report the vulnerability and proceed.
-  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --low; else npx audit-ci --low || true; fi || travis_terminate 1
-  - npm run lint || travis_terminate 1
-  - npm test || travis_terminate 1
-  - meteor build --directory .build --architecture=os.linux.x86_64 --server-only
-  - export HASH=`git log --pretty=format:'%h' -n 1`
-  - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
-  - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
-  - docker images
-  - export NAMESPACE=razee && ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
+#  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --low; else npx audit-ci --low || true; fi || travis_terminate 1
+#  - npm run lint || travis_terminate 1
+#  - npm test || travis_terminate 1
+#  - meteor build --directory .build --architecture=os.linux.x86_64 --server-only
+#  - export HASH=`git log --pretty=format:'%h' -n 1`
+#  - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
+#  - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
+#  - docker images
+  - ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
   - cat /tmp/resource.yaml
 
 before_deploy:

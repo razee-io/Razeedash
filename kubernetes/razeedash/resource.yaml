@@ -2,7 +2,7 @@ apiVersion: v1
 kind: List
 metadata:
   name: razeedash-deployment
-  namespace: "{{NAMESPACE}}"
+  namespace: {{NAMESPACE}}
   annotations:
     version: "{{TRAVIS_COMMIT}}"
     razee.io/git-repo: "{{{GIT_REMOTE}}}"
@@ -17,7 +17,7 @@ items:
         razee.io/git-repo: "{{{GIT_REMOTE}}}"
         razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
       name: razeedash
-      namespace: "{{NAMESPACE}}"
+      namespace: {{NAMESPACE}}
     spec:
       replicas: 1
       revisionHistoryLimit: 0

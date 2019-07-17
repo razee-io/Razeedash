@@ -22,9 +22,9 @@ TRAVIS_COMMIT="${TRAVIS_COMMIT:=$(git rev-parse HEAD)}"
 export TRAVIS_COMMIT
 GIT_REMOTE="$(git remote get-url origin)"
 export GIT_REMOTE
-NAMESPACE="${NAMESPACE:=razee}"
-export NAMESPACE
-echo $NAMESPACE
+# NAMESPACE="${NAMESPACE:=razee}"
+# export NAMESPACE
+# echo $NAMESPACE
 
 envsubst <"${THIS_DIR}/viewTemplate.json" >/tmp/view.json
 

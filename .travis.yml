@@ -22,9 +22,8 @@ script:
   - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
   - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
   - docker images
-
   - export NAMESPACE=razee && ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
-  - export NAMESPACE=razeeibm && ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
+  - cat /tmp/resource.yaml
 
 before_deploy:
   - docker login -u="${QUAY_ID}" -p="${QUAY_TOKEN}" quay.io

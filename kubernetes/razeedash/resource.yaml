@@ -60,6 +60,12 @@ items:
                   name: razeedash-config
                   key: razeedash_api_url
                   optional: true
+            - name: LOGIN_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: login_type
+                  optional: true
             - name: app_name
               value: Razeedash
             image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"

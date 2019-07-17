@@ -3,10 +3,6 @@ language: generic
 services:
 - docker
 
-env:
-  global:
-    - NAMESPACE=razeeibm
-
 before_install:
   # project unique tools
   - curl https://install.meteor.com | /bin/sh

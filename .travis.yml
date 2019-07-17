@@ -3,6 +3,10 @@ language: generic
 services:
 - docker
 
+env:
+  global:
+    - NAMESPACE=razee
+
 before_install:
   # project unique tools
   - curl https://install.meteor.com | /bin/sh
@@ -11,9 +15,6 @@ before_install:
 
 install:
   - meteor npm i
-
-env:
-  - NAMESPACE=razee
 
 script:
  # Audit npm packages. Fail build whan a PR audit fails, otherwise report the vulnerability and proceed.

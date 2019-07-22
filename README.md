@@ -60,7 +60,7 @@ to setup razeedash-api and MongoDB.
 
 ```bash
 # Get latest release of razeedash and deploy
-kubectl apply -f "https://github.com/razee-io/razeedash/releases/release/download/resource.yaml"
+kubectl apply -f "https://github.com/razee-io/Razeedash/releases/latest/download/resource.yaml"
 ```
 
 Check logs across pods using `kc_logs.sh` script from

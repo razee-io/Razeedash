@@ -134,9 +134,12 @@
                                 </div>
                             </div>
                             {{#each kind in usedKinds}}
-                                <div class="col-12 col-md-6 col-xl-4 mb-2">
+                                <div class="col-12 col-md-6 col-xl-4 mb-2 kindContainer" kind="{{kind}}">
                                     <div class="card">
-                                        <h5 class="card-header text-muted">"{{kind}}" attributes</h5>
+                                        <h5 class="card-header text-muted position-relative">
+                                            <span>"{{kind}}" attributes</span>
+                                            <button class="btn btn-danger position-absolute deleteKindGroupBtn" style="right:10px;top:5px;">X</button>
+                                        </h5>
                                         <div class="card-body mb-0">
                                             {{#each attrPath in (attrsUsedForKind kind)}}
                                                 <div class="input-group mb-2 attrPathContainer" kind="{{kind}}" idx="{{@index}}">
@@ -147,7 +150,7 @@
                                                 </div>
                                             {{/each}}
                                             <div class="input-group mb-2 attrPathContainer" kind="{{kind}}" idx="new">
-                                                <input type="text" value="" class="form-control attrPathItem"/>
+                                                <input type="text" value="" class="form-control attrPathItem newAttrPathItem"/>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-danger">X</button>
                                                 </div>

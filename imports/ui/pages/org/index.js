@@ -168,10 +168,40 @@ Template.OrgManageSearchableAttrs.events({
         }
         customSearchableAttrsObj.set(obj);
     },
+    'keyup .newAttrPathItem'(e){
+        var $el = $(e.currentTarget);
+        var $container = $el.closest('.attrPathContainer');
+        var kind = $container.attr('kind');
+        var val = $el.val();
+
+        if(!val){
+            return;
+        }
+
+        var obj = customSearchableAttrsObj.get();
+        obj[kind].push(val);
+        $el.val('');
+        customSearchableAttrsObj.set(obj);
+
+        _.debounce(()=>{
+            $el.closest('.card-body').find('.attrPathItem:not(.newAttrPathItem)').eq(-1).focus();
+        })();
+    },
     'click .saveBtn'(){
         var attrObj = customSearchableAttrsObj.get();
         Meteor.call('saveCustomSearchableAttrsObj', Session.get('currentOrgId'), attrObj, ()=>{
         });
+    },
+    'click .deleteKindGroupBtn'(e){
+        var $el = $(e.currentTarget);
+        var $container = $el.closest('.kindContainer');
+        var kind = $container.attr('kind');
+
+        var obj = customSearchableAttrsObj.get();
+        delete obj[kind];
+        customSearchableAttrsObj.set(obj);
+
+        return false;
     },
 });
 

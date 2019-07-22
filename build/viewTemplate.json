@@ -1,5 +1,6 @@
 {
   "TRAVIS_COMMIT": "${TRAVIS_COMMIT}",
   "TRAVIS_TAG": "${TRAVIS_TAG}",
-  "GIT_REMOTE": "${GIT_REMOTE}"
+  "GIT_REMOTE": "${GIT_REMOTE}",
+  "NAMESPACE": "razee"
 }

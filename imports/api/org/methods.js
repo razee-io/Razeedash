@@ -49,10 +49,10 @@ Meteor.methods({
     },
     reloadUserOrgList(){
         var userObj = Meteor.users.findOne({ _id: Meteor.userId() });
-        if(userObj && userObj.github) {
+        if(userObj && !localUser()) {
             var orgs = ghe.listOrgs(userObj);
             Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
-        }
+        } 
     },
     registerLocalOrg(name){
         check( name, String );

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: List
 metadata:
   name: razeedash-deployment
-  namespace: razee
+  namespace: {{NAMESPACE}}
   annotations:
     version: "{{TRAVIS_COMMIT}}"
     razee.io/git-repo: "{{{GIT_REMOTE}}}"
@@ -17,7 +17,7 @@ items:
         razee.io/git-repo: "{{{GIT_REMOTE}}}"
         razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
       name: razeedash
-      namespace: razee
+      namespace: {{NAMESPACE}}
     spec:
       replicas: 1
       revisionHistoryLimit: 0
@@ -59,6 +59,12 @@ items:
                 configMapKeyRef:
                   name: razeedash-config
                   key: razeedash_api_url
+                  optional: true
+            - name: LOGIN_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: login_type
                   optional: true
             - name: app_name
               value: Razeedash

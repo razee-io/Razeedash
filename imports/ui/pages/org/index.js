@@ -96,6 +96,15 @@ Template.OrgManageSearchableAttrs.helpers({
     availableKinds(){
         return availableKinds.get();
     },
+    unusedKinds(){
+        var availableKinds = Template.OrgManageSearchableAttrs.__helpers.get('availableKinds').call(Template.instance());
+        var usedKinds = Template.OrgManageSearchableAttrs.__helpers.get('usedKinds').call(Template.instance());
+        return _.without(availableKinds, ...usedKinds);
+    },
+    isTrackBtnDisabled(){
+        var unusedKinds = Template.OrgManageSearchableAttrs.__helpers.get('unusedKinds').call(Template.instance());
+        return (unusedKinds.length < 1 ? 'disabled' : '');
+    },
     usedKinds(){
         return _.keys(customSearchableAttrsObj.get());
     },

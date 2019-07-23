@@ -103,17 +103,17 @@
                             </select>
                         </div>
                         <div class="input-group-append">
-                            <button class="btn btn-primary trackBtn">Track</button>
+                            <button class="btn btn-primary trackBtn" {{isTrackBtnDisabled}}>Track</button>
                         </div>
                     </div>
                 </div>
 
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary saveBtn" {{saveBtnDisabledAttr}}>Save Changes</button>
+                </div>
+
                 {{#if hasAnyUsedKinds}}
                     <div>
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary saveBtn" {{saveBtnDisabledAttr}}>Save Changes</button>
-                        </div>
-
                         <div class="row">
                             <div class="col-12 col-md-6 col-xl-4 mb-2">
                                 <div class="card">

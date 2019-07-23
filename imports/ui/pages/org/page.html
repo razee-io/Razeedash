@@ -89,27 +89,31 @@
         <div class="card-body">
             {{#if loadedKinds}}
                 <div class="mb-3">
-                    Select a kubernetes "kind" to track attribute history for:
-                    <div class="input-group">
+                    <div class="d-flex justify-content-between">
                         <div>
-                            <select class="form-control trackKindDropdown" style="width:200px;">
-                                {{#each kind in availableKinds}}
-                                    {{#if kindIsUsed kind}}
-                                        <option disabled value="{{kind}}">{{kind}} (already tracking)</option>
-                                    {{else}}
-                                        <option value="{{kind}}">{{kind}}</option>
-                                    {{/if}}
-                                {{/each}}
-                            </select>
+                            Select a kubernetes "kind" to track attribute history for:
+                            <div class="input-group">
+                                <div>
+                                    <select class="form-control trackKindDropdown" style="width:200px;">
+                                        {{#each kind in availableKinds}}
+                                            {{#if kindIsUsed kind}}
+                                                <option disabled value="{{kind}}">{{kind}} (already tracking)</option>
+                                            {{else}}
+                                                <option value="{{kind}}">{{kind}}</option>
+                                            {{/if}}
+                                        {{/each}}
+                                    </select>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary trackBtn" {{isTrackBtnDisabled}}>Track</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="input-group-append">
-                            <button class="btn btn-primary trackBtn" {{isTrackBtnDisabled}}>Track</button>
+                        <div>
+                            <br />
+                            <button class="btn btn-primary saveBtn" {{saveBtnDisabledAttr}}>Save Changes</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary saveBtn" {{saveBtnDisabledAttr}}>Save Changes</button>
                 </div>
 
                 {{#if hasAnyUsedKinds}}

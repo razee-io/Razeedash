@@ -46,9 +46,21 @@ items:
                   key: oauth_secret_key
                   optional: true
             - name: GITHUB_URL
-              value: "https://github.com/"
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: github_url
             - name: GITHUB_API
-              value: "https://api.github.com/"
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: github_api
+            - name: MAIL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: mail_url
+                  optional: true
             - name: ROOT_URL
               valueFrom:
                 configMapKeyRef:

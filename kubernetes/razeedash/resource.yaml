@@ -50,11 +50,13 @@ items:
                 configMapKeyRef:
                   name: razeedash-config
                   key: github_url
+                  optional: true
             - name: GITHUB_API
               valueFrom:
                 configMapKeyRef:
                   name: razeedash-config
                   key: github_api
+                  optional: true
             - name: MAIL_URL
               valueFrom:
                 configMapKeyRef:

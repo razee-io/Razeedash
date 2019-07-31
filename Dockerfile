@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:8
+FROM node:8-alpine 
 
 LABEL maintainer="Michael McKay <mckaymic@us.ibm.com>"
 

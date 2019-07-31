@@ -14,6 +14,7 @@ COPY .build/bundle /app
 
 RUN apk update \
 	&& apk add ${BUILD_PACKAGES} \
+	&& apk add --no-cache libc6-compat \
 	&& mkdir -p /root \
 	&& mkdir -p /app \
 	&& npm install -g npm@4 \

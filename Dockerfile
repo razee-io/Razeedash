@@ -1,4 +1,4 @@
-FROM node:8
+FROM mhart/alpine-node:8
 
 LABEL maintainer="Michael McKay <mckaymic@us.ibm.com>"
 
@@ -21,6 +21,7 @@ RUN apk update \
 	&& node-gyp install \
     && $METEORD_DIR/build_app.sh \
     && $METEORD_DIR/rebuild_npm_modules.sh \
+    && npm rebuild bcrypt --build-from-source \
 	&& apk del --purge ${BUILD_PACKAGES} \
     && $METEORD_DIR/clean-final.sh
 

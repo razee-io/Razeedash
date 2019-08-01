@@ -141,7 +141,7 @@ Meteor.methods({
     },
     saveCustomSearchableAttrsObj(orgId, data){
 
-console.log(`todo: remove this`);
+        console.log('todo: remove this');
 
         requireOrgAccess(orgId);
         var search = {

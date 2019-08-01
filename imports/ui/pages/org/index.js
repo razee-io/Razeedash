@@ -84,9 +84,9 @@ Template.OrgManageSearchableAttrs.onCreated(function(){
         Orgs.findOne({ name: orgName, });
         var inst = Template.instance();
         _.defer(()=>{
-            updateChangesTracker(inst)
+            updateChangesTracker(inst);
         });
-    })
+    });
 });
 Template.OrgManageSearchableAttrs.helpers({
     loadedKinds(){
@@ -160,7 +160,7 @@ var updateChangesTracker = (templateInstance)=>{
 };
 
 Template.OrgManageSearchableAttrs.events({
-    'keyup .attrPathItem'(e){
+    'keyup .attrPathItem'(){
         // updates the changesTracker
         updateChangesTracker(Template.instance());
     },
@@ -168,7 +168,7 @@ Template.OrgManageSearchableAttrs.events({
         var $el = $(e.currentTarget);
         var $kind = $el.closest('.input-group').find('.trackKindDropdown');
         var kind = $kind.val();
-        Meteor.call('addCustomSearchableAttrKind', Session.get('currentOrgId'), kind, (err, data)=>{
+        Meteor.call('addCustomSearchableAttrKind', Session.get('currentOrgId'), kind, ()=>{
         });
     },
     'click .removeAttrPathBtn'(e){
@@ -183,7 +183,7 @@ Template.OrgManageSearchableAttrs.events({
         }
 
         $el.prop('disabled', true);
-        Meteor.call('deleteCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, (err, data)=>{
+        Meteor.call('deleteCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, ()=>{
         });
     },
     'click .saveAttrPathBtn'(e){
@@ -198,7 +198,7 @@ Template.OrgManageSearchableAttrs.events({
             return;
         }
 
-        Meteor.call('setCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, val, (err, data)=>{
+        Meteor.call('setCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, val, ()=>{
             if(idx == -1){
                 $container.find('.attrPathItem').val('');
             }
@@ -218,7 +218,7 @@ Template.OrgManageSearchableAttrs.events({
 
         $modal.modal('hide');
 
-        Meteor.call('deleteCustomSearchableAttrKind', Session.get('currentOrgId'), kind, (err, data)=>{
+        Meteor.call('deleteCustomSearchableAttrKind', Session.get('currentOrgId'), kind, ()=>{
         });
 
         return false;

@@ -5,7 +5,7 @@ LABEL maintainer="Michael McKay <mckaymic@us.ibm.com>"
 ARG BUILD_ID
 ARG LAST_COMMIT_ID
 
-ENV METEORD_DIR="/opt/meteord" BUILD_PACKAGES="python make g++"
+ENV METEORD_DIR="/opt/meteord" BUILD_PACKAGES="python make g++ build-base"
 
 WORKDIR /root
 

@@ -57,13 +57,16 @@ Template.OrgSingle.helpers({
     org(){
         return Orgs.findOne({ name: Template.instance().orgName });
     },
+    orgName(){
+        return FlowRouter.getParam('baseOrgName');
+    }
 });
 
 
 var availableKinds = new ReactiveVar([]);
 var loadedKinds = new ReactiveVar(false);
 var customSearchableAttrsObj = new ReactiveVar(null);
-var hasChanges = new ReactiveVar(false);
+var changesTracker = new ReactiveVar();
 
 Template.OrgManageSearchableAttrs.onCreated(function(){
     this.autorun(()=>{
@@ -72,21 +75,21 @@ Template.OrgManageSearchableAttrs.onCreated(function(){
         Meteor.call('getResourceKindsForOrg', Session.get('currentOrgId'), (err, data)=>{
             loadedKinds.set(true);
             availableKinds.set(data);
-            hasChanges.set(false);
             var customSearchableAttrs = _.cloneDeep(_.get(instance, 'data.org.customSearchableAttrs', {}));
             customSearchableAttrsObj.set(customSearchableAttrs);
         });
     });
     this.autorun(()=>{
-        // updates hasChanges
-        var originalCustomSearchableAttrs = Template.currentData().org.customSearchableAttrs;
-        hasChanges.set(!_.isEqual(originalCustomSearchableAttrs, customSearchableAttrsObj.get()));
-    });
+        var orgName = FlowRouter.getParam('baseOrgName');
+        Orgs.findOne({ name: orgName, });
+        var inst = Template.instance();
+        //updateChangesTracker(inst)
+        _.defer(()=>{
+            updateChangesTracker(inst)
+        });
+    })
 });
 Template.OrgManageSearchableAttrs.helpers({
-    hasChanges(){
-        return hasChanges.get();
-    },
     loadedKinds(){
         return loadedKinds.get();
     },
@@ -106,7 +109,7 @@ Template.OrgManageSearchableAttrs.helpers({
         return (unusedKinds.length < 1 ? 'disabled' : '');
     },
     usedKinds(){
-        return _.keys(customSearchableAttrsObj.get());
+        return _.keys(_.get(Template.currentData(), 'org.customSearchableAttrs', {}));
     },
     kindIsUsed(kind){
         var usedKinds = Template.OrgManageSearchableAttrs.__helpers.get('usedKinds').call(Template.instance());
@@ -116,12 +119,11 @@ Template.OrgManageSearchableAttrs.helpers({
         var usedKinds = Template.OrgManageSearchableAttrs.__helpers.get('usedKinds').call(Template.instance());
         return (usedKinds.length > 0);
     },
-    saveBtnDisabledAttr(){
-        var hasChanges = Template.OrgManageSearchableAttrs.__helpers.get('hasChanges').call(Template.instance());
-        return (hasChanges ? '' : 'disabled');
-    },
     attrsUsedForKind(kind){
-        return _.get(customSearchableAttrsObj.get(), `['${kind}']`, []);
+        return _.get(Template.currentData(), `org.customSearchableAttrs["${kind}"]`, []);
+    },
+    attrPathIdxHasChanges(kind, idx){
+        return true;
     },
     exampleAttrPaths(){
         return [
@@ -131,84 +133,149 @@ Template.OrgManageSearchableAttrs.helpers({
             'metadata.annotations["deployment.kubernetes.io/revision"]',
         ];
     },
+    canSaveIdx(kind, idx){
+        if(idx == -1){
+            return true;
+        }
+        var hasChanges = _.get(changesTracker.get(), `${kind}.${idx}`);
+        return hasChanges;
+        var elVal = _.get(changesTracker.get(), '');
+        var attrsUsedForKind = Template.OrgManageSearchableAttrs.__helpers.get('attrsUsedForKind').call(Template.instance(), kind);
+        var originalAttr = attrsUsedForKind[idx];
+        return (originalAttr == elVal || elVal == '');
+    },
+    kindIdxSaveIsDisabled(kind, idx){
+        var canSaveIdx = Template.OrgManageSearchableAttrs.__helpers.get('canSaveIdx').call(Template.instance(), kind, idx);
+        return (canSaveIdx ? '' : 'disabled');
+    }
 });
 
+var updateChangesTracker = (templateInstance)=>{
+    var org = Orgs.findOne({ name: templateInstance.data.orgName, });
+    console.log(3333, org, templateInstance.data)
+    var originalSearchableAttrs = _.get(org, 'customSearchableAttrs', {});
+
+    var obj = {};
+    var formVals = {};
+    $('.kindContainer').each(function(){
+        var kind = $(this).attr('kind');
+        obj[kind] = [];
+        $(this).find('.attrPathContainer').each(function(){
+            var idx = $(this).attr('idx');
+            var val = $(this).find('.attrPathItem').val();
+            var originalVal = _.get(originalSearchableAttrs, `${kind}.${idx}`, null);
+            var hasChanges = (val != originalVal);
+            obj[kind].push(hasChanges);
+            formVals[`${kind}_${idx}`]=val;
+        });
+    });
+    console.log(1111, originalSearchableAttrs, obj, formVals)
+    changesTracker.set(obj);
+};
+
 Template.OrgManageSearchableAttrs.events({
+    'keyup .attrPathItem'(e){
+        // updates the changesTracker
+        updateChangesTracker(Template.instance());
+    },
     'click .trackBtn'(e){
         var $el = $(e.currentTarget);
         var $kind = $el.closest('.input-group').find('.trackKindDropdown');
         var kind = $kind.val();
-        var obj = customSearchableAttrsObj.get();
-        obj[kind] = obj[kind] || [];
-        customSearchableAttrsObj.set(obj);
+        var inst = Template.instance();
+        Meteor.call('addCustomSearchableAttrKind', Session.get('currentOrgId'), kind, (err, data)=>{
+            //updateChangesTracker(inst);
+        });
     },
     'click .removeAttrPathBtn'(e){
         var $el = $(e.currentTarget);
         var $container = $el.closest('.attrPathContainer');
         var kind = $container.attr('kind');
-        var idx = $container.attr('idx');
-        idx = (idx == 'new' ? -1 :  parseInt(idx));
+        var idx = parseInt($container.attr('idx'));
 
         if(idx == -1){
-            $el.val('');
+            $container.find('.attrPathItem').val('');
             return;
         }
 
-        var obj = customSearchableAttrsObj.get();
-        obj[kind].splice(idx, 1);
-        customSearchableAttrsObj.set(obj);
-    },
-    'change .attrPathItem'(e){
-        var $el = $(e.currentTarget);
-        var $container = $el.closest('.attrPathContainer');
-        var val = $el.val();
-        var kind = $container.attr('kind');
-        var idx = $container.attr('idx');
-        idx = (idx == 'new' ? -1 :  parseInt(idx));
-
-        var obj = customSearchableAttrsObj.get();
-
-        if(idx == -1){ //new attr
-            obj[kind].push(val);
-            $el.val('');
-        }
-        else{
-            obj[kind][idx] = val;
-        }
-        customSearchableAttrsObj.set(obj);
-    },
-    'keyup .newAttrPathItem'(e){
-        var $el = $(e.currentTarget);
-        var $container = $el.closest('.attrPathContainer');
-        var kind = $container.attr('kind');
-        var val = $el.val();
-
-        if(!val){
-            return;
-        }
-
-        var obj = customSearchableAttrsObj.get();
-        obj[kind].push(val);
-        $el.val('');
-        customSearchableAttrsObj.set(obj);
-
-        _.debounce(()=>{
-            $el.closest('.card-body').find('.attrPathItem:not(.newAttrPathItem)').eq(-1).focus();
-        })();
-    },
-    'click .saveBtn'(){
-        var attrObj = customSearchableAttrsObj.get();
-        Meteor.call('saveCustomSearchableAttrsObj', Session.get('currentOrgId'), attrObj, ()=>{
+        $el.prop('disabled', true);
+        var inst = Template.instance();
+        Meteor.call('deleteCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, (err, data)=>{
+            //updateChangesTracker(inst);
         });
     },
+    'click .saveAttrPathBtn'(e){
+        var $el = $(e.currentTarget);
+        var $container = $el.closest('.attrPathContainer');
+        var kind = $container.attr('kind');
+        var idx = parseInt($container.attr('idx'));
+        var val = $container.find('.attrPathItem').val();
+
+        // if its the new attr and no val set, doesnt do anything
+        if(idx == -1 && val == ''){
+            return;
+        }
+
+        var inst = Template.instance();
+        Meteor.call('setCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, val, (err, data)=>{
+            if(idx == -1){
+                $container.find('.attrPathItem').val('');
+            }
+            //updateChangesTracker(inst);
+        });
+    },
+    // 'change .attrPathItem'(e){
+    //     var $el = $(e.currentTarget);
+    //     var $container = $el.closest('.attrPathContainer');
+    //     var val = $el.val();
+    //     var kind = $container.attr('kind');
+    //     var idx = $container.attr('idx');
+    //     idx = (idx == 'new' ? -1 :  parseInt(idx));
+    //
+    //     var obj = customSearchableAttrsObj.get();
+    //
+    //     if(idx == -1){ //new attr
+    //         obj[kind].push(val);
+    //         $el.val('');
+    //     }
+    //     else{
+    //         obj[kind][idx] = val;
+    //     }
+    //     customSearchableAttrsObj.set(obj);
+    // },
+    // 'keyup .newAttrPathItem'(e){
+    //     var $el = $(e.currentTarget);
+    //     var $container = $el.closest('.attrPathContainer');
+    //     var kind = $container.attr('kind');
+    //     var val = $el.val();
+    //
+    //     if(!val){
+    //         return;
+    //     }
+    //
+    //     var obj = customSearchableAttrsObj.get();
+    //     obj[kind].push(val);
+    //     $el.val('');
+    //     customSearchableAttrsObj.set(obj);
+    //
+    //     _.debounce(()=>{
+    //         $el.closest('.card-body').find('.attrPathItem:not(.newAttrPathItem)').eq(-1).focus();
+    //     })();
+    // },
+    // 'click .saveBtn'(){
+    //     var attrObj = customSearchableAttrsObj.get();
+    //     Meteor.call('saveCustomSearchableAttrsObj', Session.get('currentOrgId'), attrObj, ()=>{
+    //     });
+    // },
     'click .deleteKindGroupBtn'(e){
         var $el = $(e.currentTarget);
         var $container = $el.closest('.kindContainer');
         var kind = $container.attr('kind');
 
-        var obj = customSearchableAttrsObj.get();
-        delete obj[kind];
-        customSearchableAttrsObj.set(obj);
+        var inst = Template.instance();
+        Meteor.call('deleteCustomSearchableAttrKind', Session.get('currentOrgId'), kind, (err, data)=>{
+            //updateChangesTracker(inst);
+        });
 
         return false;
     },

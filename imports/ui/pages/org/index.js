@@ -83,7 +83,6 @@ Template.OrgManageSearchableAttrs.onCreated(function(){
         var orgName = FlowRouter.getParam('baseOrgName');
         Orgs.findOne({ name: orgName, });
         var inst = Template.instance();
-        //updateChangesTracker(inst)
         _.defer(()=>{
             updateChangesTracker(inst)
         });
@@ -120,10 +119,7 @@ Template.OrgManageSearchableAttrs.helpers({
         return (usedKinds.length > 0);
     },
     attrsUsedForKind(kind){
-        return _.get(Template.currentData(), `org.customSearchableAttrs["${kind}"]`, []);
-    },
-    attrPathIdxHasChanges(kind, idx){
-        return true;
+        return _.get(Template.currentData(), ['org', 'customSearchableAttrs', kind], []);
     },
     exampleAttrPaths(){
         return [
@@ -137,22 +133,13 @@ Template.OrgManageSearchableAttrs.helpers({
         if(idx == -1){
             return true;
         }
-        var hasChanges = _.get(changesTracker.get(), `${kind}.${idx}`);
+        var hasChanges = _.get(changesTracker.get(), [kind, idx]);
         return hasChanges;
-        var elVal = _.get(changesTracker.get(), '');
-        var attrsUsedForKind = Template.OrgManageSearchableAttrs.__helpers.get('attrsUsedForKind').call(Template.instance(), kind);
-        var originalAttr = attrsUsedForKind[idx];
-        return (originalAttr == elVal || elVal == '');
     },
-    kindIdxSaveIsDisabled(kind, idx){
-        var canSaveIdx = Template.OrgManageSearchableAttrs.__helpers.get('canSaveIdx').call(Template.instance(), kind, idx);
-        return (canSaveIdx ? '' : 'disabled');
-    }
 });
 
 var updateChangesTracker = (templateInstance)=>{
     var org = Orgs.findOne({ name: templateInstance.data.orgName, });
-    console.log(3333, org, templateInstance.data)
     var originalSearchableAttrs = _.get(org, 'customSearchableAttrs', {});
 
     var obj = {};
@@ -163,13 +150,12 @@ var updateChangesTracker = (templateInstance)=>{
         $(this).find('.attrPathContainer').each(function(){
             var idx = $(this).attr('idx');
             var val = $(this).find('.attrPathItem').val();
-            var originalVal = _.get(originalSearchableAttrs, `${kind}.${idx}`, null);
+            var originalVal = _.get(originalSearchableAttrs, [kind, idx], null);
             var hasChanges = (val != originalVal);
             obj[kind].push(hasChanges);
             formVals[`${kind}_${idx}`]=val;
         });
     });
-    console.log(1111, originalSearchableAttrs, obj, formVals)
     changesTracker.set(obj);
 };
 
@@ -182,9 +168,7 @@ Template.OrgManageSearchableAttrs.events({
         var $el = $(e.currentTarget);
         var $kind = $el.closest('.input-group').find('.trackKindDropdown');
         var kind = $kind.val();
-        var inst = Template.instance();
         Meteor.call('addCustomSearchableAttrKind', Session.get('currentOrgId'), kind, (err, data)=>{
-            //updateChangesTracker(inst);
         });
     },
     'click .removeAttrPathBtn'(e){
@@ -199,9 +183,7 @@ Template.OrgManageSearchableAttrs.events({
         }
 
         $el.prop('disabled', true);
-        var inst = Template.instance();
         Meteor.call('deleteCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, (err, data)=>{
-            //updateChangesTracker(inst);
         });
     },
     'click .saveAttrPathBtn'(e){
@@ -216,69 +198,31 @@ Template.OrgManageSearchableAttrs.events({
             return;
         }
 
-        var inst = Template.instance();
         Meteor.call('setCustomSearchableAttrKindIdx', Session.get('currentOrgId'), kind, idx, val, (err, data)=>{
             if(idx == -1){
                 $container.find('.attrPathItem').val('');
             }
-            //updateChangesTracker(inst);
         });
     },
-    // 'change .attrPathItem'(e){
-    //     var $el = $(e.currentTarget);
-    //     var $container = $el.closest('.attrPathContainer');
-    //     var val = $el.val();
-    //     var kind = $container.attr('kind');
-    //     var idx = $container.attr('idx');
-    //     idx = (idx == 'new' ? -1 :  parseInt(idx));
-    //
-    //     var obj = customSearchableAttrsObj.get();
-    //
-    //     if(idx == -1){ //new attr
-    //         obj[kind].push(val);
-    //         $el.val('');
-    //     }
-    //     else{
-    //         obj[kind][idx] = val;
-    //     }
-    //     customSearchableAttrsObj.set(obj);
-    // },
-    // 'keyup .newAttrPathItem'(e){
-    //     var $el = $(e.currentTarget);
-    //     var $container = $el.closest('.attrPathContainer');
-    //     var kind = $container.attr('kind');
-    //     var val = $el.val();
-    //
-    //     if(!val){
-    //         return;
-    //     }
-    //
-    //     var obj = customSearchableAttrsObj.get();
-    //     obj[kind].push(val);
-    //     $el.val('');
-    //     customSearchableAttrsObj.set(obj);
-    //
-    //     _.debounce(()=>{
-    //         $el.closest('.card-body').find('.attrPathItem:not(.newAttrPathItem)').eq(-1).focus();
-    //     })();
-    // },
-    // 'click .saveBtn'(){
-    //     var attrObj = customSearchableAttrsObj.get();
-    //     Meteor.call('saveCustomSearchableAttrsObj', Session.get('currentOrgId'), attrObj, ()=>{
-    //     });
-    // },
     'click .deleteKindGroupBtn'(e){
         var $el = $(e.currentTarget);
-        var $container = $el.closest('.kindContainer');
+        var $modal = $el.siblings('.deleteModal');
+        $modal.modal('show');
+        return false;
+    },
+    'click .deleteKindGroupConfirmBtn'(e){
+        var $el = $(e.currentTarget);
+        var $modal = $el.closest('.modal');
+        var $container = $modal.closest('.kindContainer');
         var kind = $container.attr('kind');
 
-        var inst = Template.instance();
+        $modal.modal('hide');
+
         Meteor.call('deleteCustomSearchableAttrKind', Session.get('currentOrgId'), kind, (err, data)=>{
-            //updateChangesTracker(inst);
         });
 
         return false;
-    },
+    }
 });
 
 

@@ -5,7 +5,7 @@ LABEL maintainer="Michael McKay <mckaymic@us.ibm.com>"
 ARG BUILD_ID
 ARG LAST_COMMIT_ID
 
-ENV METEORD_DIR="/opt/meteord" BUILD_PACKAGES="python make g++ build-base"
+ENV METEORD_DIR="/opt/meteord" BUILD_PACKAGES="python make g++"
 
 WORKDIR /root
 
@@ -21,7 +21,6 @@ RUN apk update \
 	&& node-gyp install \
     && $METEORD_DIR/build_app.sh \
     && $METEORD_DIR/rebuild_npm_modules.sh \
-    && npm rebuild bcrypt --build-from-source \
 	&& apk del --purge ${BUILD_PACKAGES} \
     && $METEORD_DIR/clean-final.sh
 

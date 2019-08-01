@@ -33,7 +33,7 @@
     "description": "Dashboard for razee resources",
     "dependencies": {
         "@babel/runtime": "^7.1.2",
-        "bcrypt": "^3.0.5",
+        "bcryptjs": "^2.4.3",
         "bootstrap": "^4.3.1",
         "bootstrap-datepicker": "^1.7.1",
         "bunyan": "^1.8.12",

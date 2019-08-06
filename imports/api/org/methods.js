@@ -139,19 +139,6 @@ Meteor.methods({
         }
         return true;
     },
-    saveCustomSearchableAttrsObj(orgId, data){
-
-        console.log('todo: remove this');
-
-        requireOrgAccess(orgId);
-        var search = {
-            _id: orgId,
-        };
-        var sets = {
-            'customSearchableAttrs': data,
-        };
-        Orgs.update(search, { $set: sets });
-    },
     addCustomSearchableAttrKind(orgId, kind){
         check(orgId, String);
         check(kind, String);

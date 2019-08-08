@@ -138,11 +138,24 @@ Template.SelectOrg_deregister.helpers({
     isDeRegistering(){
         return Template.instance().isDeRegistering.get();
     },
+    orgName(){
+        return Template.currentData().org.name;
+    }
 });
 Template.SelectOrg_deregister.events({
-    'click .deRegisterOrgBtn'(){
+    'click .deRegisterOrgBtn'(e){
+        var $el = $(e.currentTarget);
+        var $modal = $el.siblings('.modal');
+        $modal.modal();
+
+        return false;
+    },
+    'click .confirmDeRegisterOrgBtn'(e){
         const inst = Template.instance();
         const orgName = Template.currentData().org.name;
+
+        // removes the modal (and modal backdrop)
+        $(e.currentTarget).closest('.modal').modal('hide');
 
         inst.isDeRegistering.set(true);
         Meteor.call('deRegisterOrg', orgName, (err)=>{
@@ -152,5 +165,5 @@ Template.SelectOrg_deregister.events({
             }
         });
         return false;
-    }
+    },
 });

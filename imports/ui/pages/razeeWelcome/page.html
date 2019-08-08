@@ -39,41 +39,41 @@
     <div class="container-fluid m-0 my-1 p-0">
         {{#if Template.subscriptionsReady}}
             {{#each org in orgNames}}
-            <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush">
                     <li class="list-group-item pr-0">
                         <div class="row">
-                                <div class="col-md">
-                                    {{#if orgExists org.name}}
-                                        <a class="org-link" href="{{pathFor 'welcome' baseOrgName=org.name}}"> 
-                                            <img class="img-thumbnail org-image my-1"  src="{{org.avatarUrl}}">
-                                            {{org.name}}
-                                        </a>
+                            <div class="col-md">
+                                {{#if orgExists org.name}}
+                                    <a class="org-link" href="{{pathFor 'welcome' baseOrgName=org.name}}">
+                                        <img class="img-thumbnail org-image my-1"  src="{{org.avatarUrl}}">
+                                        {{org.name}}
+                                    </a>
+                                {{else}}
+                                    <span class="org-link">
+                                        <img class="img-thumbnail org-image my-1 grayscale" src="{{org.avatarUrl}}">
+                                        <span class="text-muted">{{org.name}}</span>
+                                    </span>
+                                {{/if}}
+                            </div>
+
+                            <div class="col-md my-auto">
+                                <div class="float-md-right">
+                                {{#if orgExists org.name}}
+                                    {{> SelectOrg_deregister org=org}}
+                                    <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0 action-button">Manage</a>
+                                    {{#unless localUser}}
+                                        {{> SelectOrg_git org=org}}
+                                    {{/unless}}
+                                {{else}}
+                                    {{#if isAdminOfOrg org.name}}
+                                        {{> SelectOrg_register org=org}}
+                                        {{> SelectOrg_git org=org}}
                                     {{else}}
-                                        <span class="org-link"> 
-                                            <img class="img-thumbnail org-image my-1 grayscale" src="{{org.avatarUrl}}">
-                                            <span class="text-muted">{{org.name}}</span> 
-                                        </span>
+                                        <i>You must be a GitHub <a href="{{githubUrl}}{{org.name}}">{{org.name}}</a> org admin to register it in RazeeDash.</i>
                                     {{/if}}
+                                {{/if}}
                                 </div>
-                                
-                                <div class="col-md my-auto">
-                                    <div class="float-md-right">
-                                    {{#if orgExists org.name}}
-                                        {{> SelectOrg_deregister org=org}}
-                                        <a href="{{pathFor 'org' baseOrgName=org.name}}" class="ml-2 btn btn-primary btn-sm rounded-0 action-button">Manage</a>
-                                        {{#unless localUser}}
-                                            {{> SelectOrg_git org=org}}
-                                        {{/unless}}
-                                    {{else}}
-                                        {{#if isAdminOfOrg org.name}}
-                                            {{> SelectOrg_register org=org}}
-                                            {{> SelectOrg_git org=org}}
-                                        {{else}}
-                                            <i>You must be a GitHub <a href="{{githubUrl}}{{org.name}}">{{org.name}}</a> org admin to register it in RazeeDash.</i>
-                                        {{/if}}
-                                    {{/if}}
-                                    </div>
-                                </div>
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -148,6 +148,26 @@
             <i class="fa fa-spinner fa-spin"></i>
         {{/if}}
     </button>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Org "{{orgName}}"</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body font-weight-bold">
+                    Are you sure you want to remove the org "{{orgName}}"?<br />
+                    All the data that Razee stores for it will be removed.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger confirmDeRegisterOrgBtn">Yes, Remove "{{orgName}}"</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 

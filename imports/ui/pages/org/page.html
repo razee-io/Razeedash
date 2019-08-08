@@ -77,5 +77,120 @@
                 </form>
             </div>
         </div>
+
+        {{> OrgManageSearchableAttrs org=org orgName=orgName}}
+
     {{/if}}
+</template>
+
+<template name="OrgManageSearchableAttrs">
+    <div class="card m-2">
+        <h4 class="card-header text-muted">Custom Searchable Attributes</h4>
+        <div class="card-body">
+            {{#if loadedKinds}}
+                <div class="mb-3">
+                    <div>
+                        Select a kubernetes "kind" to track attribute history for:
+                        <div class="input-group">
+                            <div>
+                                <select class="form-control trackKindDropdown" style="width:200px;">
+                                    {{#each kind in availableKinds}}
+                                        {{#if kindIsUsed kind}}
+                                            <option disabled value="{{kind}}">{{kind}} (already tracking)</option>
+                                        {{else}}
+                                            <option value="{{kind}}">{{kind}}</option>
+                                        {{/if}}
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary trackBtn" {{isTrackBtnDisabled}}>Track</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{#if hasAnyUsedKinds}}
+                    <div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-xl-4 mb-2">
+                                <div class="card">
+                                    <h5 class="card-header text-muted">Example attributes</h5>
+                                    <div class="card-body">
+                                        <div class="text-muted mb-3">
+                                            Pass the javascript object path of the resource yaml attributes you want to track:
+                                        </div>
+                                        {{#each attrPath in exampleAttrPaths}}
+                                            <div class="input-group mb-2">
+                                                <input class="form-control" type="text" disabled value="{{attrPath}}"/>
+                                            </div>
+                                        {{/each}}
+                                        <div class="text-muted mt-3">
+                                            Tracks the name, namespace, first container image, and kube revision number (of, for instance, a deployment object).
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{#each kind in usedKinds}}
+                                <div class="col-12 col-md-6 col-xl-4 mb-2 kindContainer" kind="{{kind}}">
+                                    <div class="card">
+                                        <h5 class="card-header text-muted position-relative">
+                                            <span>"{{kind}}" attributes</span>
+                                            <button class="btn btn-danger position-absolute deleteKindGroupBtn" style="right:10px;top:5px;">X</button>
+
+                                            <div class="modal deleteModal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Delete attributes for "{{kind}}"</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to delete the RazeeDash custom searchable attributes for kubernetes kind <strong>"{{kind}}"</strong>?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary deleteKindGroupConfirmBtn">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </h5>
+                                        <div class="card-body mb-0">
+                                            {{#each attrPath in (attrsUsedForKind kind)}}
+                                                <div class="input-group mb-2 attrPathContainer" kind="{{kind}}" idx="{{@index}}">
+                                                    <input type="text" value="{{attrPath}}" class="form-control attrPathItem"/>
+                                                    <div class="input-group-append">
+                                                        {{#if canSaveIdx kind @index}}
+                                                            <button class="btn btn-primary saveAttrPathBtn">Save</button>
+                                                        {{/if}}
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-danger removeAttrPathBtn">X</button>
+                                                    </div>
+                                                </div>
+                                            {{/each}}
+                                            <div class="input-group mb-2 attrPathContainer" kind="{{kind}}" idx="-1">
+                                                <input type="text" value="" class="form-control attrPathItem newAttrPathItem"/>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary saveAttrPathBtn">Save</button>
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-danger removeAttrPathBtn">X</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+            {{else}}
+                {{> loading text='Loading resource kind list' }}
+            {{/if}}
+        </div>
+    </div>
 </template>

@@ -21,16 +21,17 @@ import uuid from 'uuid';
 import { Orgs } from './orgs.js';
 import ghe from '../lib/ghe.js';
 import { localUser } from '../lib/login.js';
+import { requireOrgAccess } from '/imports/api/org/utils.js';
 
 Meteor.methods({
     hasOrgs() {
 
         let userOrgs = _.get(Meteor.user(), 'github.orgs', []);
         let userOrgNames = _.map(userOrgs, 'name');
-        
+
         if(localUser()) {
             userOrgNames = _.map(Orgs.find({ type: 'local' }, { name: 1 }).fetch(), 'name');
-        } 
+        }
 
         const userOrgsInMeteor = Orgs.find({ name: { $in: userOrgNames } }).count();
         if(userOrgsInMeteor === 0) {
@@ -56,7 +57,7 @@ Meteor.methods({
     registerLocalOrg(name){
         check( name, String );
         const userObj = Meteor.user();
-        const org = Orgs.findOne({ 
+        const org = Orgs.findOne({
             $and: [
                 { name },
                 { type: 'local' }
@@ -108,15 +109,15 @@ Meteor.methods({
     deRegisterOrg(name){
         check( name, String );
         if(localUser()) {
-            const org = Orgs.findOne({ 
+            const org = Orgs.findOne({
                 $and: [
                     { name },
                     { type: 'local' }
                 ]
             });
-    
+
             if(org){
-                Orgs.remove({ 
+                Orgs.remove({
                     $and: [
                         { name },
                         { type: 'local' }
@@ -138,4 +139,62 @@ Meteor.methods({
         }
         return true;
     },
+    addCustomSearchableAttrKind(orgId, kind){
+        check(orgId, String);
+        check(kind, String);
+        requireOrgAccess(orgId);
+        var search = {
+            _id: orgId,
+            [`customSearchableAttrs.${kind}`]: { $exists: false },
+        };
+        var sets = {
+            [`customSearchableAttrs.${kind}`]: [],
+        };
+        Orgs.update(search, { $set: sets });
+    },
+    deleteCustomSearchableAttrKind(orgId, kind){
+        check(orgId, String);
+        check(kind, String);
+        requireOrgAccess(orgId);
+        var search = {
+            _id: orgId,
+        };
+        Orgs.update(search, { $unset: { [`customSearchableAttrs.${kind}`]: true } });
+    },
+    setCustomSearchableAttrKindIdx(orgId, kind, idx, val){
+        check(orgId, String);
+        check(kind, String);
+        check(idx, Number);
+        check(val, String);
+        requireOrgAccess(orgId);
+        var search = {
+            _id: orgId,
+        };
+        var updateObj = {
+            $set: {
+                [`customSearchableAttrs.${kind}.${idx}`]: val,
+            },
+        };
+        if(idx == -1){
+            updateObj = {
+                $push: {
+                    [`customSearchableAttrs.${kind}`]: val,
+                },
+            };
+        }
+        Orgs.update(search, updateObj);
+    },
+    deleteCustomSearchableAttrKindIdx(orgId, kind, idx){
+        check(orgId, String);
+        check(kind, String);
+        check(idx, Number);
+        var search = {
+            _id: orgId,
+        };
+        // apparently mongo doesnt let you remove an array item by index, so what we'll do is set the item to null and then remove all nulls
+        // sets the item to null
+        Orgs.update(search, { $unset: { [`customSearchableAttrs.${kind}.${idx}`]: true } });
+        // removes all nulls
+        Orgs.update(search, { $pull: { [`customSearchableAttrs.${kind}`]: null } });
+    }
 });

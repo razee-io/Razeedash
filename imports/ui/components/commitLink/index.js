@@ -26,13 +26,13 @@ Template.commitLink.helpers({
             let otherRepo;
             let commitSHA;
             for (const key in resourceData) {
-                if(key === 'annotations_razee_io_commit_sha') {
+                if(key === 'annotations_razee_io_commit_sha' || key === 'annotations["razee_io_commit_sha"]') {
                     commitSHA = resourceData[key];
                 }
-                if(key === 'annotations_razee_io_git_repo') {
+                if(key === 'annotations_razee_io_git_repo' || key === 'annotations["razee_io_git_repo"]') {
                     gitRepo = resourceData[key];
                 }
-                if(key === 'annotations_razee_io_source_url') {
+                if(key === 'annotations_razee_io_source_url' || key === 'annotations["razee_io_source_url"]') {
                     otherRepo = resourceData[key];
                 }
             }

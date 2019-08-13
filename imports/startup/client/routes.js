@@ -131,6 +131,15 @@ orgedRoutes.route('/resources/:clusterId', {
     },
 });
 
+orgedRoutes.route('/clusters/:clusterId/resources/resource', {
+    name: 'cluster.resource',
+    title: 'Resource Cluster :clusterId',
+    parent: 'cluster.tab',
+    action(params, queryParams) {
+        BlazeLayout.render('Base_layout', { main: 'Resources_single', selfLink: queryParams.selfLink, clusterId: params.clusterId });
+    },
+});
+
 FlowRouter.notFound = {
     action() {
         BlazeLayout.render('Base_layout', { main: 'App_notFound', doesntRequireOrgIdLoaded: true });

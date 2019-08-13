@@ -81,6 +81,14 @@ Template.breadcrumbs.helpers({
             }catch(e){} // eslint-disable-line no-empty
             return name;
         }
+        if(crumb.routeName === 'cluster.resource') {
+            let displayName = '';
+            try{
+                displayName = crumb.route._queryParams.get('selfLink');
+                displayName = _.last(_.filter(displayName.split('/')));
+            }catch(e){} // eslint-disable-line no-empty
+            return displayName;
+        }
         if(_.includes(['cluster.tab'], crumb.routeName)){
             // if a crumb for the single cluster page, then find()s it so we can display its name
             var id = crumb.params.id || crumb.params.clusterId;
@@ -100,6 +108,22 @@ Template.breadcrumbs.helpers({
             if(clustersSearch_q){
                 qs.q = clustersSearch_q;
             }
+        }
+        if(crumb.routeName == 'cluster.tab') {
+            const clusterId = FlowRouter.current().params.clusterId || FlowRouter.current().params.id;
+            const tabID = FlowRouter.current().params.tabId || 'resources';
+            const params = {
+                'id': clusterId,
+                'tabId': tabID
+            };
+            return FlowRouter.path(crumb.route.name, params);
+        }
+        if(crumb.routeName == 'cluster.resource') {
+            let displayLink = '';
+            try{
+                displayLink = crumb.route._queryParams.get('selfLink');
+            }catch(e){} // eslint-disable-line no-empty
+            qs.selfLink = displayLink;
         }
         if(crumb.routeName == 'resource.cluster'){
             var selfLink = '';

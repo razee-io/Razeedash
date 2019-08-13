@@ -53,6 +53,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                         </thead>
                         <tbody>
                             {_.map(containers, (container, idx)=>{
+                                var env = _.get(container, 'env', []);
                                 return (
                                     <tr key={idx}>
                                         <td className="colName">Name</td>
@@ -80,8 +81,8 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                             }
                                         </td>
                                         <td className="colName">Envs</td>
-                                        <td className={container.env.length > 0 ? 'p-0' : ''}>
-                                            {container.env.length > 0 &&
+                                        <td className={env.length > 0 ? 'p-0' : ''}>
+                                            {env.length > 0 &&
                                             <table className="table table-striped mb-0">
                                                 <thead>
                                                     <tr>
@@ -91,7 +92,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {_.map(container.env, (envObj)=>{
+                                                    {_.map(env, (envObj)=>{
                                                         var valType = 'string';
                                                         var val = envObj.value;
                                                         if(envObj.valueFrom){
@@ -115,7 +116,7 @@ class ResourceKindDeploymentTypeContainersCard extends React.Component {
                                                 </tbody>
                                             </table>
                                             }
-                                            {container.env.length == 0 &&
+                                            {env.length == 0 &&
                                                 <span>None</span>
                                             }
                                         </td>

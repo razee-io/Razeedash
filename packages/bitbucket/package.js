@@ -1,4 +1,8 @@
 /* eslint-disable no-undef */
+
+// This package is a modification of code from https://github.com/Tarang/Meteor-Accounts-Bitbucket 
+// and https://github.com/meteor/meteor/tree/devel/packages/github-oauth
+
 Package.describe({
     name: 'bitbucket',
     version: '0.1.0',
@@ -13,8 +17,6 @@ Package.onUse(function(api) {
     api.use('random', 'client');
     api.use('service-configuration', ['client', 'server']);
 
-    api.export('bitbucket');
-
     api.addFiles( ['bitbucket_configure.html', 'bitbucket_configure.js'], 'client');
     api.addFiles('bitbucket_server.js', 'server');
     api.addFiles('bitbucket_client.js', 'client');
@@ -28,4 +30,6 @@ Package.onUse(function(api) {
     
     api.addFiles('bitbucket_login_button.css', 'client');
     api.addFiles('accounts-bitbucket.js');
+
+    api.export('Bitbucket');
 });

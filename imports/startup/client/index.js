@@ -34,7 +34,10 @@ import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
 import { localUser } from '/imports/api/lib/login.js';
 
-Accounts.ui.config( { requestPermissions: { github: ['read:user', 'read:org'] } } );
+Accounts.ui.config( { requestPermissions: { 
+    github: ['read:user', 'read:org'],
+    bitbucket: ['email', 'account', 'team']
+} } );
 
 const time = new ReactiveVar();
 time.set(new Date());

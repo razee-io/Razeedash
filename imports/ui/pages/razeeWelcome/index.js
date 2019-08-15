@@ -47,14 +47,23 @@ Template.SelectOrg.helpers({
             const localOrgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch().sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
             return localOrgs;
         } else {
-            return _.get(Meteor.user(), 'github.orgs', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
+            if(loginType() === 'bitbucket') {
+                return _.get(Meteor.user(), 'bitbucket.teams', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
+            } else {
+                return _.get(Meteor.user(), 'github.orgs', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
+            }
         }
     },
     orgExists(name){
         return !!Orgs.findOne({ name });
     },
     isAdminOfOrg(name){
-        var orgs = _.get(Meteor.user(), 'github.orgs', []);
+        var orgs;
+        if(loginType() === 'bitbucket') {
+            orgs = _.get(Meteor.user(), 'bitbucket.teams', []);
+        } else {
+            orgs = _.get(Meteor.user(), 'github.orgs', []);
+        }
         var org = _.find(orgs, (org)=>{
             return org.name === name;
         });
@@ -71,7 +80,13 @@ Template.SelectOrg.helpers({
             gitUrl = _.get(githubLoginService, 'gheURL', '');
         }
 
-        return `https://${gitUrl}/settings/connections/applications/${clientId}`;
+        if(serviceType === 'bitbucket') {
+            // return `https://${gitUrl}/settings/connections/applications/${clientId}`;
+            return '';
+        } else {
+            return `https://${gitUrl}/settings/connections/applications/${clientId}`;
+        }
+
     },
 });
 

@@ -26,7 +26,7 @@ AccountsTemplates.configure({
     },
 });
 
-// A user can logon via github, github enterprise or they can create a local id/password stored in mongo
+// A user can logon via github, github enterprise, bitbucket or they can create a local id/password stored in mongo
 // `localUser` is used throughout our code so that we can skip calls to the github api for local users
 function localUser() {
     if( _.has(Meteor.user(), 'services.github') || _.has(Meteor.user(), 'services.ghe') || _.has(Meteor.user(), 'services.bitbucket') ) {

@@ -16,7 +16,7 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Orgs } from './orgs.js';
-import { localUser } from '/imports/api/lib/login.js';
+import { localUser, loginType } from '/imports/api/lib/login.js';
 import _ from 'lodash';
 
 export const requireOrgAccess = (orgId)=>{
@@ -24,9 +24,12 @@ export const requireOrgAccess = (orgId)=>{
     let accessibleOrgNames;
     if(localUser()) {
         accessibleOrgNames = _.map(Orgs.find({ type: 'local' }, { name: 1 }).fetch(), 'name');
-        
     } else {
-        accessibleOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        if(loginType === 'bitbucket') {
+            accessibleOrgs = _.get(Meteor.user(), 'bitbucket.teams', []);
+        } else {
+            accessibleOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        }
         accessibleOrgNames = _.map(accessibleOrgs, 'name');
     }
 

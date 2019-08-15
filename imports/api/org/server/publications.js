@@ -30,7 +30,10 @@ Meteor.publish('orgs', function(names){
 
 Meteor.publish('orgsForUser', function(){
     var orgNames = [];
-    if(Meteor.user() && Meteor.user().github) {
+    if(Meteor.user() && Meteor.user().bitbucket) {
+        orgNames = _.map(Meteor.user().bitbucket.teams || [], 'name');
+        return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs: 1 });
+    } else if(Meteor.user() && Meteor.user().github) {
         orgNames = _.map(Meteor.user().github.orgs || [], 'name');
         return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs: 1 });
     } else {

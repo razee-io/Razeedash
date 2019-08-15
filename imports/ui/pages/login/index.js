@@ -31,7 +31,7 @@ Template.atForm.helpers({
 
 // This is used in the customAtOauth template 
 Template.atOauth.helpers({
-    // only show one login button at a time -- either Github or GitHub enterprise 
+    // only show one login button at a time -- either Github, GitHub enterprise or Bitbucket 
     // depending Meteor.settings.public.LOGIN_TYPE
     showService(service, authType) {
         if(service._id === authType) {

@@ -48,6 +48,7 @@ Template.Base_layout.onRendered(function() {
         this.subscribe('userData');
         var orgName = Session.get('currentOrgName');
         this.subscribe('orgIdByName', orgName);
+        
         Meteor.call('hasOrgs', function(err, result) {
             hasOrgsDefined.set(result);
         });

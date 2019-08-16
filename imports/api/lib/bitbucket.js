@@ -47,7 +47,6 @@ function listTeams(loggedInUserObj){
     }
     
     return _.map(data.values, (item)=>{
-        console.log(item);
         const team = item.team;
         const permission = item.permission;
         if(!team){

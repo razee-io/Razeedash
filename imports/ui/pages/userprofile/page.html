@@ -45,7 +45,7 @@
                                    id="inputEmail" 
                                    aria-describedby="emailHelp" 
                                    placeholder="email" 
-                                   value="{{or currentUser.services.github.email currentUser.services.ghe.email currentUser.services.bitbucket.display_name}}" 
+                                   value="{{or currentUser.services.github.email currentUser.services.ghe.email currentUser.services.bitbucket.username}}" 
                                    readonly>
                             <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
                         </div>

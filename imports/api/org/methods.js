@@ -33,9 +33,6 @@ Meteor.methods({
         } else {
             userOrgs = _.get(Meteor.user(), 'github.orgs', []);
         }
-        console.log('userOrgs found ------------------ ');
-        console.log(userOrgs);
-
         let userOrgNames = _.map(userOrgs, 'name');
 
         if(localUser()) {

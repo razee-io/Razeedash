@@ -15,19 +15,22 @@
 */
 
 import { Meteor } from 'meteor/meteor';
+import { ServiceConfiguration } from 'meteor/service-configuration';
 import { OAuth } from 'meteor/oauth';
 import { HTTP } from 'meteor/http';
 import log from './log.js';
 import _ from 'lodash';
 
+let userAgent = 'Meteor';
+if (Meteor.release) {
+    userAgent += `/${Meteor.release}`;
+}
+
 function listTeams(loggedInUserObj){
     const url = `${Meteor.settings.public.BITBUCKET_API}user/permissions/teams`;
     const token = OAuth.openSecret( loggedInUserObj.services['bitbucket'].accessToken, loggedInUserObj._id );
+    const refreshToken = OAuth.openSecret( loggedInUserObj.services['bitbucket'].refreshToken, loggedInUserObj._id );
 
-    let userAgent = 'Meteor';
-    if (Meteor.release) {
-        userAgent += `/${Meteor.release}`;
-    }
     const options = {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -38,8 +41,21 @@ function listTeams(loggedInUserObj){
     try {
         response = HTTP.get(url, options);
     }catch(e){
-        log.info({ e }, 'http error');
-        return false;
+        log.info('Could not get team data with the original access token.  Getting a refreshToken now...');
+        const tokens = updateTokens(refreshToken);
+        const newAccessToken = tokens[0];
+        Meteor.call('setToken', newAccessToken);
+        try {
+            response = HTTP.get(url, {
+                headers: {
+                    Authorization: `Bearer ${newAccessToken}`,
+                    'User-Agent': userAgent
+                }
+            });
+        } catch (err) {
+            log.info({ err }, 'Could not get team data using the refreshToken');
+            return false;
+        }    
     }
     const data = response.data;
     if(!data){
@@ -64,5 +80,34 @@ function listTeams(loggedInUserObj){
         };
     });
 }
+
+// https://developer.atlassian.com/bitbucket/api/2/reference/meta/authentication#refresh-tokens
+const updateTokens = (refreshToken) => {
+    const config = ServiceConfiguration.configurations.findOne({service: 'bitbucket'});
+    if (!config) {
+        throw new ServiceConfiguration.ConfigError();
+    }
+    let response;
+    try {
+        response = HTTP.post(
+            'https://bitbucket.org/site/oauth2/access_token', {
+                headers: {
+                    Accept: 'application/json',
+                    'User-Agent': userAgent,
+                },
+                params: {
+                    grant_type: 'refresh_token', 
+                    refresh_token: refreshToken,
+                    client_id: config.consumerKey,
+                    client_secret: OAuth.openSecret(config.secret)
+                }
+            });
+    } catch (err) {
+        throw Object.assign( 
+            new Error(`Failed to get a refresh token from Bitbucket. ${err.message}`), { response: err.response },
+        );
+    }
+    return [response.data.access_token, response.data.refresh_token];
+};
 
 export { listTeams };

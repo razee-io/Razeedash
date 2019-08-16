@@ -70,7 +70,6 @@ Template.SelectOrg.helpers({
         return (org.role === 'admin');
     },
     authMoreOrgsLink(){
-        // eslint-disable-next-line no-undef
         let gitUrl = 'github.com';
         let serviceType = loginType();
         
@@ -79,15 +78,8 @@ Template.SelectOrg.helpers({
         if(serviceType === 'ghe') {
             gitUrl = _.get(githubLoginService, 'gheURL', '');
         }
-
-        if(serviceType === 'bitbucket') {
-            // return `https://${gitUrl}/settings/connections/applications/${clientId}`;
-            return '';
-        } else {
-            return `https://${gitUrl}/settings/connections/applications/${clientId}`;
-        }
-
-    },
+        return `https://${gitUrl}/settings/connections/applications/${clientId}`;
+    }
 });
 
 Template.SelectOrg.events({
@@ -96,6 +88,12 @@ Template.SelectOrg.events({
         Meteor.call('reloadUserOrgList', ()=>{
             refreshStatus.set('');
         });
+    }
+});
+
+Template.SelectOrg_git.helpers({
+    scmIcon() {
+        return loginType() === 'bitbucket' ? 'fa-bitbucket' : 'fa-github';
     }
 });
 

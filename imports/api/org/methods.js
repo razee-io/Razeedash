@@ -104,7 +104,7 @@ Meteor.methods({
             return (org.name == name);
         });
         if(!userOrg || userOrg.role != 'admin'){
-            throw new Meteor.Error(`You must be a GitHub "${name}" org admin to register it.`);
+            throw new Meteor.Error(`You must be a "${name}" admin to register it.`);
         }
         var org = Orgs.findOne({ name });
         if(org){

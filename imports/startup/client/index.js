@@ -67,6 +67,9 @@ Template.registerHelper('localUser', () => {
 Template.registerHelper('loginType', () => {
     return Meteor.settings.public.LOGIN_TYPE;
 });
+Template.registerHelper('bitbucketUser', () => {
+    return Meteor.settings.public.LOGIN_TYPE === 'bitbucket';
+});
 
 Template.registerHelper('clusterYamlUrl', (key) => {
     let url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
@@ -136,6 +139,16 @@ Template.registerHelper('meteorSetting', (name)=>{
 
 Template.registerHelper('githubUrl', ()=>{
     return Meteor.settings.public.GITHUB_URL;
+});
+Template.registerHelper('bitbucketUrl', ()=>{
+    return Meteor.settings.public.BITBUCKET_URL;
+});
+Template.registerHelper('scmUrl', ()=>{
+    if(Meteor.settings.public.LOGIN_TYPE === 'bitbucket') {
+        return Meteor.settings.public.BITBUCKET_URL;
+    } else {
+        return Meteor.settings.public.GITHUB_URL;
+    }
 });
 
 Template.registerHelper('currentGheOrgName', ()=>{

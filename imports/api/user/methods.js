@@ -23,5 +23,8 @@ Meteor.methods({
         log.info({ userid: this.userId }, 'Generate API key');
         const newKey = Random.hexString(32);
         Meteor.users.update(this.userId, { $set: { apiKey: newKey } });
+    },
+    setToken(newAccessToken) {
+        Meteor.users.update(this.userId,  { $set: { 'services.bitbucket.accessToken': newAccessToken } });
     }
 });

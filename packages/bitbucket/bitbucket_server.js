@@ -6,7 +6,6 @@
 Bitbucket = {};
 
 OAuth.registerService('bitbucket', 2, null, query => {
-    // const accessToken = getAccessToken(query);
     const tokens = getTokens(query);
     const accessToken = tokens[0];
     const refreshToken = tokens[1];

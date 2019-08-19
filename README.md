@@ -58,7 +58,7 @@ Example registration for running locally.
 
 ### Using Bitbucket authentication
 
-To use Bitbucket authentication you need to create the `login_type` key in the `razeedash-config` ConfigMap and set it to `bitbucket`. 
+To use Bitbucket authentication you need to create the `login_type` key in the `razeedash-config` ConfigMap and set it to `bitbucket`.
 
 ```yaml
     apiVersion: v1

@@ -67,7 +67,7 @@ Template.SelectOrg.helpers({
         var org = _.find(orgs, (org)=>{
             return org.name === name;
         });
-        return (org.role === 'admin');
+        return (org && org.role === 'admin');
     },
     authMoreOrgsLink(){
         let gitUrl = 'github.com';

@@ -25,7 +25,7 @@ export const requireOrgAccess = (orgId)=>{
     if(localUser()) {
         accessibleOrgNames = _.map(Orgs.find({ type: 'local' }, { name: 1 }).fetch(), 'name');
     } else {
-        if(loginType === 'bitbucket') {
+        if(loginType() === 'bitbucket') {
             accessibleOrgs = _.get(Meteor.user(), 'bitbucket.teams', []);
         } else {
             accessibleOrgs = _.get(Meteor.user(), 'github.orgs', []);

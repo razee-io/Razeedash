@@ -76,7 +76,7 @@
                                         {{> SelectOrg_register org=org}}
                                         {{> SelectOrg_git org=org}}
                                     {{else}}
-                                        <i>You must be a <a href="{{scmUrl}}{{org.name}}">{{org.name}}</a> admin to register it in RazeeDash.</i>
+                                        <i>You must be an admin of <a href="{{scmUrl}}{{org.name}}">{{org.name}}</a> to register it in RazeeDash.</i>
                                     {{/if}}
                                 {{/if}}
                                 </div>
@@ -96,10 +96,10 @@
                     <div>
                         <div class="m-3">
                             {{#if bitbucketUser }}
-                                You don't appear to belong to any teams. Try refreshing.<br />
+                                You don't appear to belong to any Bitbucket teams. Try refreshing.<br />
                                 You can also <a href="https://bitbucket.org/account/create-team/" target="_blank">create a new Bitbucket team</a>.
                             {{else}}
-                                You don't appear to belong to any organizations. Try refreshing.<br />
+                                You don't appear to belong to any GitHub organizations. Try refreshing.<br />
                                 You can also <a href="https://github.com/organizations/new" target="_blank">create a new GitHub organization</a>.
                             {{/if}}
 

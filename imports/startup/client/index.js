@@ -32,11 +32,11 @@ import { Orgs } from '/imports/api/org/orgs';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
-import { localUser } from '/imports/api/lib/login.js';
+import { localUser, loginType } from '/imports/api/lib/login.js';
 
 Accounts.ui.config( { requestPermissions: { 
     github: ['read:user', 'read:org'],
-    bitbucket: ['email', 'account', 'team']
+    bitbucket: ['account']
 } } );
 
 const time = new ReactiveVar();
@@ -59,6 +59,10 @@ Template.registerHelper('localUserName', () => {
         loggedInUser = userName[0].address;
     }
     return loggedInUser;
+});
+
+Template.registerHelper('scmLabel', () => {
+    return loginType() === 'bitbucket' ? 'Bitbucket' : 'GitHub';
 });
 
 Template.registerHelper('localUser', () => {
@@ -341,7 +345,11 @@ Template.registerHelper('iconForOrgName', (orgName) => {
     if(localUser()) {
         orgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch();
     } else {
-        orgs = _.get(Meteor.user(), 'github.orgs', []);
+        if(loginType() === 'bitbucket') {
+            orgs = _.get(Meteor.user(), 'bitbucket.teams', []);
+        } else {
+            orgs = _.get(Meteor.user(), 'github.orgs', []);
+        }
     } 
 
     var selectedOrg = _.find(orgs, (org)=>{

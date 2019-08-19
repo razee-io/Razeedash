@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+// based off of https://github.com/meteor/meteor/blob/devel/packages/accounts-github/github.js
+
 Accounts.oauth.registerService('bitbucket');
 
 if (Meteor.isClient) {

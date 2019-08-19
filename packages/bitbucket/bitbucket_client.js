@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+// based off of https://github.com/meteor/meteor/blob/devel/packages/github-oauth/github_client.js
+
 Bitbucket = {};
 
 // Request Bitbucket credentials for the user

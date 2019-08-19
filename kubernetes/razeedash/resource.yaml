@@ -55,6 +55,18 @@ items:
                   name: razeedash-config
                   key: github_api
                   optional: true
+            - name: BITBUCKET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: bitbucket_url
+                  optional: true
+            - name: BITBUCKET_API
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: bitbucket_api
+                  optional: true
             - name: MAIL_URL
               valueFrom:
                 configMapKeyRef:

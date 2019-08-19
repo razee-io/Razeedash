@@ -25,9 +25,11 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 | OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
 | GITHUB_URL       | Optional | <https://github.com>     | Required if `LOGIN_TYPE=ghe` |
 | GITHUB_API       | Optional | <https://api.github.com> | Required if `LOGIN_TYPE=ghe` |
+| BITBUCKET_URL    | Optional | <https://bitbucket.org>     | Optional when `LOGIN_TYPE=bitbucket`. |
+| BITBUCKET_API    | Optional | <https://api.bitbucket.org/2.0/> | Optional when `LOGIN_TYPE=bitbucket` |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
 | LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
-| LOGIN_TYPE |   Optional    | github | Use `local` to enable local id/password logins. Use `ghe` for GitHub Enterprise instead of GitHub authentication. |
+| LOGIN_TYPE |   Optional    | github | Use `local` to enable local id/password logins. Use `ghe` for GitHub Enterprise instead of GitHub authentication. Use `bitbucket` for Bitbucket authentication. |
 
 ### Register GitHub application
 
@@ -53,6 +55,17 @@ Example registration for running locally.
         github_url: github.your_company.com
         github_api: github.your_company.com/api/v3
     ```
+
+### Using Bitbucket authentication
+
+To use Bitbucket authentication you need to create the `login_type` key in the `razeedash-config` ConfigMap and set it to `bitbucket`. 
+
+```yaml
+    apiVersion: v1
+    kind: ConfigMap
+    data:
+        login_type: bitbucket
+```
 
 ### Enable email/password authentication
 

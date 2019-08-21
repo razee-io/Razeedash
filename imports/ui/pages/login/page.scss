@@ -17,10 +17,23 @@
 .accounts-dialog {
     border-radius: 0;
 }
+
 #configure-login-service-dialog {
+    opacity: 0;
     input {
         border-radius: 0;
     }
+    @media (max-width: 685px) { 
+        width: 370px;
+        margin-left: -186px;
+    }
+    .url {
+        word-break: break-word;
+    }
+}
+
+#login-buttons .login-button, .accounts-dialog .login-button {
+    border-radius: 0;
 }
 
 // customize the layout of the email/password login form

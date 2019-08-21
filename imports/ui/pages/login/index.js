@@ -29,6 +29,38 @@ Template.Login.onCreated(function(){
         selectedService.set(undefined);
     });
 });
+Template.atSocial.onRendered(function(){
+    this.autorun(()=>{
+        if(Template.instance().view.isRendered){
+            Template.instance().$('.at-social-btn').animate({ opacity: 1 }, 400 );
+        }
+    });
+});
+
+function animateServiceDialog() {
+    $('#configure-login-service-dialog').animate({opacity: 1}, 400);
+}
+Template.configureLoginServiceDialogForGhe.onRendered(function() {
+    this.autorun(()=>{
+        if(Template.instance().view.isRendered){
+            animateServiceDialog();
+        }
+    });
+});
+Template.configureLoginServiceDialogForBitbucket.onRendered(function() {
+    this.autorun(()=>{
+        if(Template.instance().view.isRendered){
+            animateServiceDialog();
+        }
+    });
+});
+Template.configureLoginServiceDialogForGithub.onRendered(function() {
+    this.autorun(()=>{
+        if(Template.instance().view.isRendered){
+            animateServiceDialog();
+        }
+    });
+});
 // This is used in the customAtForm template to determine whether or not 
 // to show the email/password login form
 Template.atForm.helpers({

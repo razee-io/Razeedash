@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
-Template.configureLoginServiceDialogForBitbucket.siteUrl = function () {
+Template.configureLoginServiceDialogForBitbucket.helpers({
     // Bitbucket doesn't recognize localhost as a domain name
-    return Meteor.absoluteUrl({replaceLocalhost: true});
-};
+    siteUrl() {
+        return Meteor.absoluteUrl({replaceLocalhost: true});
+    } 
+});
 
 Template.configureLoginServiceDialogForBitbucket.fields = function () {
     return [

@@ -58,7 +58,6 @@ Meteor.startup(()=>{
     Meteor.settings.public.BITBUCKET_API = process.env.BITBUCKET_API || 'https://api.bitbucket.org/2.0/';
     Meteor.settings.public.RAZEE_GITHUB_URL = 'https://github.com/razee-io/razeedash';
     Meteor.settings.public.RAZEEDASH_API_URL = process.env.RAZEEDASH_API_URL || null;
-    Meteor.settings.public.LOGIN_TYPE = process.env.LOGIN_TYPE || 'github';  // github, ghe, bitbucket or local
 
     const versionInfo = {
         buildId: process.env.BUILD_ID || '$$BUILD_ID$$',

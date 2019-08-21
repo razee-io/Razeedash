@@ -17,6 +17,7 @@
 import { Meteor } from 'meteor/meteor';
 import _ from 'lodash';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
+import { ServiceConfiguration } from 'meteor/service-configuration';
 
 AccountsTemplates.configure({
     texts: {
@@ -37,7 +38,13 @@ function localUser() {
 }
 
 function loginType() {
-    return Meteor.settings.public.LOGIN_TYPE;
+    const service = getServiceConfiguration();
+    return service;
 }
 
-export { localUser, loginType };
+function getServiceConfiguration() {
+    const config = ServiceConfiguration.configurations.findOne({});
+    return config ? config.service : undefined;
+}
+
+export { localUser, loginType, getServiceConfiguration };

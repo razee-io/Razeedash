@@ -86,7 +86,17 @@ const serviceData = {
 
 // This is used in the customAtOauth template 
 Template.atOauth.helpers({
-    showSelectedService(service) {
+    showServiceList(configuredService) {
+        if(configuredService) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+    showSelectedService(service, configuredService) {
+        if(configuredService && configuredService === service._id) {
+            return service;
+        }
         if(service._id === selectedService.get()) {
             return service;
         }

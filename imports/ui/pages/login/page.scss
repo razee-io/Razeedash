@@ -49,7 +49,7 @@
 }
 
 .login-card {
-    width: 464px;
+    width: 645px;
     padding: 24px 0;
     font-family: 'IBM Plex Sans';
     .heading {
@@ -66,4 +66,33 @@
     @media (max-width: 415px) { 
         width: 330px;
     }
+}
+
+.card-img-top {
+    margin-bottom: 40px;
+}
+.service-wrapper {
+    margin-top: 15px;
+}
+
+.card-deck {
+    @media (max-width: 685px) { 
+        align-items: center;
+    }
+    .card {
+        min-height: 260px;
+        justify-content: center;
+        align-items: center;
+        transition : border 350ms ease-out;
+        @media (max-width: 685px) { 
+            width: 200px;
+        }
+    }
+}
+.card-footer {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 45px;
 }

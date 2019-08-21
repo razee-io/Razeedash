@@ -68,9 +68,21 @@
 -->
 <template name="customAtOauth">
     <div class="at-oauth">
+        <div class="card-deck">
         {{#each service in oauthService}}
-            {{#if showService service loginType}}
+            <div class="card js-configure-service {{getServiceClass service._id}}" data-service="{{service._id}}">
+                <img class="card-img-top" src="{{serviceImg service._id}}" alt="service logo">
+                <div class="card-footer">
+                    <p class="card-text">{{serviceLabel service._id}}</p>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+        {{#each service in oauthService}}
+            {{#if showSelectedService service }}
+            <div class="service-wrapper">
                 {{> atSocial service}}
+            </div>
             {{/if}}
         {{/each}}
     </div>

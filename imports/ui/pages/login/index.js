@@ -20,24 +20,67 @@ import './page.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { ReactiveVar } from 'meteor/reactive-var';
 
+let selectedService = new ReactiveVar(undefined);
+
+Template.Login.onCreated(function(){
+    this.autorun(()=>{
+        selectedService.set(undefined);
+    });
+});
 // This is used in the customAtForm template to determine whether or not 
-// to show the email/password login formj:w
+// to show the email/password login form
 Template.atForm.helpers({
     showPwdForm() {
         return Meteor.settings.public.LOGIN_TYPE === 'local';
     },
 });
 
+const serviceData = {
+    'ghe': {
+        'img': 'img/Octocat.png',
+        'label': 'GitHub Enterprise'
+    },
+    'github': {
+        'img': 'img/GitHub_Logo.png',
+        'label': 'GitHub'
+    },
+    'bitbucket': {
+        'img': 'img/bitbucket.svg',
+        'label': 'Bitbucket'
+    }
+};
+
 // This is used in the customAtOauth template 
 Template.atOauth.helpers({
-    // only show one login button at a time -- either Github, GitHub enterprise or Bitbucket 
-    // depending Meteor.settings.public.LOGIN_TYPE
-    showService(service, authType) {
-        if(service._id === authType) {
+    showSelectedService(service) {
+        if(service._id === selectedService.get()) {
             return service;
         }
     },
+    serviceImg(service) {
+        return serviceData[service].img;
+    },
+    serviceLabel(service) {
+        return serviceData[service].label;
+    },
+    getServiceClass(service) {
+        if(service === selectedService.get()) {
+            return 'border-primary';
+        } else {
+            return 'border-grey';
+        }
+    }
+});
+
+Template.atOauth.events({
+    'click .js-configure-service'(event) {
+        event.preventDefault();
+        if(event.currentTarget.dataset.service) {
+            selectedService.set(event.currentTarget.dataset.service);
+        }
+    }
 });
 
 Template.Login.events({

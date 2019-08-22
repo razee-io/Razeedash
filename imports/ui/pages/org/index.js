@@ -24,6 +24,7 @@ import Clipboard from 'clipboard';
 import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { loginType } from '/imports/api/lib/login.js';
 
 Template.OrgSingle.onCreated( () => {
     const template = Template.instance();
@@ -59,6 +60,9 @@ Template.OrgSingle.helpers({
     },
     orgName(){
         return FlowRouter.getParam('baseOrgName');
+    },
+    orgType() {
+        return loginType() === 'bitbucket' ? 'Team' : 'Organization';
     }
 });
 
@@ -224,5 +228,3 @@ Template.OrgManageSearchableAttrs.events({
         return false;
     }
 });
-
-

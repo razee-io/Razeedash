@@ -38,3 +38,7 @@
 .grayscale{
   filter:grayscale(100%);
 }
+
+.modal-dialog, .modal-content {
+    border-radius: 0%;
+}

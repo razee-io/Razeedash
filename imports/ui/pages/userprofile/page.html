@@ -33,22 +33,24 @@
                                 <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Email" value="{{localUserName}}" readonly>
                             {{else}}
                                 <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Email" value="{{currentUser.profile.name}}" readonly>
-                                <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
+                                <small id="emailHelp" class="form-text text-muted">This comes from {{scmLabel}} and cannot be updated.</small>
                             {{/if}}
                         </div>
 
                         {{#unless localUser}} 
-                        <div class="form-group">
-                            <label for="inputEmail">Email address</label>
-                            <input type="email" 
-                                   class="form-control" 
-                                   id="inputEmail" 
-                                   aria-describedby="emailHelp" 
-                                   placeholder="email" 
-                                   value="{{or currentUser.services.github.email currentUser.services.ghe.email}}" 
-                                   readonly>
-                            <small id="emailHelp" class="form-text text-muted">This comes from GitHub and cannot be updated.</small>
-                        </div>
+                            {{#unless bitbucketUser}}
+                            <div class="form-group">
+                                <label for="inputEmail">Email address</label>
+                                <input type="email" 
+                                    class="form-control" 
+                                    id="inputEmail" 
+                                    aria-describedby="emailHelp" 
+                                    placeholder="email" 
+                                    value="{{or currentUser.services.github.email currentUser.services.ghe.email}}" 
+                                    readonly>
+                                <small id="emailHelp" class="form-text text-muted">This comes from {{scmLabel}} and cannot be updated.</small>
+                            </div>
+                            {{/unless}}
                         {{/unless}}
 
                         <div class="form-group">

@@ -29,10 +29,17 @@
         {{#if localUser}}
             <span>Select an org</span>
         {{else}}
-            <i class="fa fa-github" aria-hidden="true"></i> Select an org
-            <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh GitHub Orgs">
-                <i class="fa fa-refresh" aria-hidden="true"></i>
-            </span>
+            {{#if bitbucketUser }}
+                <i class="fa fa-bitbucket" aria-hidden="true"></i> Select a team
+                <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh Bitbucket teams">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </span>
+            {{else}}
+                <i class="fa fa-github" aria-hidden="true"></i> Select an org
+                <span class="refresh-btn {{refreshStatus}} float-right" data-toggle="tooltip" data-placement="left" title="Refresh GitHub Orgs">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </span>
+            {{/if}}
         {{/if}}
     </h2>
 
@@ -69,7 +76,7 @@
                                         {{> SelectOrg_register org=org}}
                                         {{> SelectOrg_git org=org}}
                                     {{else}}
-                                        <i>You must be a GitHub <a href="{{githubUrl}}{{org.name}}">{{org.name}}</a> org admin to register it in RazeeDash.</i>
+                                        <i>You must be an admin of <a href="{{scmUrl}}{{org.name}}">{{org.name}}</a> to register it in RazeeDash.</i>
                                     {{/if}}
                                 {{/if}}
                                 </div>
@@ -88,15 +95,23 @@
                 {{else}}
                     <div>
                         <div class="m-3">
-                            You don't appear to belong to any organizations. Try refreshing.<br />
-                            You can also <a href="https://github.com/organizations/new" target="_blank">create a new github organization</a>.
+                            {{#if bitbucketUser }}
+                                You don't appear to belong to any Bitbucket teams. Try refreshing.<br />
+                                You can also <a href="https://bitbucket.org/account/create-team/" target="_blank">create a new Bitbucket team</a>.
+                            {{else}}
+                                You don't appear to belong to any GitHub organizations. Try refreshing.<br />
+                                You can also <a href="https://github.com/organizations/new" target="_blank">create a new GitHub organization</a>.
+                            {{/if}}
+
                         </div>
                     </div>
 
-                    <div class="m-3">
-                        <a href="{{authMoreOrgsLink}}" target="_blank">Authorize more of your github orgs.</a>
-                        <span class="text-muted">Click Grant next to each org you'd like to authorize.</span>
-                    </div>
+                    {{#unless bitbucketUser}}
+                        <div class="m-3">
+                            <a href="{{authMoreOrgsLink}}" target="_blank">Authorize more of your github orgs.</a>
+                            <span class="text-muted">Click Grant next to each org you'd like to authorize.</span>
+                        </div>
+                    {{/unless}}
                 {{/if}}
             {{/each}}
             {{#let orgCount=orgNames.length}}
@@ -132,7 +147,7 @@
 </template>
 
 <template name="SelectOrg_register">
-    <button class="btn btn-primary btn-sm registerOrgBtn rounded-0 action-button" {{outputDisabled isRegistering}} alt="Register this org in RazeeDash">
+    <button class="btn btn-primary btn-sm registerOrgBtn rounded-0 action-button" {{outputDisabled isRegistering}} alt="Register in RazeeDash">
         Register
         {{#if isRegistering}}
             <i class="fa fa-spinner fa-spin"></i>
@@ -142,7 +157,7 @@
 
 
 <template name="SelectOrg_deregister">
-    <button class="btn btn-warning btn-sm deRegisterOrgBtn rounded-0 action-button" {{outputDisabled isRegistering}} alt="Un-register this org from RazeeDash">
+    <button class="btn btn-warning btn-sm deRegisterOrgBtn rounded-0 action-button" {{outputDisabled isRegistering}} alt="Un-register from RazeeDash">
         Remove
         {{#if isDeRegistering}}
             <i class="fa fa-spinner fa-spin"></i>
@@ -152,17 +167,17 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Remove Org "{{orgName}}"</h5>
+                    <h5 class="modal-title">Remove "{{orgName}}"</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body font-weight-bold">
-                    Are you sure you want to remove the org "{{orgName}}"?<br />
+                    Are you sure you want to remove "{{orgName}}"?<br />
                     All the data that Razee stores for it will be removed.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger confirmDeRegisterOrgBtn">Yes, Remove "{{orgName}}"</button>
+                    <button type="button" class="btn btn-danger confirmDeRegisterOrgBtn">Yes, remove "{{orgName}}"</button>
                     <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -172,5 +187,5 @@
 
 
 <template name="SelectOrg_git">
-    <a href="{{githubUrl}}{{org.name}}" class="ml-2 btn btn-sm btn-light fa fa-github rounded-0 git-img action-button" alt="{{org.name}} github link"></a>
+    <a href="{{scmUrl}}{{org.name}}" class="ml-2 btn btn-sm btn-light fa {{scmIcon}} rounded-0 git-img action-button" alt="{{org.name}} link"></a>
 </template>

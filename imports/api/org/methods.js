@@ -20,13 +20,19 @@ import { Meteor } from 'meteor/meteor';
 import uuid from 'uuid';
 import { Orgs } from './orgs.js';
 import ghe from '../lib/ghe.js';
-import { localUser } from '../lib/login.js';
+import bitbucket from '../lib/bitbucket.js';
+import { localUser, loginType } from '../lib/login.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 
 Meteor.methods({
     hasOrgs() {
 
-        let userOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        let userOrgs;
+        if(loginType() === 'bitbucket') {
+            userOrgs = _.get(Meteor.user(), 'bitbucket.teams', []);
+        } else {
+            userOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        }
         let userOrgNames = _.map(userOrgs, 'name');
 
         if(localUser()) {
@@ -50,8 +56,13 @@ Meteor.methods({
     reloadUserOrgList(){
         var userObj = Meteor.users.findOne({ _id: Meteor.userId() });
         if(userObj && !localUser()) {
-            var orgs = ghe.listOrgs(userObj);
-            Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
+            if(loginType() === 'bitbucket') {
+                let teams = bitbucket.listTeams(userObj);
+                Meteor.users.update({ _id: userObj._id}, { $set: { 'bitbucket.teams': teams} });
+            } else {
+                let orgs = ghe.listOrgs(userObj);
+                Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
+            }
         } 
     },
     registerLocalOrg(name){
@@ -83,12 +94,17 @@ Meteor.methods({
     registerOrg(name){
         check( name, String );
         var userObj = Meteor.user();
-        var userOrgs = _.get(userObj, 'github.orgs');
+        var userOrgs;
+        if(loginType() === 'bitbucket') {
+            userOrgs = _.get(userObj, 'bitbucket.teams');
+        } else {
+            userOrgs = _.get(userObj, 'github.orgs');
+        }
         var userOrg = _.find(userOrgs, (org)=>{
             return (org.name == name);
         });
         if(!userOrg || userOrg.role != 'admin'){
-            throw new Meteor.Error(`You must be a GitHub "${name}" org admin to register it.`);
+            throw new Meteor.Error(`You must be a "${name}" admin to register it.`);
         }
         var org = Orgs.findOne({ name });
         if(org){
@@ -127,13 +143,19 @@ Meteor.methods({
                 throw new Meteor.Error(`org "${name}" was not found.`);
             }
         } else {
+            let serviceName = loginType();
             var userObj = Meteor.user();
-            var userOrgs = _.get(userObj, 'github.orgs');
+            let userOrgs;
+            if(serviceName === 'bitbucket') {
+                userOrgs = _.get(userObj, 'bitbucket.teams');
+            } else {
+                userOrgs = _.get(userObj, 'github.orgs');
+            }
             var userOrg = _.find(userOrgs, (org)=>{
                 return (org.name == name);
             });
             if(!userOrg || userOrg.role != 'admin'){
-                throw new Meteor.Error(`You must be a GitHub "${name}" org admin to de-register it.`);
+                throw new Meteor.Error(`You must be a ${serviceName} admin of "${name}" to de-register it.`);
             }
             Orgs.remove({ name: name });
         }

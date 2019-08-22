@@ -32,9 +32,12 @@ import { Orgs } from '/imports/api/org/orgs';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
-import { localUser } from '/imports/api/lib/login.js';
+import { localUser, loginType, getServiceConfiguration } from '/imports/api/lib/login.js';
 
-Accounts.ui.config( { requestPermissions: { github: ['read:user', 'read:org'] } } );
+Accounts.ui.config( { requestPermissions: { 
+    github: ['read:user', 'read:org'],
+    bitbucket: ['account']
+} } );
 
 const time = new ReactiveVar();
 time.set(new Date());
@@ -58,11 +61,22 @@ Template.registerHelper('localUserName', () => {
     return loggedInUser;
 });
 
+Template.registerHelper('scmLabel', () => {
+    return loginType() === 'bitbucket' ? 'Bitbucket' : 'GitHub';
+});
+
 Template.registerHelper('localUser', () => {
     return localUser();
 });
+Template.registerHelper('configuredService', () => {
+    return getServiceConfiguration();
+});
 Template.registerHelper('loginType', () => {
-    return Meteor.settings.public.LOGIN_TYPE;
+    return getServiceConfiguration();
+});
+Template.registerHelper('bitbucketUser', () => {
+    const service = getServiceConfiguration();
+    return service === 'bitbucket';
 });
 
 Template.registerHelper('clusterYamlUrl', (key) => {
@@ -133,6 +147,17 @@ Template.registerHelper('meteorSetting', (name)=>{
 
 Template.registerHelper('githubUrl', ()=>{
     return Meteor.settings.public.GITHUB_URL;
+});
+Template.registerHelper('bitbucketUrl', ()=>{
+    return Meteor.settings.public.BITBUCKET_URL;
+});
+Template.registerHelper('scmUrl', ()=>{
+    const service = getServiceConfiguration();
+    if(service === 'bitbucket') {
+        return Meteor.settings.public.BITBUCKET_URL;
+    } else {
+        return Meteor.settings.public.GITHUB_URL;
+    }
 });
 
 Template.registerHelper('currentGheOrgName', ()=>{
@@ -325,7 +350,11 @@ Template.registerHelper('iconForOrgName', (orgName) => {
     if(localUser()) {
         orgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch();
     } else {
-        orgs = _.get(Meteor.user(), 'github.orgs', []);
+        if(loginType() === 'bitbucket') {
+            orgs = _.get(Meteor.user(), 'bitbucket.teams', []);
+        } else {
+            orgs = _.get(Meteor.user(), 'github.orgs', []);
+        }
     } 
 
     var selectedOrg = _.find(orgs, (org)=>{

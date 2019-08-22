@@ -17,6 +17,7 @@
 import { Meteor } from 'meteor/meteor';
 import _ from 'lodash';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
+import { ServiceConfiguration } from 'meteor/service-configuration';
 
 AccountsTemplates.configure({
     texts: {
@@ -26,10 +27,10 @@ AccountsTemplates.configure({
     },
 });
 
-// A user can logon via github, github enterprise or they can create a local id/password stored in mongo
+// A user can logon via github, github enterprise, bitbucket or they can create a local id/password stored in mongo
 // `localUser` is used throughout our code so that we can skip calls to the github api for local users
 function localUser() {
-    if( _.has(Meteor.user(), 'services.github') || _.has(Meteor.user(), 'services.ghe') ) {
+    if( _.has(Meteor.user(), 'services.github') || _.has(Meteor.user(), 'services.ghe') || _.has(Meteor.user(), 'services.bitbucket') ) {
         return false;
     } else {
         return true;
@@ -37,7 +38,13 @@ function localUser() {
 }
 
 function loginType() {
-    return Meteor.settings.public.LOGIN_TYPE;
+    const service = getServiceConfiguration();
+    return service;
 }
 
-export { localUser, loginType };
+function getServiceConfiguration() {
+    const config = ServiceConfiguration.configurations.findOne({});
+    return config ? config.service : undefined;
+}
+
+export { localUser, loginType, getServiceConfiguration };

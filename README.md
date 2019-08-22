@@ -23,11 +23,12 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 | ----             | -------- | -----                    | ----------- |
 | MONGO_URL        | Required | -                        | URL to your mongo instance |
 | OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
-| GITHUB_URL       | Optional | <https://github.com>     | Required if `LOGIN_TYPE=ghe` |
-| GITHUB_API       | Optional | <https://api.github.com> | Required if `LOGIN_TYPE=ghe` |
+| GITHUB_URL       | Optional | <https://github.com>     | Required when using GitHub Enterprise authentication |
+| GITHUB_API       | Optional | <https://api.github.com> | Required when using GitHub Enterprise authentication |
+| BITBUCKET_URL    | Optional | <https://bitbucket.org>     | Required when using Bitbucket Enterprise authentication |
+| BITBUCKET_API    | Optional | <https://api.bitbucket.org/2.0/> | Required when using Bitbucket Enterprise authentication |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
 | LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
-| LOGIN_TYPE |   Optional    | github | Use `local` to enable local id/password logins. Use `ghe` for GitHub Enterprise instead of GitHub authentication. |
 
 ### Register GitHub application
 
@@ -43,29 +44,27 @@ Example registration for running locally.
 
 ### Using GitHub Enterprise for authentication
 
-- Add `login_type`, `github_url` and `github_api` to the `razeedash-config` ConfigMap.  For example:
+- Add `github_url` and `github_api` to the `razeedash-config` ConfigMap.  For example:
 
     ```yaml
     apiVersion: v1
     kind: ConfigMap
     data:
-        login_type: ghe
         github_url: github.your_company.com
         github_api: github.your_company.com/api/v3
     ```
 
-### Enable email/password authentication
+### Using Bitbucket Enterprise authentication
 
-To use email/password authentication instead of GitHub authentication you need to create the `login_type` key in the `razeedash-config` ConfigMap and set it to `local`. If the variable is not set then you will only see the `Sign in with GitHub` option.
+Add `bitbucket_url` and `bitbucket_api` to the `razeedash-config` ConfigMap. For example:
 
 ```yaml
     apiVersion: v1
     kind: ConfigMap
     data:
-        login_type: local
+        bitbucket_url: bitbucket.your_company.org
+        bitbucket_api: api.bitbucket.your_company.org/2.0/
 ```
-
-For password resets set a `mail_url` key in the `razeedash-config` ConfigMap.  Details on the `MAIL_URL` environment variable can be found [here](https://docs.meteor.com/api/email.html)
 
 ### Deploy components
 

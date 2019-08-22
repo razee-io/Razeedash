@@ -35,7 +35,7 @@
                         {{> breadcrumbs }}
                         <div class="m-2">
                             <div class="alert alert-danger" role="alert">
-                                Org "{{currentOrgName}}" not found
+                                "{{currentOrgName}}" not found
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     {{> Login }}
                 {{/if}}
             {{else}}
-                {{> loading text="Loading Org Data..."}}
+                {{> loading text="Loading data..."}}
             {{/if}}
         {{/unless}}
     {{/if}}

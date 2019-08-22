@@ -35,7 +35,7 @@ var hasOrgAccess = new ReactiveVar(false);
 import { Session } from 'meteor/session';
 import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
 import { Orgs } from '/imports/api/org/orgs.js';
-import { localUser } from '/imports/api/lib/login.js';
+import { localUser, loginType } from '/imports/api/lib/login.js';
 
 Template.page_welcome.onCreated(function() {
     this.autorun(()=>{
@@ -45,7 +45,12 @@ Template.page_welcome.onCreated(function() {
 
     this.autorun(()=>{
         var orgName = Session.get('currentOrgName');
-        var userOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        var userOrgs;
+        if(loginType() === 'bitbucket') {
+            userOrgs = _.get(Meteor.user(), 'bitbucket.teams', []);
+        } else {
+            userOrgs = _.get(Meteor.user(), 'github.orgs', []);
+        }
         var userOrgNames = _.map(userOrgs, 'name');
         
         if(localUser()) {

@@ -61,10 +61,6 @@ Template.registerHelper('localUserName', () => {
     return loggedInUser;
 });
 
-Template.registerHelper('scmLabel', () => {
-    return loginType() === 'bitbucket' ? 'Bitbucket' : 'GitHub';
-});
-
 Template.registerHelper('localUser', () => {
     return localUser();
 });

@@ -65,10 +65,6 @@
             {{/if}}
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            {{#if hasOrgsDefined }}
-            <a class="dropdown-item" href="{{pathFor 'profile'}}">
-              <i class="text-muted fa fa-user" aria-hidden="true"></i> Profile</a>
-            {{/if}}
             <a class="dropdown-item" target="_blank" href="{{meteorSetting 'RAZEE_GITHUB_URL'}}">
               <i class="text-muted fa fa-github" aria-hidden="true"></i> Razee on GitHub</a>
             <a class="dropdown-item razee-logout" href="#">

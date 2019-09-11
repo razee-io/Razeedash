@@ -18,29 +18,8 @@ import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { ResourceYamlHist } from './resourceYamlHist.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
-import moment from 'moment';
-import _ from 'lodash';
 
 Meteor.methods({
-    async getPrevResourceYamlHistObj(orgId, clusterId, resourceSelfLink){
-        check(orgId, String);
-        check(clusterId, String);
-        check(resourceSelfLink, String);
-        requireOrgAccess(orgId);
-        var search = {
-            org_id: orgId,
-            cluster_id: clusterId,
-            resourceSelfLink,
-        };
-        var options = {
-            sort: {
-                updated: -1,
-            },
-            limit: 1,
-            skip: 1,
-        };
-        return await ResourceYamlHist.findOne(search, options);
-    },
     async getTwoYamlHistsAtTimestamp(orgId, clusterId, resourceSelfLink, ts=null){
         check(orgId, String);
         check(clusterId, String);
@@ -56,7 +35,6 @@ Meteor.methods({
         if(ts){
             search.updated = { $lte: new Date(ts) };
         }
-        console.log(3333, search)
         var options = {
             sort: {
                 updated: -1,

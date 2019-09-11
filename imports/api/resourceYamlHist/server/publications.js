@@ -16,9 +16,7 @@
 
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
-import { Match } from 'meteor/check';
 import { ResourceYamlHist } from '../resourceYamlHist.js';
-import utils from '/imports/both/utils.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 
 Meteor.publish('resourceYamlHist.histForSelfLink', function(orgId, clusterId, selfLink) {

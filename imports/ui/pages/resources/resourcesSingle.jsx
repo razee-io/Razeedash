@@ -12,27 +12,6 @@ import { Session } from "meteor/session";
 import { StrDiff } from '../../components/strDiff/index.jsx';
 
 export class ResourcesSingle extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {};
-    }
-
-    componentWillUpdate(nextProps, nextState, nextContext){
-        // once the resource id loads do the meteor call
-        if(_.get(nextProps, 'resource._id') && !_.isEqual(_.get(this.props, 'resource._id'), _.get(nextProps, 'resource._id'))){
-            console.log(2222, nextProps)
-            this.getPrevResourceYamlHistObj(nextProps.orgId, nextProps.clusterId, nextProps.resource.selfLink);
-        }
-    }
-
-    getPrevResourceYamlHistObj(orgId, clusterId, selfLink){
-        Meteor.call('getPrevResourceYamlHistObj', orgId, clusterId, selfLink, (err, obj)=>{
-            this.setState({
-                prevResourceYamlHistObj: obj,
-            });
-        });
-    }
-
     render() {
         if(this.props.isLoading){
             return (
@@ -40,16 +19,8 @@ export class ResourcesSingle extends React.Component {
             );
         }
         var resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
-        var histAttrs = {
-            resourceYamlHistItems: this.props.resourceYamlHistItems,
-            resource: this.props.resource,
-            prevResourceYamlHistObj: this.state.prevResourceYamlHistObj,
-        };
         return (
             <div>
-                {this.state.prevResourceYamlHistObj &&
-                    <ResourceHistDiff {...histAttrs} />
-                }
                 <div className="card m-2">
                     <div className="card-header">
                         <h4 className="mb-0 text-muted">
@@ -105,10 +76,10 @@ export class ResourceHistDiff extends React.Component{
         var resourceYamlHistItems = this.props.resourceYamlHistItems;
         return (
             <div className="dropdown yamlHistDropdown">
-                <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                <button className="btn btn-primary dropdown-toggle mb-3" type="button" data-toggle="dropdown">
                     Recent Changes
                 </button>
-                <div className="dropdown-menu dropdown-menu-right">
+                <div className="dropdown-menu">
                     {_.map(resourceYamlHistItems, (histItem, idx)=>{
                         var isActive = (histItem.updated - 0 == this.state.updatedTime) || (this.state.updatedTime == null && idx == 0);
                         return (
@@ -138,25 +109,15 @@ export class ResourceHistDiff extends React.Component{
 
     render(){
         var resource = this.props.resource;
-        //var prevResourceYamlHistObj = this.props.prevResourceYamlHistObj;
         if(!resource){
             return null;
         }
 
         return (
-            <div className="card m-2">
-                <h4 className="card-header d-flex justify-content-between align-items-center py-2">
-                    <div className="text-muted">
-                        Yaml History
-                    </div>
-                    <div className="">
-                        {this.renderDropdown()}
-                    </div>
-                </h4>
-                <div className="card-body">
-                    {this.state.loading && 'LOADING'}
-                    {this.renderDiff()}
-                </div>
+            <div>
+                {this.renderDropdown()}
+                {this.state.loading && <Blaze template="loading" />}
+                {this.renderDiff()}
             </div>
         );
     }
@@ -173,7 +134,6 @@ export class ResourcesSingle_default extends React.Component{
         var histAttrs = {
             resourceYamlHistItems: this.props.resourceYamlHistItems,
             resource: this.props.resource,
-            //prevResourceYamlHistObj: this.state.prevResourceYamlHistObj,
         };
         return (
             <div>

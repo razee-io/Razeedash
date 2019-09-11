@@ -18,37 +18,14 @@ import './page.scss';
 import './page.html';
 import '../../components/cluster/details';
 import '../../components/cluster/resources';
-import '../../components/cluster/updaterMessages';
 import '../../components/cluster/webhooks';
 import '../../components/cluster/comments';
-import moment from 'moment';
-import { Messages } from '/imports/api/message/messages.js';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.cluster.helpers({
     collapsable() {
         return !Template.currentData().notCollapsable;
-    },
-    updaterMessagesByClusterId(clusterId) {
-        return Messages.find({
-            cluster_id: clusterId,
-            updated: { $gte: new moment().subtract(1, 'hour').toDate() }
-        }, { sort: { updated: -1 } });
-    },
-    hasUpdaterMessages(clusterId) {
-        return Messages.find({
-            cluster_id: clusterId,
-            updated: { $gte: new moment().subtract(1, 'hour').toDate() }
-        }).count() > 0;
-    },
-    updaterMessagesByClusterIdCountStr(clusterId) {
-        var count = Messages.find({ cluster_id: clusterId }).count();
-        if (count > 99) {
-            // stops at 99 because we have a limit 100 on the publisher
-            count = '99+';
-        }
-        return count || '0';
     },
     commentCountStr() {
         return (this.cluster.comments || []).length;
@@ -62,11 +39,4 @@ Template.cluster.helpers({
         }
         return false;
     }
-});
-
-Template.cluster.onCreated(function() {
-    this.autorun(() => {
-        const clusterId = Template.currentData().cluster.cluster_id;
-        this.subscribe('messages.byCluster', clusterId);
-    });
 });

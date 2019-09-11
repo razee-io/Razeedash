@@ -70,8 +70,7 @@ Meteor.publish('clusterSearch', function(orgId, searchStr, limit=50) {
             updated: 1,
             'metadata.name': 1,
             'metadata.cluster_lock': 1,
-            'metadata.kube_version': 1,
-            'metadata.last_updater_message': 1
+            'metadata.kube_version': 1
         },
         limit: limit,
     };

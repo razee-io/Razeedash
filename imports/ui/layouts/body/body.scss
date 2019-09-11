@@ -64,15 +64,7 @@
 .r-aside {
     padding-right: 300px;
 }
-.otherAside {
-    display: none;
-    .card {
-        background: none;
-        .updaterMessages {
-            margin-left: 6px;
-        }
-    }
-}
+
 .container-fluid {
     // max-width: 1280px;
     margin: 0 auto;
@@ -99,27 +91,6 @@
     touch-action: auto;
     overflow: hidden !important;
     -ms-overflow-style: none;
-}
-.updaterMessages {
-    padding: 0px 10px;
-    &.danger {
-        border-left: 3px solid #e71d32;
-    }
-    &.warning {
-        border-left: 3px solid #efc100;
-    }
-    &.info{
-        border-left: 3px solid #5aaafa;
-    }
-    h5, h6, p {
-        margin: 0px;
-        word-break: break-all;
-    }
-    p {
-     a {
-         text-decoration: none;
-     }
-    }
 }
 
 .chop {
@@ -154,9 +125,6 @@
     .right-side-panel {
       display: none; 
     } 
-    .otherAside {
-      display: block;  
-    }
 }
   
 @media (max-width: 767px) {

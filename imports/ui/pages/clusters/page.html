@@ -83,13 +83,6 @@
     <td class="d-none d-md-table-cell">
       {{getClusterVersion cluster}}
     </td>
-    <td class="cluster_icon_row">
-      {{#if withinMinutes cluster.last_updater_message 10 }}
-      <a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='updaterMessages'}}">
-        <i class="fa fa-exclamation-triangle align-middle text-danger" aria-hidden="true" title="This cluster has messages"></i>
-      </a>
-      {{/if}}
-    </td>
   </tr>
 </template>
 

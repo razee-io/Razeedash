@@ -52,18 +52,6 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link {{isActiveTab 'updaterMessages'}}" href="updaterMessages" role="tab" aria-selected="true" tabname="updaterMessages">
-                      <span>
-                        <span class="">
-                          <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Updater messages
-                        </span>
-                        {{#if hasUpdaterMessages cluster.cluster_id }}
-                        <span class="badge badge-danger mx-1">{{updaterMessagesByClusterIdCountStr cluster.cluster_id}}</span>
-                        {{/if}}
-                      </span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
                     <a class="nav-link {{isActiveTab 'webhooks'}}" href="webhooks" role="tab" aria-controls="profile" aria-selected="false"
                       tabname="webhooks">
                       <i class="fa fa-anchor" aria-hidden="true"></i> Webhooks
@@ -92,12 +80,6 @@
                 {{#if or (isActiveTab "resources") (isActiveTab "namespaces")}}
                 <div class="card border-top-0 border-bottom">
                   {{> cluster_resources cluster_id=cluster.cluster_id}}
-                </div>
-                {{/if}}
-                
-                {{#if isActiveTab "updaterMessages"}}
-                <div class="card border-top-0 border-bottom">
-                  {{> updater_messages_table updaterMessages=(updaterMessagesByClusterId cluster.cluster_id) }}
                 </div>
                 {{/if}}
 

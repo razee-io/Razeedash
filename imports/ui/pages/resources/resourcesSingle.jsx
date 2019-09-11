@@ -3,13 +3,36 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 import { Resources } from '../../../api/resource/resources';
+import { ResourcesYamlHist, ResourceYamlHist } from '../../../api/resourceYamlHist/resourceYamlHist';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import moment from 'moment';
 import resourceKinds from './resourceKindComponents';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from "meteor/session";
+import { StrDiff } from '../../components/strDiff/index.jsx';
 
 export class ResourcesSingle extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {};
+    }
+
+    componentWillUpdate(nextProps, nextState, nextContext){
+        // once the resource id loads do the meteor call
+        if(_.get(nextProps, 'resource._id') && !_.isEqual(_.get(this.props, 'resource._id'), _.get(nextProps, 'resource._id'))){
+            console.log(2222, nextProps)
+            this.getPrevResourceYamlHistObj(nextProps.orgId, nextProps.clusterId, nextProps.resource.selfLink);
+        }
+    }
+
+    getPrevResourceYamlHistObj(orgId, clusterId, selfLink){
+        Meteor.call('getPrevResourceYamlHistObj', orgId, clusterId, selfLink, (err, obj)=>{
+            this.setState({
+                prevResourceYamlHistObj: obj,
+            });
+        });
+    }
+
     render() {
         if(this.props.isLoading){
             return (
@@ -17,20 +40,122 @@ export class ResourcesSingle extends React.Component {
             );
         }
         var resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
+        var histAttrs = {
+            resourceYamlHistItems: this.props.resourceYamlHistItems,
+            resource: this.props.resource,
+            prevResourceYamlHistObj: this.state.prevResourceYamlHistObj,
+        };
+        return (
+            <div>
+                {this.state.prevResourceYamlHistObj &&
+                    <ResourceHistDiff {...histAttrs} />
+                }
+                <div className="card m-2">
+                    <div className="card-header">
+                        <h4 className="mb-0 text-muted">
+                            Resource "{resourceName}" on <a href={FlowRouter.path('cluster.tab', { id: this.props.clusterId, tabId: 'resources' })}>{this.props.clusterId}</a>
+                        </h4>
+                    </div>
+                    <div className="card-body">
+                        {this.props.resource &&
+                            <ResourcesSingle_default {...this.props} />
+                        }
+                        {!this.props.resource &&
+                            <div>Resource "{this.props.selfLink}" not found</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+
+
+
+
+export class ResourceHistDiff extends React.Component{
+    componentWillMount(){
+        this.renderDropdown = this.renderDropdown.bind(this);
+        this.renderDiff = this.renderDiff.bind(this);
+        this.switchToUpdateTime = this.switchToUpdateTime.bind(this);
+
+        this.setState({
+            loading: true,
+        });
+        this.switchToUpdateTime(null);
+    }
+
+    switchToUpdateTime(timestamp){
+        this.setState({
+            updatedTime: timestamp,
+            loading: true,
+            compareYamls: [],
+        });
+        var resource = this.props.resource;
+        Meteor.call('getTwoYamlHistsAtTimestamp', resource.org_id, resource.cluster_id, resource.selfLink, timestamp, (err, data)=>{
+            this.setState({
+                compareYamls: data,
+                loading: false,
+            });
+        });
+    }
+
+    renderDropdown(){
+        var resourceYamlHistItems = this.props.resourceYamlHistItems;
+        return (
+            <div className="dropdown yamlHistDropdown">
+                <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Recent Changes
+                </button>
+                <div className="dropdown-menu dropdown-menu-right">
+                    {_.map(resourceYamlHistItems, (histItem, idx)=>{
+                        var isActive = (histItem.updated - 0 == this.state.updatedTime) || (this.state.updatedTime == null && idx == 0);
+                        return (
+                            <div className={`dropdown-item ${isActive ? 'active' : ''}`} key={histItem._id} onClick={()=>{this.switchToUpdateTime(histItem.updated - 0)}}>
+                                {moment(histItem.updated).format('LT, ll')}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    renderDiff(){
+        var oldStr = _.get(this.state, 'compareYamls[1].yamlStr', '');
+        var newStr = _.get(this.state, 'compareYamls[0].yamlStr', '');
+        _.attempt(()=>{
+            oldStr = JSON.stringify(JSON.parse(oldStr), null, 2);
+        });
+        _.attempt(()=>{
+            newStr = JSON.stringify(JSON.parse(newStr), null, 2);
+        });
+        return (
+            <StrDiff {...{ oldStr, newStr }} />
+        );
+    }
+
+    render(){
+        var resource = this.props.resource;
+        //var prevResourceYamlHistObj = this.props.prevResourceYamlHistObj;
+        if(!resource){
+            return null;
+        }
+
         return (
             <div className="card m-2">
-                <div className="card-header">
-                    <h4 className="mb-0 text-muted">
-                        Resource "{resourceName}" on <a href={FlowRouter.path('cluster.tab', { id: this.props.clusterId, tabId: 'resources' })}>{this.props.clusterId}</a>
-                    </h4>
-                </div>
+                <h4 className="card-header d-flex justify-content-between align-items-center py-2">
+                    <div className="text-muted">
+                        Yaml History
+                    </div>
+                    <div className="">
+                        {this.renderDropdown()}
+                    </div>
+                </h4>
                 <div className="card-body">
-                    {this.props.resource &&
-                        <ResourcesSingle_default resource={this.props.resource} />
-                    }
-                    {!this.props.resource &&
-                        <div>Resource "{this.props.selfLink}" not found</div>
-                    }
+                    {this.state.loading && 'LOADING'}
+                    {this.renderDiff()}
                 </div>
             </div>
         );
@@ -45,6 +170,11 @@ export class ResourcesSingle_default extends React.Component{
         if(resourceKinds[kind]){
             KindResourceTagName = resourceKinds[kind];
         }
+        var histAttrs = {
+            resourceYamlHistItems: this.props.resourceYamlHistItems,
+            resource: this.props.resource,
+            //prevResourceYamlHistObj: this.state.prevResourceYamlHistObj,
+        };
         return (
             <div>
 
@@ -55,9 +185,34 @@ export class ResourcesSingle_default extends React.Component{
                 }
 
                 <div className="card mt-0">
-                    <h4 className="card-header text-muted">Yaml data</h4>
+                    <h4 className="card-header text-muted">Resource</h4>
                     <div className="card-body">
-                        <Blaze template="stringifyp" data={JSON.parse(this.props.resource.data)} />
+                        <div className="accordion" id="resource-yaml-accordion">
+                            <div className="card">
+                                <div className="card-header">
+                                    <button className="btn btn-link" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-changes">
+                                        Changes
+                                    </button>
+                                </div>
+                                <div id="resource-yaml-accordion-changes" className="collapse">
+                                    <div className="card-body">
+                                        <ResourceHistDiff {...histAttrs} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-header">
+                                    <button className="btn btn-link" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-full">
+                                        Full Object
+                                    </button>
+                                </div>
+                                <div id="resource-yaml-accordion-full" className="collapse show">
+                                    <div className="card-body">
+                                        <Blaze template="stringifyp" data={JSON.parse(this.props.resource.data)} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,16 +275,19 @@ export default withTracker(()=>{
         Meteor.subscribe('resources.bySelfLink', orgId, clusterId, selfLink),
         Meteor.subscribe('clusters.id', Session.get('currentOrgId'), clusterId),
         Meteor.subscribe('resourceData.bySelfLink', orgId, clusterId, selfLink),
+        Meteor.subscribe('resourceYamlHist.histForSelfLink', orgId, clusterId, selfLink),
     ];
     var resource = Resources.findOne({
         cluster_id: clusterId,
         selfLink,
     });
+    var resourceYamlHistItems = ResourceYamlHist.find({ org_id: orgId, cluster_id: clusterId, resourceSelfLink: selfLink }).fetch();
     var isLoading = _.some(subs, (sub)=>{
         return !sub.ready();
     });
     return {
-        selfLink, clusterId, isLoading,
-        resource,
+        orgId, clusterId,
+        selfLink, isLoading,
+        resource, resourceYamlHistItems,
     };
 })(ResourcesSingle);

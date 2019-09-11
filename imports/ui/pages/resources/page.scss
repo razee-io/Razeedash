@@ -64,3 +64,16 @@ table.tableCollapse{
         }
     }
 }
+
+.yamlHistDropdown {
+    background: blue;
+
+    .dropdown-item {
+        cursor: pointer;
+
+        &:not(.active):not(:active):hover {
+            background: #def;
+        }
+    }
+}
+

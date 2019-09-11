@@ -20,7 +20,6 @@ import _ from 'lodash';
 
 import '../../components/clustersByKubeVersion';
 import '../../components/activeDeployments';
-import '../../components/updaterMessages';
 import '../../components/sevenDayDeployments';
 import '../../components/recentDeployments';
 import '../../components/inactiveClusters';

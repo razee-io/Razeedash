@@ -17,13 +17,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Messages } from '../messages.js';
 import { check } from 'meteor/check';
-import { requireOrgAccess } from '/imports/api/org/utils.js';
 import moment from 'moment';
-
-Meteor.publish('messages.past5Minutes', function(orgId) {
-    requireOrgAccess(orgId);
-    return Messages.find({ org_id: orgId, updated: { $gte: new moment().subtract(5, 'minutes').toDate() } }, { limit: 10, sort: { updated: -1 } });
-});
 
 Meteor.publish('messages.byCluster', function(clusterId) {
     check( clusterId, String );

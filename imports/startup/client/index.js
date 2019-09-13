@@ -149,11 +149,13 @@ Template.registerHelper('bitbucketUrl', ()=>{
 });
 Template.registerHelper('scmUrl', ()=>{
     const service = getServiceConfiguration();
+    let scmLink = '';
     if(service === 'bitbucket') {
-        return Meteor.settings.public.BITBUCKET_URL;
+        scmLink = Meteor.settings.public.BITBUCKET_URL;
     } else {
-        return Meteor.settings.public.GITHUB_URL;
+        scmLink = Meteor.settings.public.GITHUB_URL;
     }
+    return scmLink.endsWith('/') ? scmLink : scmLink + '/';
 });
 
 Template.registerHelper('currentGheOrgName', ()=>{

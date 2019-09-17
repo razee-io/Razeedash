@@ -134,7 +134,7 @@ export class ResourceYamlDisplay extends React.Component{
         };
         var newYamlStr = _.get(this.state, 'compareYamls[0].yamlStr', 'null');
         if(!newYamlStr || newYamlStr == 'null'){
-            // defaults to the resource.data yaml if not resourceHistObj found
+            // defaults to the resource.data yaml if no resourceHistObj found
             newYamlStr = histAttrs.resource.data;
         }
         var newYamlObj = newYamlStr;

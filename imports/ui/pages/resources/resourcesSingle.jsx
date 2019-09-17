@@ -3,6 +3,7 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 import { Resources } from '../../../api/resource/resources';
+import { ExternalApplications } from '../../../api/externalApplications/externalApplications';
 import { ResourcesYamlHist, ResourceYamlHist } from '../../../api/resourceYamlHist/resourceYamlHist';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import moment from 'moment';
@@ -10,6 +11,7 @@ import resourceKinds from './resourceKindComponents';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from "meteor/session";
 import { StrDiff } from '../../components/strDiff/index.jsx';
+import Mustache from 'mustache';
 
 export class ResourcesSingle extends React.Component {
     render() {
@@ -40,10 +42,6 @@ export class ResourcesSingle extends React.Component {
         );
     }
 }
-
-
-
-
 
 export class ResourceHistDiff extends React.Component{
     render(){
@@ -173,7 +171,7 @@ export class ResourceYamlDisplay extends React.Component{
                                 <Blaze template="stringifyp" data={newYamlObj} />
                             }
                             {!newYamlObj &&
-                                <div class="alert alert-warning">
+                                <div className="alert alert-warning">
                                     Error: Failed to load resource yaml object
                                 </div>
                             }
@@ -197,6 +195,7 @@ export class ResourcesSingle_default extends React.Component{
 
         return (
             <div>
+                <ExternalApps {...this.props} />
                 <ResourceKindAttrTable {...this.props} />
 
                 {KindResourceTagName &&
@@ -209,6 +208,78 @@ export class ResourcesSingle_default extends React.Component{
     }
 }
 
+class ExternalApps extends React.Component{
+    renderLinks(applications) {
+
+        const resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
+        const resourceKind = this.props.resource.searchableData.kind;
+
+        console.log('originalApps');
+        console.log(applications);
+        const filteredApps = applications.filter( (app) => {
+            const nameRegEx = new RegExp(app.nameMatch, 'i');
+            const kindRegEx = new RegExp(app.kindMatch, 'i');
+            console.log(`nameRegEx match? ${resourceName} - ${app.nameMatch}` + nameRegEx.test(resourceName));
+            console.log(`kindRegEx match? ${resourceKind} - ${app.kindMatch}` + kindRegEx.test(resourceKind));
+            
+            return nameRegEx.test(resourceName) && kindRegEx.test(resourceKind);
+        });
+        console.log('filteredApps');
+        console.log(filteredApps);
+        
+        const urlTemplate = {
+            'kind': resourceKind,
+            'name': resourceName
+        };
+
+        if(filteredApps && filteredApps.length > 0 ) {
+            return (
+                <ul className="externalApp">
+                    {
+                        filteredApps.map( (app) => {
+                            let output = Mustache.render(app.url, urlTemplate);
+                            return <li key={app.name}><a href={output} target="_blank">{app.name}</a></li>
+                        })
+                    }
+                </ul>
+            );
+        } else {
+            const orgLink = `/${FlowRouter.getParam('baseOrgName')}/org`;
+            return (
+                <ul className="externalApp">
+                    <li>No external application links were found. You can create a new link from the <a href={orgLink}> Manage </a> page.</li>
+                </ul>
+            );
+        }
+    }
+    render(){
+
+        // const applications = this.props.externalApplications;
+        const applications = [
+            { 
+                'name': 'razeeflags',
+                'url': 'https://flags.razee.io/{{kind}}/{{name}}',
+                'kindMatch': '',
+                'nameMatch': 'watch'
+            },
+            {
+                'name': 'someApp',
+                'url': 'https://www.ibm.com/',
+                'kindMatch': 'Deployment',
+                'nameMatch': ''
+            }
+        ];
+
+        return (
+            <div className="card mb-3">
+                <h4 className="card-header text-muted">External applications</h4>
+                <div className="card-body p-0 stacked table-responsive">
+                    { this.renderLinks(applications) }
+                </div>
+            </div>
+        );
+    }
+}
 class ResourceKindAttrTable extends React.Component{
     render(){
         var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => {
@@ -265,6 +336,7 @@ export default withTracker(()=>{
         Meteor.subscribe('clusters.id', Session.get('currentOrgId'), clusterId),
         Meteor.subscribe('resourceData.bySelfLink', orgId, clusterId, selfLink),
         Meteor.subscribe('resourceYamlHist.histForSelfLink', orgId, clusterId, selfLink),
+        Meteor.subscribe('externalApplications', orgId),
     ];
     var resource = Resources.findOne({
         cluster_id: clusterId,
@@ -274,6 +346,7 @@ export default withTracker(()=>{
         { org_id: orgId, cluster_id: clusterId, resourceSelfLink: selfLink },
         { sort: {updated: -1 } }
     ).fetch();
+    var externalApplications = ExternalApplications.find( { org_id: orgId }).fetch();
     var isLoading = _.some(subs, (sub)=>{
         return !sub.ready();
     });
@@ -281,5 +354,6 @@ export default withTracker(()=>{
         orgId, clusterId,
         selfLink, isLoading,
         resource, resourceYamlHistItems,
+        externalApplications
     };
 })(ResourcesSingle);

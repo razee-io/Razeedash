@@ -140,7 +140,7 @@ export class ResourceYamlDisplay extends React.Component{
         return (
             <div className="card mt-0">
                 <h4 className="card-header text-muted d-flex align-items-center">
-                    <div class="mr-3">
+                    <div className="mr-3">
                         Resource
                     </div>
                     <div>

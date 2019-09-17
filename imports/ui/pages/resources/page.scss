@@ -75,3 +75,16 @@ table.tableCollapse{
     }
 }
 
+.diffCollapseBtn{
+    .collapseArrow {
+        transform: rotate(-180deg);
+        transition-duration: .3s;
+    }
+
+    &.collapsed{
+        .collapseArrow {
+            transform: rotate(0deg);
+        }
+    }
+}
+

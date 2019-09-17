@@ -46,9 +46,30 @@ export class ResourcesSingle extends React.Component {
 
 
 export class ResourceHistDiff extends React.Component{
+    render(){
+        var resource = this.props.resource;
+        if(!resource){
+            return null;
+        }
+        var oldStr = _.get(this.props, 'compareYamls[1].yamlStr', '');
+        var newStr = _.get(this.props, 'compareYamls[0].yamlStr', '');
+        _.attempt(()=>{
+            oldStr = JSON.stringify(JSON.parse(oldStr), null, 2);
+        });
+        _.attempt(()=>{
+            newStr = JSON.stringify(JSON.parse(newStr), null, 2);
+        });
+        return (
+            <div>
+                <StrDiff {...{ oldStr, newStr }} />
+            </div>
+        );
+    }
+}
+
+export class ResourceYamlDisplay extends React.Component{
     componentWillMount(){
         this.renderDropdown = this.renderDropdown.bind(this);
-        this.renderDiff = this.renderDiff.bind(this);
         this.switchToUpdateTime = this.switchToUpdateTime.bind(this);
 
         this.setState({
@@ -74,14 +95,26 @@ export class ResourceHistDiff extends React.Component{
 
     renderDropdown(){
         var resourceYamlHistItems = this.props.resourceYamlHistItems;
+        var curSelectedIdx = _.findIndex(resourceYamlHistItems, (histItem)=>{
+            return (histItem.updated - 0 == this.state.updatedTime);
+        });
+        if(this.state.updatedTime == null){
+            curSelectedIdx = 0;
+        }
+        var curSelectedTimestamp = _.get(resourceYamlHistItems[curSelectedIdx], 'updated', null);
+        var recentChangesBtnText = 'Recent Changes';
+        if(curSelectedTimestamp){
+            recentChangesBtnText = `Change on ${moment(curSelectedTimestamp).format('LT, ll')}`;
+        }
+
         return (
             <div className="dropdown yamlHistDropdown">
-                <button className="btn btn-primary dropdown-toggle mb-3" type="button" data-toggle="dropdown">
-                    Recent Changes
+                <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    {recentChangesBtnText}
                 </button>
                 <div className="dropdown-menu">
                     {_.map(resourceYamlHistItems, (histItem, idx)=>{
-                        var isActive = (histItem.updated - 0 == this.state.updatedTime) || (this.state.updatedTime == null && idx == 0);
+                        var isActive = (idx == curSelectedIdx);
                         return (
                             <div className={`dropdown-item ${isActive ? 'active' : ''}`} key={histItem._id} onClick={()=>{this.switchToUpdateTime(histItem.updated - 0)}}>
                                 {moment(histItem.updated).format('LT, ll')}
@@ -93,31 +126,54 @@ export class ResourceHistDiff extends React.Component{
         );
     }
 
-    renderDiff(){
-        var oldStr = _.get(this.state, 'compareYamls[1].yamlStr', '');
-        var newStr = _.get(this.state, 'compareYamls[0].yamlStr', '');
-        _.attempt(()=>{
-            oldStr = JSON.stringify(JSON.parse(oldStr), null, 2);
-        });
-        _.attempt(()=>{
-            newStr = JSON.stringify(JSON.parse(newStr), null, 2);
-        });
-        return (
-            <StrDiff {...{ oldStr, newStr }} />
-        );
-    }
-
     render(){
-        var resource = this.props.resource;
-        if(!resource){
-            return null;
-        }
-
+        var histAttrs = {
+            resourceYamlHistItems: this.props.resourceYamlHistItems,
+            resource: this.props.resource,
+            compareYamls: this.state.compareYamls,
+        };
+        var newYamlStr = _.get(this.state, 'compareYamls[0].yamlStr', 'null');
+        var newYamlObj = newYamlStr;
+        _.attempt(()=>{
+            newYamlObj = JSON.parse(newYamlStr);
+        });
         return (
-            <div>
-                {this.renderDropdown()}
-                {this.state.loading && <Blaze template="loading" />}
-                {this.renderDiff()}
+            <div className="card mt-0">
+                <h4 className="card-header text-muted d-flex align-items-center">
+                    <div class="mr-3">
+                        Resource
+                    </div>
+                    <div>
+                        {this.renderDropdown()}
+                    </div>
+                </h4>
+                <div className="card-body">
+                    {this.state.loading &&
+                        <Blaze template="loading" />
+                    }
+                    {!this.state.loading &&
+                        <div>
+                            <div className="accordion" id="resource-yaml-accordion">
+                                <div className="card border-bottom mb-3">
+                                    <div className="card-header">
+                                        <button className="btn btn-link diffCollapseBtn collapsed" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-changes">
+                                            Changes
+                                            <i className="fa fa-chevron-down ml-2 collapseArrow" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div id="resource-yaml-accordion-changes" className="collapse">
+                                        <div className="card-body">
+                                            <ResourceHistDiff {...histAttrs} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Blaze template="stringifyp" data={newYamlObj} />
+                        </div>
+                    }
+
+                </div>
             </div>
         );
     }
@@ -131,50 +187,16 @@ export class ResourcesSingle_default extends React.Component{
         if(resourceKinds[kind]){
             KindResourceTagName = resourceKinds[kind];
         }
-        var histAttrs = {
-            resourceYamlHistItems: this.props.resourceYamlHistItems,
-            resource: this.props.resource,
-        };
+
         return (
             <div>
-
                 <ResourceKindAttrTable {...this.props} />
 
                 {KindResourceTagName &&
                     <KindResourceTagName {...{data, ...this.props}} />
                 }
 
-                <div className="card mt-0">
-                    <h4 className="card-header text-muted">Resource</h4>
-                    <div className="card-body">
-                        <div className="accordion" id="resource-yaml-accordion">
-                            <div className="card">
-                                <div className="card-header">
-                                    <button className="btn btn-link" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-changes">
-                                        Changes
-                                    </button>
-                                </div>
-                                <div id="resource-yaml-accordion-changes" className="collapse">
-                                    <div className="card-body">
-                                        <ResourceHistDiff {...histAttrs} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="card">
-                                <div className="card-header">
-                                    <button className="btn btn-link" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-full">
-                                        Full Object
-                                    </button>
-                                </div>
-                                <div id="resource-yaml-accordion-full" className="collapse show">
-                                    <div className="card-body">
-                                        <Blaze template="stringifyp" data={JSON.parse(this.props.resource.data)} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ResourceYamlDisplay {...this.props} />
             </div>
         );
     }
@@ -182,7 +204,7 @@ export class ResourcesSingle_default extends React.Component{
 
 class ResourceKindAttrTable extends React.Component{
     render(){
-        var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => { 
+        var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => {
             // the annotations keys won't look good when displayed in the table so we remove them here
             return item.indexOf('annotations[') !== 0
         });

@@ -169,7 +169,14 @@ export class ResourceYamlDisplay extends React.Component{
                                 </div>
                             </div>
 
-                            <Blaze template="stringifyp" data={newYamlObj} />
+                            {newYamlObj &&
+                                <Blaze template="stringifyp" data={newYamlObj} />
+                            }
+                            {!newYamlObj &&
+                                <div class="alert alert-warning">
+                                    Error: Failed to load resource yaml object
+                                </div>
+                            }
                         </div>
                     }
 

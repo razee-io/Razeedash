@@ -26,5 +26,5 @@ ResourceYamlHist.deny({
 });
 
 if ( Meteor.isServer ) {
-    ResourceYamlHist._ensureIndex( { org_id: 1, resourceSelfLink: 1, updated: 1 } );
+    ResourceYamlHist._ensureIndex( { org_id: 1, cluster_id: 1, resourceSelfLink: 1, updated: 1 } );
 }

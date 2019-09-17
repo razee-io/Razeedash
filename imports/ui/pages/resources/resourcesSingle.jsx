@@ -133,6 +133,10 @@ export class ResourceYamlDisplay extends React.Component{
             compareYamls: this.state.compareYamls,
         };
         var newYamlStr = _.get(this.state, 'compareYamls[0].yamlStr', 'null');
+        if(!newYamlStr || newYamlStr == 'null'){
+            // defaults to the resource.data yaml if no resourceHistObj found
+            newYamlStr = histAttrs.resource.data;
+        }
         var newYamlObj = newYamlStr;
         _.attempt(()=>{
             newYamlObj = JSON.parse(newYamlStr);
@@ -173,7 +177,7 @@ export class ResourceYamlDisplay extends React.Component{
                                 <Blaze template="stringifyp" data={newYamlObj} />
                             }
                             {!newYamlObj &&
-                                <div class="alert alert-warning">
+                                <div className="alert alert-warning">
                                     Error: Failed to load resource yaml object
                                 </div>
                             }

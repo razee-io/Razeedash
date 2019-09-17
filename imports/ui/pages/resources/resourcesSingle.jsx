@@ -156,12 +156,12 @@ export class ResourceYamlDisplay extends React.Component{
                             <div className="accordion" id="resource-yaml-accordion">
                                 <div className="card border-bottom mb-3">
                                     <div className="card-header">
-                                        <button className="btn btn-link diffCollapseBtn collapsed" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-changes">
+                                        <button className="btn btn-link diffCollapseBtn" type="button" data-toggle="collapse" data-target="#resource-yaml-accordion-changes">
                                             Changes
                                             <i className="fa fa-chevron-down ml-2 collapseArrow" aria-hidden="true"></i>
                                         </button>
                                     </div>
-                                    <div id="resource-yaml-accordion-changes" className="collapse">
+                                    <div id="resource-yaml-accordion-changes" className="collapse show">
                                         <div className="card-body">
                                             <ResourceHistDiff {...histAttrs} />
                                         </div>
@@ -263,7 +263,10 @@ export default withTracker(()=>{
         cluster_id: clusterId,
         selfLink,
     });
-    var resourceYamlHistItems = ResourceYamlHist.find({ org_id: orgId, cluster_id: clusterId, resourceSelfLink: selfLink }).fetch();
+    var resourceYamlHistItems = ResourceYamlHist.find(
+        { org_id: orgId, cluster_id: clusterId, resourceSelfLink: selfLink },
+        { sort: {updated: -1 } }
+    ).fetch();
     var isLoading = _.some(subs, (sub)=>{
         return !sub.ready();
     });

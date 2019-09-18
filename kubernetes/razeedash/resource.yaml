@@ -30,6 +30,9 @@ items:
             app: razeedash
           name: razeedash
         spec:
+          securityContext:
+            fsGroup: 999
+            runAsUser: 999
           containers:
           - env:
             - name: MONGO_URL

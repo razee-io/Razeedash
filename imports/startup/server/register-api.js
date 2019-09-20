@@ -37,3 +37,4 @@ import '../../api/resourceYamlHist/server/publications.js';
 import '../../api/resourceYamlHist/methods.js';
 
 import '../../api/externalApplications/server/publications.js';
+import '../../api/externalApplications/methods.js';

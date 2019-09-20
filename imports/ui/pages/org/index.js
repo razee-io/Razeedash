@@ -20,11 +20,13 @@ import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
 import { Orgs } from '/imports/api/org/orgs';
+import { ExternalApplications } from '/imports/api/externalApplications/externalApplications';
 import Clipboard from 'clipboard';
 import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { loginType } from '/imports/api/lib/login.js';
+import toastr from 'toastr';
 
 Template.OrgSingle.onCreated( () => {
     const template = Template.instance();
@@ -71,6 +73,135 @@ var availableKinds = new ReactiveVar([]);
 var loadedKinds = new ReactiveVar(false);
 var customSearchableAttrsObj = new ReactiveVar(null);
 var changesTracker = new ReactiveVar();
+ 
+let editMode = new ReactiveVar(false);
+let showNewAppRow = new ReactiveVar(false);
+let clickedItem = new ReactiveVar(null);
+
+Template.OrgManageExternalApps.onCreated(function() {
+    this.autorun(()=>{
+        Meteor.subscribe('externalApplications', Session.get('currentOrgId'));
+        editMode.set(false);
+    });
+});
+Template.OrgManageExternalApps.helpers({
+    showNewAppRow() {
+        return showNewAppRow.get();
+    },
+    externalApps(){
+        const apps = ExternalApplications.find({'org_id': Session.get('currentOrgId')}).fetch();
+        return apps;        
+    },
+    editMode(name) {
+        return name == clickedItem.get() ? true : false;
+    },
+    clickedItem() {
+        return clickedItem.get();
+    }
+});
+
+Template.OrgManageExternalApps.events({
+    'click .js-add-app'(e) {
+        e.preventDefault();
+        const appName = $(e.target).closest('.app-item-new').find('input[name="appName"]').val();
+        const url = $(e.target).closest('.app-item-new').find('input[name="appLink"]').val();
+        const nameMatch = $(e.target).closest('.app-item-new').find('input[name="nameMatch"]').val();
+        const kindMatch = $(e.target).closest('.app-item-new').find('input[name="kindMatch"]').val();
+
+        if(!appName|| appName.length == 0) {
+            $(e.target).closest('.app-item-new').find('input[name="appName"]').addClass('is-invalid');
+            return false;
+        }
+
+        if(!url || url.length == 0) {
+            $(e.target).closest('.app-item-new').find('input[name="appLink"]').addClass('is-invalid');
+            return false;
+        }
+
+        Meteor.call('addApplication', Session.get('currentOrgId'), appName, url, nameMatch, kindMatch, (error)=>{
+            if(error) {
+                toastr.error('Error adding a new application', error);
+            }
+        });
+        showNewAppRow.set(false);
+        return false;
+    },
+    'click .js-create-app'(e) {
+        e.preventDefault();
+        showNewAppRow.set(true);
+    },
+    'click .deleteAppConfirmBtn'(e) {
+        const $el = $(e.currentTarget);
+        const $modal = $el.closest('.modal');
+        const $container = $modal.closest('.app-item');
+        const appName= $container.data('name');
+        $modal.modal('hide');
+        if(appName) {
+            Meteor.call('removeApplication', Session.get('currentOrgId'), appName, (error)=>{
+                if(error) {
+                    toastr.error(`Error removing the application ${appName}`, error);
+                }
+            });
+        }
+        return false;
+    },
+    'click .js-app-remove'(e){
+        clickedItem.set(null);
+        var $el = $(e.currentTarget);
+        var $modal = $el.siblings('.deleteAppModal');
+        $modal.modal('show');
+        return false;
+    },
+    'click .js-app-help'(e){
+        e.preventDefault();
+        clickedItem.set(null);
+        var $el = $(e.currentTarget);
+        var $modal = $el.siblings('.helpModal');
+        $modal.modal('show');
+        return false;
+    },
+    'click .js-cancel-add'(e) {
+        e.preventDefault();
+        showNewAppRow.set(false);
+    },
+    'click .js-cancel-edit'(e) {
+        e.preventDefault();
+        clickedItem.set(null);
+    },
+    'click .js-update-app'(e) {
+        e.preventDefault();
+        const appId = $(e.target).closest('tr').data('id');
+        const updatedName = $(e.target).closest('.app-item-edit').find('input[name="appName"]').val();
+        const updatedLink = $(e.target).closest('.app-item-edit').find('input[name="appLink"]').val();
+        const updatedNameMatch = $(e.target).closest('.app-item-edit').find('input[name="nameMatch"]').val();
+        const updatedKindMatch = $(e.target).closest('.app-item-edit').find('input[name="kindMatch"]').val();
+
+        if(!updatedName || updatedName.length == 0) {
+            $(e.target).closest('.app-item-edit').find('input[name="appName"]').addClass('is-invalid');
+            return false;
+        }
+
+        if(!updatedLink || updatedLink.length == 0) {
+            $(e.target).closest('.app-item-edit').find('input[name="appLink"]').addClass('is-invalid');
+            return false;
+        }
+        
+        Meteor.call('updateApplication', Session.get('currentOrgId'), appId, updatedName, updatedLink, updatedNameMatch, updatedKindMatch, (error) => {
+            if(error) {
+                toastr.error('Error updating the application', error);
+            }
+        });
+
+        clickedItem.set(null);
+    },
+    'click td.app-edit'(e) {
+        e.preventDefault();
+        const clickedRow = $(e.target).closest('tr').data('name');
+        clickedItem.set(clickedRow);
+        editMode.set(true);
+        return false;
+    },
+});
 
 Template.OrgManageSearchableAttrs.onCreated(function(){
     this.autorun(()=>{

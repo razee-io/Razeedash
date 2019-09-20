@@ -16,7 +16,6 @@
 
 import toastr from 'toastr';
 
-// configs for the "flawless:meteor-toastr" plugin
 toastr.options = {
     'closeButton': true,
     'debug': false,

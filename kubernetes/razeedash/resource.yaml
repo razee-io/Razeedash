@@ -96,6 +96,7 @@ items:
             - name: app_name
               value: Razeedash
             image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"
+            workingDir: /app
             imagePullPolicy: Always
             name: razeedash
             ports:

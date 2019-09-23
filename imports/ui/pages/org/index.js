@@ -146,6 +146,11 @@ Template.OrgManageExternalApps.events({
         return false;
     },
     'click .js-app-remove'(e){
+        e.preventDefault();
+        // prevent the delete modal from displaying when adding a new row and using the enter key
+        if(showNewAppRow.get()) {
+            return false;
+        }
         clickedItem.set(null);
         var $el = $(e.currentTarget);
         var $modal = $el.siblings('.deleteAppModal');

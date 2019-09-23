@@ -95,28 +95,27 @@
                     <thead>
                             <tr>
                               <th class="pl-2">Name</th>
-                              <th class="">URL</th>
-                              <th class="">Name Match (regex)</th>
-                              <th class="">Kind Match (regex)</th>
-                              <th class="">Action</th>
+                              <th>URL</th>
+                              <th>Name Match (regex)</th>
+                              <th>Kind Match (regex)</th>
+                              <th>Action</th>
                             </tr>
                     </thead>
                     <tbody>
                         {{#unless externalApps}}
                             <tr class="app-item">
                                 <td class="align-middle pl-2"><span>No applications have been defined</span></td>
-                                <td class="align-middle"><span class="text-muted">https://company.site.com/{{|kind}}/{{|name}}</span></td>
+                                <td class="align-middle"><span class="text-muted">https://company.example.com/{{|kind}}/{{|name}}</span></td>
                                 <td class="align-middle"><span class="text-muted">my-resource.*</span></td>
                                 <td class="align-middle"><span class="text-muted">Deployment</span></td>
                                 <td></td>
                             </tr>
-
-                            {{/unless}}
+                        {{/unless}}
                         {{#each app in externalApps}}
                             {{#if editMode app.name }}
                                 <tr class="app-item-edit" data-name="{{app.name}}" data-id="{{app._id}}">
                                     <td class="cursor-pointer pl-2">                                   
-                                        <input type="text" name="appName" value="{{app.name}}" class="form-control" required/>
+                                        <input type="text" name="appName" value="{{app.name}}" class="form-control" required autofocus/>
                                         <div class="invalid-feedback"> Please enter a name </div>
                                     </td>
                                     <td class="cursor-pointer">                                   
@@ -169,7 +168,7 @@
                         {{#if showNewAppRow }}
                         <tr class="app-item-new">
                                 <td class="cursor-pointer pl-2">                                   
-                                    <input type="text" name="appName" class="form-control" required/>
+                                    <input type="text" name="appName" class="form-control" required autofocus/>
                                     <div class="invalid-feedback"> Please enter a name </div>
                                 </td>
                                 <td class="cursor-pointer">                                   
@@ -183,7 +182,7 @@
                                     <input type="text" name="kindMatch" placeholder="Deployment" class="form-control"/>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary rounded-0 js-add-app" type="submit">Save</button>
+                                    <button class="btn btn-primary rounded-0 js-add-app">Save</button>
                                     <button class="btn btn-warning rounded-0 js-cancel-add">Cancel</button>
                                 </td>
                         </tr>
@@ -194,7 +193,7 @@
             </form>
             <div>
                 <button class="ml-1 mt-2 btn btn-primary js-create-app" type="submit">Add</button>
-                <a href="" class="ml-1 align-middle js-app-help">help</a>
+                <a href="" class="ml-1 align-bottom js-app-help">help</a>
                 <div class="modal helpModal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -205,21 +204,34 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Define an external link</p>
+                                    <p>Define an external link to be displayed on the Resources page</p>
                                     <dl>
                                         <dt>Name(required)</dt>
                                         <dd>Enter a name for you application</dd>
                                     
                                         <dt>URL(required)</dt>
-                                        <dd>Enter a link for you application. This link will show up on the Resources page if it matches both the Name Match and Kind Match fields</dd>
+                                        <dd>Enter a link for you application </dd>
                                         <dd>You can use the {{|name}} and {{|kind}} mustache templates as part of your URL</dd>
-                                        <dd>Example: <code>https://company.site.com/{{|kind}}/{{|name}}</code></dd>
+                                        <dd>Example: <code>https://company.example.com/{{|kind}}/{{|name}}</code> This would show up on the 
+                                        Resources page as <code>https://company.example.com/Deployment/my-resource</code> if {{|kind}} matched <code>Deployment</code> and 
+                                    {{|name}} matched <code>my-resource</code> </dd>
                                     
-                                        <dt>Name Match</dt>
-                                        <dd></dd>
+                                        <dt>Name Match(Regular expression)</dt>
+                                        <dd>Example: <code>watch-keeper</code> would match resources named</dd>
+                                        <dd>
+                                            <code>watch-keeper</code><br>
+                                            <code>watch-keeper-deploy</code><br>
+                                            <code>watch-keeperapp</code><br>
+                                        </dd>
+                                        <dd>Leaving this blank will match any resource name</dd>
 
-                                        <dt>Kind Match</dt>
-                                        <dd></dd>
+                                        <dt>Kind Match(Regular expression)</dt>
+                                        <dd>Example: <code>Service</code> would match resources kinds named</dd>
+                                        <dd>
+                                            <code>Service</code><br>
+                                            <code>ServiceAccount</code><br>
+                                        </dd>
+                                        <dd>Leaving this blank will match any resource type</dd>
                                     </dl>
                                 </div>
                                 <div class="modal-footer">

@@ -116,7 +116,7 @@ Template.breadcrumbs.helpers({
                 'id': clusterId,
                 'tabId': tabID
             };
-            return FlowRouter.path(crumb.route.name, params);
+            return FlowRouter.pathFor(crumb.route.name, params);
         }
         if(crumb.routeName == 'cluster.resource') {
             let displayLink = '';
@@ -132,6 +132,6 @@ Template.breadcrumbs.helpers({
             }catch(e){} // eslint-disable-line no-empty
             qs.selfLink = selfLink;
         }
-        return FlowRouter.path(crumb.route.name, FlowRouter.current().params, qs);
+        return FlowRouter.pathFor(crumb.route.name, FlowRouter.current().params, qs);
     },
 });

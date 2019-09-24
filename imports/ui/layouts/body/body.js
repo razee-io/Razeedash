@@ -39,7 +39,7 @@ Template.Base_layout.helpers({
         return this.version === this.advertised_version;
     },
     appRoute() {
-        return FlowRouter.path('App.home');
+        return FlowRouter.pathFor('App.home');
     }
 });
 
@@ -82,7 +82,7 @@ Template.Base_layout.helpers({
 
 Template.nav.helpers({
     appRoute() {
-        return FlowRouter.path('App.home');
+        return FlowRouter.pathFor('App.home');
     },
     isActive(routeName) {
         let breadcrumbs = Breadcrumb.getAll();

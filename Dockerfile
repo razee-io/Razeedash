@@ -17,7 +17,7 @@ RUN apk update \
 	&& mkdir -p /root \
 	&& mkdir -p /app \
 	&& npm install -g npm@4 \
-	&& npm install -g node-gyp \
+	&& npm install -g node-gyp@latest \
 	&& node-gyp install \
     && $METEORD_DIR/build_app.sh \
     && $METEORD_DIR/rebuild_npm_modules.sh \

@@ -14,7 +14,7 @@
  limitations under the License.
 -->
 
-<template name="MagageExternalApps">
+<template name="ManageExternalApps">
     <div class="card m-2">
         {{ > AppHelpModal }}
 
@@ -39,7 +39,7 @@
                         {{#unless externalApps}}
                             <tr class="app-item">
                                 <td class="align-middle pl-2"><span>No applications have been defined</span></td>
-                                <td class="align-middle"><span class="text-muted">https://company.example.com/{{|kind}}/{{|name}}</span></td>
+                                <td class="align-middle"><span class="text-muted">https://company.example.com/{{|kind}}/{{|metadata.labels.app}}</span></td>
                                 <td class="align-middle"><span class="text-muted">my-resource</span></td>
                                 <td class="align-middle"><span class="text-muted">Deployment</span></td>
                                 <td></td>
@@ -106,7 +106,7 @@
                                     <div class="invalid-feedback"> Please enter a unique name </div>
                                 </td>
                                 <td class="cursor-pointer">                                   
-                                    <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|name}}" class="form-control " required/>
+                                    <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|metadata.labels.app}}" class="form-control " required/>
                                     <div class="invalid-feedback"> Please enter a url </div>
                                 </td>
                                 <td class="cursor-pointer">                                   

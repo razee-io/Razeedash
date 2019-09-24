@@ -211,6 +211,7 @@ export class ResourcesSingle_default extends React.Component{
 class ExternalApps extends React.Component{
     renderLinks(applications) {
 
+        console.log(JSON.parse(this.props.resource.data));
         const resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
         const resourceKind = this.props.resource.searchableData.kind;
 
@@ -219,12 +220,8 @@ class ExternalApps extends React.Component{
             const kindRegEx = new RegExp(app.kindMatch, 'i');
             return nameRegEx.test(resourceName) && kindRegEx.test(resourceKind);
         });
-        
-        const urlTemplate = {
-            'kind': resourceKind,
-            'name': resourceName
-        };
 
+        const urlTemplate = JSON.parse(this.props.resource.data);
         if(filteredApps && filteredApps.length > 0 ) {
             return (
                 <ul className="externalApp list-unstyled">

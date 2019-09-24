@@ -29,13 +29,13 @@ let editMode = new ReactiveVar(false);
 let showNewAppRow = new ReactiveVar(false);
 let clickedItem = new ReactiveVar(null);
 
-Template.MagageExternalApps.onCreated(function() {
+Template.ManageExternalApps.onCreated(function() {
     this.autorun(()=>{
         Meteor.subscribe('externalApplications', Session.get('currentOrgId'));
         editMode.set(false);
     });
 });
-Template.MagageExternalApps.helpers({
+Template.ManageExternalApps.helpers({
     showNewAppRow() {
         return showNewAppRow.get();
     },
@@ -58,7 +58,7 @@ Template.MagageExternalApps.helpers({
     }
 });
 
-Template.MagageExternalApps.events({
+Template.ManageExternalApps.events({
     'click .js-add-app'(e) {
         e.preventDefault();
         const appName = $(e.target).closest('.app-item-new').find('input[name="appName"]').val();
@@ -76,7 +76,7 @@ Template.MagageExternalApps.events({
             return false;
         }
 
-        const apps = Template.MagageExternalApps.__helpers.get('externalApps').call();
+        const apps = Template.ManageExternalApps.__helpers.get('externalApps').call();
         const existingAppNames = apps.map( (item) => item.name );
         if(_.includes(existingAppNames, appName)) {
             $(e.target).closest('.app-item-new').find('input[name="appName"]').addClass('is-invalid').focus();
@@ -160,7 +160,7 @@ Template.MagageExternalApps.events({
             return false;
         }
 
-        const apps = Template.MagageExternalApps.__helpers.get('externalApps').call();
+        const apps = Template.ManageExternalApps.__helpers.get('externalApps').call();
         const existingAppNames = apps.map( (item) => item.name );
         if(clickedItem.get() !== updatedName && _.includes(existingAppNames, updatedName)) {
             $(e.target).closest('.app-item-edit').find('input[name="appName"]').addClass('is-invalid').focus();

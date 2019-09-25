@@ -1,0 +1,49 @@
+<template name="ExternalAppsHelpModal">
+    <div class="modal js-app-help-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">External applications help</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Define an external link to be displayed on the Resources page</p>
+                    <dl>
+                        <dt>Name(required)</dt>
+                        <dd>Enter a name for you application</dd>
+                    
+                        <dt>URL(required)</dt>
+                        <dd>Enter a link for you application </dd>
+                        <dd>You can use mustache templates from the values found in your resource yaml to create a link. For available fields, go to the Resources page 
+                            and look at the yaml shown in the Resource section</dd>
+                        <dd>Example: <code>https://company.example.com/{{|kind}}/{{|metadata.labels.app}}</code> This would show up on the 
+                        Resources page as <code>https://company.example.com/Deployment/my-app-name</code> if your resource yaml had a <code>kind</code> of 
+                        <code>Deployment</code> and <code>metadata.labels.app</code> was <code>my-app-name</code></dd>
+                    
+                        <dt>Name Match(Regular expression)</dt>
+                        <dd>Example: <code>watch-keeper</code> would match resources named</dd>
+                        <dd>
+                            <code>watch-keeper</code><br>
+                            <code>watch-keeper-deploy</code><br>
+                            <code>watch-keeperapp</code><br>
+                        </dd>
+                        <dd>Leaving this blank will match any resource name</dd>
+
+                        <dt>Kind Match(Regular expression)</dt>
+                        <dd>Example: <code>Service</code> would match resources kinds named</dd>
+                        <dd>
+                            <code>Service</code><br>
+                            <code>ServiceAccount</code><br>
+                        </dd>
+                        <dd>Leaving this blank will match any resource type</dd>
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

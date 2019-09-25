@@ -1,0 +1,133 @@
+<!-- 
+ Copyright 2019 IBM Corp. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<template name="ManageExternalApps">
+    <div class="card m-2">
+        {{ > ExternalAppsHelpModal }}
+
+        <h4 class="card-header text-muted">External applications
+            <a href="" class="js-app-help"><i class="fa fa-question-circle text-muted"></i></a>
+        </h4> 
+
+        <div class="card-body">
+            <form id="app-table" class="needs-validation" novalidate>
+                <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                            <tr>
+                                <th class="pl-2">Name</th>
+                                <th>URL</th>
+                                <th>Name Match (regex)</th>
+                                <th>Kind Match (regex)</th>
+                                <th>Action</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        {{#unless externalApps}}
+                            <tr class="app-item">
+                                <td class="align-middle pl-2"><span>No applications have been defined</span></td>
+                                <td class="align-middle"><span class="text-muted">https://company.example.com/{{|kind}}/{{|metadata.labels.app}}</span></td>
+                                <td class="align-middle"><span class="text-muted">my-resource</span></td>
+                                <td class="align-middle"><span class="text-muted">Deployment</span></td>
+                                <td></td>
+                            </tr>
+                        {{/unless}}
+                        {{#each app in externalApps}}
+                            {{#if editMode app.name }}
+                                <tr class="app-item-edit" data-name="{{app.name}}" data-id="{{app._id}}">
+                                    <td class="cursor-pointer pl-2">                                   
+                                        <input type="text" name="appName" value="{{app.name}}" class="form-control" required autofocus/>
+                                        <div class="invalid-feedback"> Please enter a unique name </div>
+                                    </td>
+                                    <td class="cursor-pointer">                                   
+                                        <input type="text" name="appLink" value="{{app.url}}" class="form-control" required/>
+                                        <div class="invalid-feedback"> Please enter a url </div>
+                                    </td>
+                                    <td class="cursor-pointer">                                   
+                                        <input type="text" name="nameMatch" value="{{app.nameMatch}}" class="form-control"/>
+                                    </td>
+                                    <td class="cursor-pointer">                                   
+                                        <input type="text" name="kindMatch" value="{{app.kindMatch}}" class="form-control"/>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary rounded-0 js-update-app" type="submit">Save</button>
+                                        <button class="btn btn-warning rounded-0 js-cancel-edit">Cancel</button>
+                                    </td>
+                                </tr>
+                            {{else}}
+                                <tr class="app-item" data-name={{app.name}}>
+                                    <td tabindex="0" class="cursor-pointer app-edit align-middle pl-2"><span>{{app.name}}</span></td>
+                                    <td tabindex="0" class="cursor-pointer app-edit align-middle"><span>{{app.url}}</span></td>
+                                    <td tabindex="0" class="cursor-pointer app-edit align-middle"><span>{{app.nameMatch}}</span></td>
+                                    <td tabindex="0" class="cursor-pointer app-edit align-middle"><span>{{app.kindMatch}}</span></td>
+                                    <td>
+                                        <button class="btn btn-danger rounded-0 js-app-remove {{buttonStatus}}" data-name="{{app.name}}" alt="remove this app from RazeeDash"> Remove </button>
+                                        <div class="modal js-delete-app-modal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Remove "{{app.name}}"</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to remove the application link for <strong>"{{app.name}}"</strong>?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary js-delete-app-confirm">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/if}}
+                        {{/each}}
+                        <!-- New app  -->
+                        {{#if showNewAppRow }}
+                        <tr class="app-item-new">
+                                <td class="cursor-pointer pl-2">                                   
+                                    <input type="text" name="appName" class="form-control" required autofocus/>
+                                    <div class="invalid-feedback"> Please enter a unique name </div>
+                                </td>
+                                <td class="cursor-pointer">                                   
+                                    <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|metadata.labels.app}}" class="form-control " required/>
+                                    <div class="invalid-feedback"> Please enter a url </div>
+                                </td>
+                                <td class="cursor-pointer">                                   
+                                    <input type="text" name="nameMatch" placeholder="my-resource" class="form-control"/>
+                                </td>
+                                <td class="cursor-pointer">                                   
+                                    <input type="text" name="kindMatch" placeholder="Deployment" class="form-control"/>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary rounded-0 js-add-app">Save</button>
+                                    <button class="btn btn-warning rounded-0 js-cancel-add">Cancel</button>
+                                </td>
+                        </tr>
+                        {{/if}}
+                    </tbody>
+                </table>
+                </div>
+            </form>
+            <div>
+                <button class="ml-1 mt-2 btn btn-primary js-create-app" type="submit">Add</button>
+            </div>
+        </div>
+    </div>
+</template>

@@ -14,22 +14,17 @@
 * limitations under the License.
 */
 
-import toastr from 'toastr';
+import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor';
 
-toastr.options = {
-    'closeButton': true,
-    'debug': false,
-    'newestOnTop': true,
-    'progressBar': false,
-    'positionClass': 'toast-bottom-right',
-    'preventDuplicates': false,
-    'onclick': null,
-    'showDuration': '300',
-    'hideDuration': '1000',
-    'timeOut': '15000',
-    'extendedTimeOut': '1000',
-    'showEasing': 'swing',
-    'hideEasing': 'linear',
-    'showMethod': 'fadeIn',
-    'hideMethod': 'fadeOut'
-};
+export const ExternalApplications = new Mongo.Collection('externalApplications');
+
+ExternalApplications.deny({
+    insert() { return true; },
+    update() { return true; },
+    remove() { return true; },
+});
+
+if ( Meteor.isServer ) {
+    ExternalApplications._ensureIndex( { 'org_id': 'text' } );
+}

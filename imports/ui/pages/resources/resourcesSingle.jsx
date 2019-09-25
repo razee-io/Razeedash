@@ -3,6 +3,7 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 import { Resources } from '../../../api/resource/resources';
+import { ExternalApplications } from '../../../api/externalApplications/externalApplications';
 import { ResourcesYamlHist, ResourceYamlHist } from '../../../api/resourceYamlHist/resourceYamlHist';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import moment from 'moment';
@@ -10,6 +11,7 @@ import resourceKinds from './resourceKindComponents';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from "meteor/session";
 import { StrDiff } from '../../components/strDiff/index.jsx';
+import Mustache from 'mustache';
 
 export class ResourcesSingle extends React.Component {
     render() {
@@ -24,7 +26,7 @@ export class ResourcesSingle extends React.Component {
                 <div className="card m-2">
                     <div className="card-header">
                         <h4 className="mb-0 text-muted">
-                            Resource "{resourceName}" on <a href={FlowRouter.path('cluster.tab', { id: this.props.clusterId, tabId: 'resources' })}>{this.props.clusterId}</a>
+                            Resource "{resourceName}" on <a href={FlowRouter.pathFor('cluster.tab', { id: this.props.clusterId, tabId: 'resources' })}>{this.props.clusterId}</a>
                         </h4>
                     </div>
                     <div className="card-body">
@@ -40,10 +42,6 @@ export class ResourcesSingle extends React.Component {
         );
     }
 }
-
-
-
-
 
 export class ResourceHistDiff extends React.Component{
     render(){
@@ -201,6 +199,7 @@ export class ResourcesSingle_default extends React.Component{
 
         return (
             <div>
+                <ExternalApps {...this.props} />
                 <ResourceKindAttrTable {...this.props} />
 
                 {KindResourceTagName &&
@@ -213,6 +212,52 @@ export class ResourcesSingle_default extends React.Component{
     }
 }
 
+class ExternalApps extends React.Component{
+    renderLinks(applications) {
+
+        console.log(JSON.parse(this.props.resource.data));
+        const resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
+        const resourceKind = this.props.resource.searchableData.kind;
+
+        const filteredApps = applications.filter( (app) => {
+            const nameRegEx = new RegExp(app.nameMatch, 'i');
+            const kindRegEx = new RegExp(app.kindMatch, 'i');
+            return nameRegEx.test(resourceName) && kindRegEx.test(resourceKind);
+        });
+
+        const urlTemplate = JSON.parse(this.props.resource.data);
+        if(filteredApps && filteredApps.length > 0 ) {
+            return (
+                <ul className="externalApp list-unstyled">
+                    {
+                        filteredApps.map( (app) => {
+                            let output = Mustache.render(app.url, urlTemplate);
+                            return <li key={app.name}><a href={output} target="_blank">{app.name} <i className="fa fa-external-link"></i></a></li>
+                        })
+                    }
+                </ul>
+            );
+        } else {
+            return (
+                <ul className="externalApp list-unstyled">
+                    <li>No matching application links were found. You can create a new link from the <a href={FlowRouter.pathFor('org')}> Manage </a> page.</li>
+                </ul>
+            );
+        }
+    }
+    render(){
+
+        const applications = this.props.externalApplications;
+        return (
+            <div className="card mb-3">
+                <h4 className="card-header text-muted">External applications</h4>
+                <div className="card-body p-0 stacked table-responsive">
+                    { this.renderLinks(applications) }
+                </div>
+            </div>
+        );
+    }
+}
 class ResourceKindAttrTable extends React.Component{
     render(){
         var attrNames = _.filter(_.keys(this.props.resource.searchableData), (item) => {
@@ -269,6 +314,7 @@ export default withTracker(()=>{
         Meteor.subscribe('clusters.id', Session.get('currentOrgId'), clusterId),
         Meteor.subscribe('resourceData.bySelfLink', orgId, clusterId, selfLink),
         Meteor.subscribe('resourceYamlHist.histForSelfLink', orgId, clusterId, selfLink),
+        Meteor.subscribe('externalApplications', orgId),
     ];
     var resource = Resources.findOne({
         cluster_id: clusterId,
@@ -278,6 +324,7 @@ export default withTracker(()=>{
         { org_id: orgId, cluster_id: clusterId, resourceSelfLink: selfLink },
         { sort: {updated: -1 } }
     ).fetch();
+    var externalApplications = ExternalApplications.find( { org_id: orgId }).fetch();
     var isLoading = _.some(subs, (sub)=>{
         return !sub.ready();
     });
@@ -285,5 +332,6 @@ export default withTracker(()=>{
         orgId, clusterId,
         selfLink, isLoading,
         resource, resourceYamlHistItems,
+        externalApplications
     };
 })(ResourcesSingle);

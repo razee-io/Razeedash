@@ -16,6 +16,7 @@
 
 import './page.html';
 import './page.scss';
+import '../../components/externalApplications';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
@@ -71,7 +72,7 @@ var availableKinds = new ReactiveVar([]);
 var loadedKinds = new ReactiveVar(false);
 var customSearchableAttrsObj = new ReactiveVar(null);
 var changesTracker = new ReactiveVar();
-
+ 
 Template.OrgManageSearchableAttrs.onCreated(function(){
     this.autorun(()=>{
         var instance = Template.instance();

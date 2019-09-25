@@ -34,7 +34,7 @@ Template.deployments.helpers({
         return this.version === this.advertised_version;
     },
     appRoute() {
-        return FlowRouter.path('App.home');
+        return FlowRouter.pathFor('App.home');
     },
 });
 

@@ -1,0 +1,8 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+
+// prevents the left border from being cut off when the input field is focused
+td.app-edit:focus {
+    outline-offset: -5px;
+}

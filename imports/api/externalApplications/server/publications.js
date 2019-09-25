@@ -14,22 +14,13 @@
 * limitations under the License.
 */
 
-import toastr from 'toastr';
+import { check } from 'meteor/check';
+import { Meteor } from 'meteor/meteor';
+import { ExternalApplications } from '../externalApplications.js';
+import { requireOrgAccess } from '/imports/api/org/utils.js';
 
-toastr.options = {
-    'closeButton': true,
-    'debug': false,
-    'newestOnTop': true,
-    'progressBar': false,
-    'positionClass': 'toast-bottom-right',
-    'preventDuplicates': false,
-    'onclick': null,
-    'showDuration': '300',
-    'hideDuration': '1000',
-    'timeOut': '15000',
-    'extendedTimeOut': '1000',
-    'showEasing': 'swing',
-    'hideEasing': 'linear',
-    'showMethod': 'fadeIn',
-    'hideMethod': 'fadeOut'
-};
+Meteor.publish('externalApplications', function(orgId) {
+    check( orgId, String );
+    requireOrgAccess(orgId);
+    return ExternalApplications.find({ org_id: orgId });
+});

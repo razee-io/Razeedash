@@ -78,6 +78,7 @@
             </div>
         </div>
 
+        {{> ManageExternalApps org=org orgName=orgName}}
         {{> OrgManageSearchableAttrs org=org orgName=orgName}}
 
     {{/if}}
@@ -85,7 +86,7 @@
 
 <template name="OrgManageSearchableAttrs">
     <div class="card m-2">
-        <h4 class="card-header text-muted">Custom Searchable Attributes</h4>
+        <h4 class="card-header text-muted">Custom searchable attributes</h4>
         <div class="card-body">
             {{#if loadedKinds}}
                 <div class="mb-3">

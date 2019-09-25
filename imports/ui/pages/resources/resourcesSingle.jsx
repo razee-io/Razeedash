@@ -322,7 +322,7 @@ export default withTracker(()=>{
     });
     var resourceYamlHistItems = ResourceYamlHist.find(
         { org_id: orgId, cluster_id: clusterId, resourceSelfLink: selfLink },
-        { sort: {updated: -1 } }
+        { sort: {updated: -1 }, limit: 10 },
     ).fetch();
     var externalApplications = ExternalApplications.find( { org_id: orgId }).fetch();
     var isLoading = _.some(subs, (sub)=>{

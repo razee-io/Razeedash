@@ -32,6 +32,7 @@ Meteor.publish('resourceYamlHist.histForSelfLink', function(orgId, clusterId, se
     };
     var options = {
         sort: { updated: -1 },
+        limit: 10,
         fields: {
             org_id: 1,
             cluster_id: 1,

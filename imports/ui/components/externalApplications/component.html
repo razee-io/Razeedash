@@ -26,11 +26,6 @@
             <form id="app-table" class="needs-validation" novalidate>
                 
                 <div class="container-fluid">
-                    {{#unless externalApps}}
-                        <div class="row">
-                            <div class="col">No applications have been defined</div>
-                        </div>
-                    {{/unless}}
                     <div class="d-none d-lg-block row-header">
                         <div class="row">
                             <div class="col-lg-2">Name</div>
@@ -40,6 +35,13 @@
                             <div class="col-lg-2">Action</div>
                         </div>
                     </div>
+                    {{#unless externalApps}}
+                        {{#unless showNewAppRow}}
+                            <div class="row"> 
+                                <div class="col">No applications have been defined</div>
+                            </div>  
+                        {{/unless}}
+                    {{/unless}}
                     {{#each app in externalApps}}
                         {{#if editMode app.name }}
                             <div class="row app-item-edit" data-name="{{app.name}}" data-id="{{app._id}}">

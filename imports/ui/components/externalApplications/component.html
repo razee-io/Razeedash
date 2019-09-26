@@ -24,110 +24,128 @@
 
         <div class="card-body">
             <form id="app-table" class="needs-validation" novalidate>
-                <div class="table-responsive">
-                <table class="table table-sm table-hover">
-                    <thead>
-                            <tr>
-                                <th class="pl-2">Name</th>
-                                <th>URL</th>
-                                <th>Name Match (regex)</th>
-                                <th>Kind Match (regex)</th>
-                                <th>Action</th>
-                            </tr>
-                    </thead>
-                    <tbody>
-                        {{#unless externalApps}}
-                            <tr class="app-item">
-                                <td class="align-middle pl-2"><span>No applications have been defined</span></td>
-                                <td class="align-middle"><span class="text-muted"></span></td>
-                                <td class="align-middle"><span class="text-muted"></span></td>
-                                <td class="align-middle"><span class="text-muted"></span></td>
-                                <td></td>
-                            </tr>
-                        {{/unless}}
-                        {{#each app in externalApps}}
-                            {{#if editMode app.name }}
-                                <tr class="app-item-edit" data-name="{{app.name}}" data-id="{{app._id}}">
-                                    <td class="cursor-pointer pl-2">                                   
-                                        <input type="text" name="appName" value="{{app.name}}" class="form-control" required autofocus/>
-                                        <div class="invalid-feedback"> Please enter a unique name </div>
-                                    </td>
-                                    <td class="cursor-pointer">                                   
-                                        <input type="text" name="appLink" value="{{app.url}}" class="form-control" required/>
-                                        <div class="invalid-feedback"> Please enter a url </div>
-                                    </td>
-                                    <td class="cursor-pointer">                                   
-                                        <input type="text" name="nameMatch" value="{{app.nameMatch}}" class="form-control"/>
-                                    </td>
-                                    <td class="cursor-pointer">                                   
-                                        <input type="text" name="kindMatch" value="{{app.kindMatch}}" class="form-control"/>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary rounded-0 js-update-app" type="submit">Save</button>
-                                        <button class="btn btn-warning rounded-0 js-cancel-edit">Cancel</button>
-                                    </td>
-                                </tr>
-                            {{else}}
-                                <tr class="app-item" data-name={{app.name}}>
-                                    <td tabindex="0" class="cursor-pointer app-edit align-middle pl-2"><span>{{app.name}}</span></td>
-                                    <td tabindex="0" class="cursor-pointer app-edit align-middle"><span>{{app.url}}</span></td>
-                                    <td tabindex="0" class="cursor-pointer app-edit align-middle"><span>{{app.nameMatch}}</span></td>
-                                    <td tabindex="0" class="cursor-pointer app-edit align-middle"><span>{{app.kindMatch}}</span></td>
-                                    <td>
-                                        <button class="btn btn-danger rounded-0 js-app-remove {{buttonStatus}}" data-name="{{app.name}}" alt="remove this app from RazeeDash"> Remove </button>
-                                        <div class="modal js-delete-app-modal" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Remove "{{app.name}}"</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Are you sure you want to remove the application link for <strong>"{{app.name}}"</strong>?</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
-                                                            <button type="button" class="btn btn-primary js-delete-app-confirm">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {{/if}}
-                        {{/each}}
-                        <!-- New app  -->
-                        {{#if showNewAppRow }}
-                        <tr class="app-item-new">
-                                <td class="cursor-pointer pl-2">                                   
-                                    <input type="text" name="appName" class="form-control" required autofocus/>
+                
+                <div class="container-fluid">
+                    {{#unless externalApps}}
+                        <div class="row">
+                            <div class="col">No applications have been defined</div>
+                        </div>
+                    {{/unless}}
+                    <div class="d-none d-lg-block row-header">
+                        <div class="row">
+                            <div class="col-lg-2">Name</div>
+                            <div class="col-lg-4">URL</div>
+                            <div class="col-lg-2">Name Match(regex)</div>
+                            <div class="col-lg-2">Kind Match(regex)</div>
+                            <div class="col-lg-2">Action</div>
+                        </div>
+                    </div>
+                    {{#each app in externalApps}}
+                        {{#if editMode app.name }}
+                            <div class="row app-item-edit" data-name="{{app.name}}" data-id="{{app._id}}">
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Name</div>
+                                    <input type="text" name="appName" value="{{app.name}}" class="form-control" required autofocus/>
                                     <div class="invalid-feedback"> Please enter a unique name </div>
-                                </td>
-                                <td class="cursor-pointer">                                   
-                                    <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|metadata.labels.app}}" class="form-control " required/>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="d-block d-lg-none row-header-sm">URL</div>
+                                    <input type="text" name="appLink" value="{{app.url}}" class="form-control" required/>
                                     <div class="invalid-feedback"> Please enter a url </div>
-                                </td>
-                                <td class="cursor-pointer">                                   
-                                    <input type="text" name="nameMatch" placeholder="my-resource" class="form-control"/>
-                                </td>
-                                <td class="cursor-pointer">                                   
-                                    <input type="text" name="kindMatch" placeholder="Deployment" class="form-control"/>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary rounded-0 js-add-app">Save</button>
-                                    <button class="btn btn-warning rounded-0 js-cancel-add">Cancel</button>
-                                </td>
-                        </tr>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Name Match(regex)</div>
+                                    <input type="text" name="nameMatch" value="{{app.nameMatch}}" class="form-control"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Kind Match(regex)</div>
+                                    <input type="text" name="kindMatch" value="{{app.kindMatch}}" class="form-control"/>
+                                </div>
+                                <div class="col-lg-2 action-col">
+                                    <div class="d-block d-lg-none row-header-sm">Action</div>
+                                    <button class="btn btn-primary rounded-0 js-update-app" type="submit">Save</button>
+                                    <button class="btn btn-warning rounded-0 js-cancel-edit">Cancel</button>
+                                </div>
+                            </div>
+                        {{else}}
+                            <!-- small screen headers stacked view -->
+                            <div class="row app-item" data-name={{app.name}}>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Name</div>
+                                    <div class="app-edit">{{app.name}}</div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="d-block d-lg-none row-header-sm">URL</div>
+                                    <div class="app-edit">{{app.url}}</div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Name Match(regex)</div>
+                                    <div class="app-edit">{{app.nameMatch}}</div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Kind Match(regex)</div>
+                                    <div class="app-edit">{{app.kindMatch}}</div>
+                                </div>
+                                <div class="col-lg-2 action-col">
+                                    <div class="d-block d-lg-none row-header-sm">Action</div>
+                                    <button class="btn btn-danger rounded-0 js-app-remove {{buttonStatus}}" data-name="{{app.name}}" alt="remove this app from RazeeDash"> Remove </button>
+                                    <div class="modal js-delete-app-modal action-col" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Remove "{{app.name}}"</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to remove the application link for <strong>"{{app.name}}"</strong>?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary js-delete-app-confirm">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {{/if}}
-                    </tbody>
-                </table>
+                    {{/each}}
+                    {{#if showNewAppRow }}
+                        <div class="row app-item-new">
+                            <div class="col-lg-2">                                   
+                                <div class="d-block d-lg-none row-header-sm">Name</div>
+                                <input type="text" name="appName" class="form-control" required autofocus/>
+                                <div class="invalid-feedback"> Please enter a unique name </div>
+                            </div>
+                            <div class="col-lg-4">                                   
+                                <div class="d-block d-lg-none row-header-sm">URL</div>
+                                <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|metadata.labels.app}}" class="form-control " required/>
+                                <div class="invalid-feedback"> Please enter a url </div>
+                            </div>
+                            <div class="col-lg-2">                                   
+                                <div class="d-block d-lg-none row-header-sm">Name Match(regex)</div>
+                                <input type="text" name="nameMatch" placeholder="my-resource" class="form-control"/>
+                            </div>
+                            <div class="col-lg-2">                                   
+                                <div class="d-block d-lg-none row-header-sm">Kind Match(regex)</div>
+                                <input type="text" name="kindMatch" placeholder="Deployment" class="form-control"/>
+                            </div>
+                            <div class="col-lg-2 action-col">
+                                <div class="d-block d-lg-none row-header-sm">Action</div>
+                                <button class="btn btn-primary rounded-0 js-add-app">Save</button>
+                                <button class="btn btn-warning rounded-0 js-cancel-add">Cancel</button>
+                            </div>
+                        </div>
+                    {{/if}}
                 </div>
             </form>
+            {{#unless showNewAppRow}}
             <div>
-                <button class="ml-1 mt-2 btn btn-primary js-create-app" type="submit">Add</button>
+                <button class="mt-2 btn btn-primary js-create-app" type="submit">Add</button>
             </div>
+            {{/unless}}
         </div>
     </div>
 </template>

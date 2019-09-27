@@ -26,6 +26,7 @@
             <form id="app-table" class="needs-validation" novalidate>
                 
                 <div class="container-fluid">
+                    <!-- on small screens this header row will be hidden  -->
                     <div class="d-none d-lg-block row-header">
                         <div class="row">
                             <div class="col-lg-2">Name</div>
@@ -70,7 +71,6 @@
                                 </div>
                             </div>
                         {{else}}
-                            <!-- small screen headers stacked view -->
                             <div class="row app-item" data-name={{app.name}}>
                                 <div class="col-lg-2">
                                     <div class="d-block d-lg-none row-header-sm">Name</div>
@@ -123,7 +123,7 @@
                             </div>
                             <div class="col-lg-4">                                   
                                 <div class="d-block d-lg-none row-header-sm">URL</div>
-                                <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|metadata.labels.app}}" class="form-control " required/>
+                                <input type="text" name="appLink" placeholder="https://company.site.com/{{|kind}}/{{|metadata.labels.app}}" class="form-control" required/>
                                 <div class="invalid-feedback"> Please enter a url </div>
                             </div>
                             <div class="col-lg-2">                                   
@@ -144,9 +144,9 @@
                 </div>
             </form>
             {{#unless showNewAppRow}}
-            <div>
-                <button class="mt-2 btn btn-primary js-create-app" type="submit">Add</button>
-            </div>
+                <div>
+                    <button class="mt-2 btn btn-primary js-create-app" type="submit">Add</button>
+                </div>
             {{/unless}}
         </div>
     </div>

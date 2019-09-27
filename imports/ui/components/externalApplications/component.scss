@@ -1,8 +1,65 @@
-.cursor-pointer {
+
+$grey:#ced4da;
+
+.app-edit {
+    min-height: 37px;
     cursor: pointer;
+    overflow-x: scroll;
+}
+#app-table .container-fluid {
+    padding-left: 0px;
+}
+.app-item {
+    line-height: 2.5;
+    margin-bottom: 2px;
+    &:hover {
+        background-color: rgba(0,0,0,.075);
+    }
+}
+.app-item-edit {
+    margin-bottom: 2px;
+}
+.row-header {
+    line-height: 2.1;
+    border-bottom: solid 1px $grey;
+    border-top: solid 1px $grey;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.row-header-sm {
+  border: none;
+  font-weight: 600;
 }
 
-// prevents the left border from being cut off when the input field is focused
-td.app-edit:focus {
-    outline-offset: -5px;
+@media (max-width: 991px) {
+    .app-item {
+        line-height: 3.5;
+        &:hover {
+            background-color: inherit;
+        }
+    }
+    .app-item-new {
+        line-height: 3.5;
+    }
+    .action-col {
+        border-bottom: solid 1px $grey;
+        padding-bottom: 10px;
+    }
+    .app-item-edit {
+        line-height: 3.5;
+    }
+    .form-control {
+        height: 39px;
+    }
+    .app-edit {
+        display: block;
+        width: 100%;
+        height: 39px;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.9;
+        border: 1px solid $grey;
+        border-radius: 0px;
+    } 
 }

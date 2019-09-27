@@ -144,7 +144,7 @@ Template.ManageExternalApps.events({
     },
     'click .js-update-app'(e) {
         e.preventDefault();
-        const appId = $(e.target).closest('tr').data('id');
+        const appId = $(e.target).closest('.app-item-edit').data('id');
         const updatedName = $(e.target).closest('.app-item-edit').find('input[name="appName"]').val();
         const updatedLink = $(e.target).closest('.app-item-edit').find('input[name="appLink"]').val();
         const updatedNameMatch = $(e.target).closest('.app-item-edit').find('input[name="nameMatch"]').val();
@@ -176,9 +176,9 @@ Template.ManageExternalApps.events({
         clickedItem.set(null);
         editMode.set(false);
     },
-    'click td.app-edit, keypress td.app-edit'(e) {
+    'click .app-edit, keypress .app-edit'(e) {
         e.preventDefault();
-        const clickedRow = $(e.target).closest('tr').data('name');
+        const clickedRow = $(e.target).closest('.app-item').data('name');
         clickedItem.set(clickedRow);
         editMode.set(true);
         return false;

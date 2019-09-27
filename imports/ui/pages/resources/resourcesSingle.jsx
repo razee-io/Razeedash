@@ -197,9 +197,13 @@ export class ResourcesSingle_default extends React.Component{
             KindResourceTagName = resourceKinds[kind];
         }
 
+        const apps = this.props.externalApplications;
+        
         return (
             <div>
-                <ExternalApps {...this.props} />
+                { apps && apps.length > 0 &&
+                    <ExternalApps {...this.props} />
+                }
                 <ResourceKindAttrTable {...this.props} />
 
                 {KindResourceTagName &&
@@ -215,7 +219,6 @@ export class ResourcesSingle_default extends React.Component{
 class ExternalApps extends React.Component{
     renderLinks(applications) {
 
-        console.log(JSON.parse(this.props.resource.data));
         const resourceName = _.get(this.props.resource, 'searchableData.name', this.props.selfLink);
         const resourceKind = this.props.resource.searchableData.kind;
 

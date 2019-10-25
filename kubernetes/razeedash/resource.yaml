@@ -15,6 +15,8 @@ items:
         version: "{{TRAVIS_COMMIT}}"
         razee.io/git-repo: "{{{GIT_REMOTE}}}"
         razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
+      labels:
+        razee/watch-resource: "lite"
       name: razeedash
     spec:
       replicas: 1
@@ -22,6 +24,7 @@ items:
       selector:
         matchLabels:
           app: razeedash
+          razee/watch-resource: "lite"
       strategy:
         type: RollingUpdate
       template:

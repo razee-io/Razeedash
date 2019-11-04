@@ -26,7 +26,7 @@ Meteor.publish('resources.byCluster', function(orgId, clusterId) {
     return Resources.find({ 
         cluster_id: clusterId,
         org_id: orgId,
-        deleted: { $ne: true } 
+        deleted: false
     });
 });
 
@@ -102,7 +102,7 @@ Meteor.publish('resourcesSearch', function(orgId, searchStr='', limit=50, fromTi
             searchableData: 1
         }
     };
-    let search = {org_id: orgId};
+    let search = {org_id: orgId, deleted: false };
     if (searchStr || fromTime || toTime) {
         search = utils.buildSearchForResourcesName(orgId, searchStr, fromTime, toTime);
         if (!search) {

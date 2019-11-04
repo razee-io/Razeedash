@@ -26,7 +26,7 @@ Meteor.methods({
             throw new Meteor.Error('not logged in');
         }
         const clusterCount = Clusters.find({org_id: orgId}).count();
-        const resourceCount = Resources.find({org_id: orgId}).count();
+        const resourceCount = Resources.find({org_id: orgId, deleted: false}).count();
         Stats.update({ org_id: orgId }, { $set: { deploymentCount: resourceCount, clusterCount: clusterCount } } );
     },
 });

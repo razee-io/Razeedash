@@ -26,10 +26,10 @@ Template.commitLink.helpers({
             let otherRepo;
             let commitSHA;
             let trimmedSHA;
+            console.log(2222, resourceData)
             for (const key in resourceData) {
                 if(key === 'annotations_razee_io_commit_sha' || key === 'annotations["razee_io_commit_sha"]') {
                     commitSHA = resourceData[key];
-                    trimmedSHA = Blaze._globalHelpers.trimCommit(commitSHA);
                 }
                 if(key === 'annotations_razee_io_git_repo' || key === 'annotations["razee_io_git_repo"]') {
                     gitRepo = resourceData[key];
@@ -38,7 +38,14 @@ Template.commitLink.helpers({
                     otherRepo = resourceData[key];
                 }
             }
+            if(this.commitSha){
+                commitSHA = this.commitSha;
+            }
+            if(commitSHA){
+                trimmedSHA = Blaze._globalHelpers.trimCommit(commitSHA);
+            }
             // razee.io/git-repo
+            console.log(1111, gitRepo, otherRepo)
             if(gitRepo) {
                 return {
                     'link': gitRepo.split('.git')[0] + '/commit/' + commitSHA,

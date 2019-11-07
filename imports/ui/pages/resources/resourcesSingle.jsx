@@ -140,7 +140,7 @@ export class ResourceYamlDisplay extends React.Component{
             newYamlObj = JSON.parse(newYamlStr);
         });
         return (
-            <div className="card mt-0">
+            <div className="card mt-0" id="hist">
                 <h4 className="card-header text-muted d-flex align-items-center">
                     <div className="mr-3">
                         Resource

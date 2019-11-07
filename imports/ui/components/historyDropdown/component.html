@@ -15,7 +15,24 @@
 -->
 
 <template name="history_dropdown">
-  <div class="dropdown">
-      {{moment (_lastUpdated)}}
-  </div>
+    <div class="dropdown">
+        <a href="#" id="dropdownHistoryButton" data-toggle="dropdown" data-boundary="window">
+            {{moment (_lastUpdated)}}
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownHistoryButton">
+            {{#each histChangeObj in histChangeObjs}}
+                <h6 class="dropdown-header">
+                    <a href="{{pathFor 'cluster.resource' clusterId=resource.cluster_id query=resourcePathQueryObj }}#hist={{histChangeObj.timestamp}}">
+                        {{or (histChangeObj.fromCommit) '--------'}}
+                        ➟
+                        {{or (histChangeObj.toCommit) '--------'}}
+                    </a>
+                    <span class="text-muted" data-toggle="tooltip" data-placement="top" title="{{localeDate (timestampToDateObj histChangeObj.timestamp)}}">
+                        {{moment histChangeObj.timestamp}}
+                    </span>
+                </h6>
+            {{/each}}
+        </div>
+    </div>
 </template>

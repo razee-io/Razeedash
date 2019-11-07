@@ -55,11 +55,6 @@ Template.deploymenttemplate.helpers({
         var commitShaHistObjs = _.get(resource, 'searchableDataHist.razeeCommitSha', []);
         var lastUpdated = _.get(commitShaHistObjs, '[0].timestamp');
         return lastUpdated;
-        var lastUpdated = _.max(_.map(_.flatten(_.map(resource.searchableDataHist, (a)=>{return a})), 'timestamp'))
-        console.log(333, lastUpdated)
-        return lastUpdated;
-        console.log(1111, resource)
-        return resource.updated;
     },
     histChangeObjs(resource){
         var commitShaHistObjs = _.get(resource, 'searchableDataHist.razeeCommitSha', []);
@@ -80,7 +75,6 @@ Template.deploymenttemplate.helpers({
             };
         });
         histChangeObjs = _.sortBy(histChangeObjs, 'timestamp').reverse();
-        console.log(3333, histChangeObjs)
         return histChangeObjs;
     },
 });

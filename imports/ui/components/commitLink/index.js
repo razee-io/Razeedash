@@ -26,7 +26,6 @@ Template.commitLink.helpers({
             let otherRepo;
             let commitSHA;
             let trimmedSHA;
-            console.log(2222, resourceData)
             for (const key in resourceData) {
                 if(key === 'annotations_razee_io_commit_sha' || key === 'annotations["razee_io_commit_sha"]') {
                     commitSHA = resourceData[key];
@@ -45,7 +44,6 @@ Template.commitLink.helpers({
                 trimmedSHA = Blaze._globalHelpers.trimCommit(commitSHA);
             }
             // razee.io/git-repo
-            console.log(1111, gitRepo, otherRepo)
             if(gitRepo) {
                 return {
                     'link': gitRepo.split('.git')[0] + '/commit/' + commitSHA,

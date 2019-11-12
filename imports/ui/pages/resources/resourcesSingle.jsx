@@ -145,8 +145,6 @@ export class ResourceYamlDisplay extends React.Component{
                         return (
                             <div className={`dropdown-item ${isActive ? 'active' : ''}`} key={histItem._id} onClick={()=>{this.switchToUpdateTime(histItem.updated - 0)}}>
                                 {moment(histItem.updated).format('LT, ll')}
-
-__ {histItem.updated-0}
                             </div>
                         );
                     })}

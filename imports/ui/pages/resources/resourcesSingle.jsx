@@ -70,7 +70,6 @@ export class ResourceYamlDisplay extends React.Component{
     componentWillMount(){
         var updateTime = _.get(window.location.hash.match(/hist=([0-9]+)/), '[1]', null);
         if(updateTime){
-            //updateTime = updateTime.replace(/[0-9]{3}$/, '000');
             updateTime = parseInt(updateTime);
         }
 
@@ -230,7 +229,6 @@ export class ResourcesSingle_default extends React.Component{
         
         return (
             <div>
-                <div style={{display:'none'}}>
                 { apps && apps.length > 0 &&
                     <ExternalApps {...this.props} />
                 }
@@ -239,7 +237,6 @@ export class ResourcesSingle_default extends React.Component{
                 {KindResourceTagName &&
                     <KindResourceTagName {...{data, ...this.props}} />
                 }
-                </div>
 
                 <ResourceYamlDisplay {...this.props} />
             </div>

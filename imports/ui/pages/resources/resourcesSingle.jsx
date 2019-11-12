@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 import { Resources } from '../../../api/resource/resources';
@@ -67,16 +68,44 @@ export class ResourceHistDiff extends React.Component{
 
 export class ResourceYamlDisplay extends React.Component{
     componentWillMount(){
+        var updateTime = _.get(window.location.hash.match(/hist=([0-9]+)/), '[1]', null);
+        if(updateTime){
+            //updateTime = updateTime.replace(/[0-9]{3}$/, '000');
+            updateTime = parseInt(updateTime);
+        }
+
         this.renderDropdown = this.renderDropdown.bind(this);
         this.switchToUpdateTime = this.switchToUpdateTime.bind(this);
+        this.jumpToHistIfRequired = this.jumpToHistIfRequired.bind(this);
 
         this.setState({
             loading: true,
         });
-        this.switchToUpdateTime(null);
+        this.switchToUpdateTime(updateTime);
+    }
+
+    jumpToHistIfRequired(){
+        if(window.location.hash.match(/hist=([0-9]+)/)){
+            ReactDOM.findDOMNode(this).scrollIntoView();
+        }
+    }
+
+    componentDidMount(){
+        this.jumpToHistIfRequired();
     }
 
     switchToUpdateTime(timestamp){
+        var findClosestYamlUpdateTimestamp = (timestamp)=>{
+            if(!timestamp){
+                return null;
+            }
+            var sortedResourceYamlHistItems = _.sortBy(this.props.resourceYamlHistItems, (resourceYamlHistItem)=>{
+                return Math.abs(timestamp - resourceYamlHistItem.updated);
+            });
+            return _.get(sortedResourceYamlHistItems, `0.updated`, null);
+        };
+        timestamp = findClosestYamlUpdateTimestamp(timestamp) || timestamp;
+        timestamp = timestamp - 0;
         this.setState({
             updatedTime: timestamp,
             loading: true,
@@ -116,6 +145,8 @@ export class ResourceYamlDisplay extends React.Component{
                         return (
                             <div className={`dropdown-item ${isActive ? 'active' : ''}`} key={histItem._id} onClick={()=>{this.switchToUpdateTime(histItem.updated - 0)}}>
                                 {moment(histItem.updated).format('LT, ll')}
+
+__ {histItem.updated-0}
                             </div>
                         );
                     })}
@@ -201,6 +232,7 @@ export class ResourcesSingle_default extends React.Component{
         
         return (
             <div>
+                <div style={{display:'none'}}>
                 { apps && apps.length > 0 &&
                     <ExternalApps {...this.props} />
                 }
@@ -209,6 +241,7 @@ export class ResourcesSingle_default extends React.Component{
                 {KindResourceTagName &&
                     <KindResourceTagName {...{data, ...this.props}} />
                 }
+                </div>
 
                 <ResourceYamlDisplay {...this.props} />
             </div>

@@ -23,6 +23,7 @@ import { Resources } from '/imports/api/resource/resources.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
+import _ from 'lodash';
 
 Template.deployments.helpers({
     resources() {
@@ -49,5 +50,31 @@ Template.deploymenttemplate.helpers({
         return {
             selfLink: resource.selfLink,
         };
-    }
+    },
+    lastUpdated(resource){
+        var commitShaHistObjs = _.get(resource, 'searchableDataHist.razeeCommitSha', []);
+        var lastUpdated = _.get(commitShaHistObjs, '[0].timestamp');
+        return lastUpdated;
+    },
+    histChangeObjs(resource){
+        var commitShaHistObjs = _.get(resource, 'searchableDataHist.razeeCommitSha', []);
+        var histChangeObjs = _.map(commitShaHistObjs, (commitShaHistObj, idx)=>{
+            var fromCommit = _.get(commitShaHistObjs, `[${idx - 1}].val`, null);
+            var toCommit = _.get(commitShaHistObj, 'val', null);
+            var timestamp = _.get(commitShaHistObj, 'timestamp', null);
+            if(fromCommit && fromCommit.match(/^[0-9a-f]{32,40}$/i)){
+                fromCommit = fromCommit.slice(0,8);
+            }
+            if(toCommit && toCommit.match(/^[0-9a-f]{32,40}$/i)){
+                toCommit = toCommit.slice(0,8);
+            }
+            return {
+                fromCommit,
+                toCommit,
+                timestamp,
+            };
+        });
+        histChangeObjs = _.sortBy(histChangeObjs, 'timestamp').reverse();
+        return histChangeObjs;
+    },
 });

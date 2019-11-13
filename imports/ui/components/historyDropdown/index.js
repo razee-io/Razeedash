@@ -51,4 +51,10 @@ Template.history_dropdown.helpers({
             }
         }
     },
+    resourcePathQueryObj(){
+        return { selfLink: this.resource.selfLink };
+    },
+    timestampToDateObj(timestamp){
+        return new Date(timestamp);
+    },
 });

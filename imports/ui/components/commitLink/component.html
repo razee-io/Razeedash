@@ -16,6 +16,10 @@
 
 <template name="commitLink">
     {{#if gitData}}
-        <a href="{{gitData.link}}" target="_blank">{{gitData.text}} <i class="fa fa-external-link"></i></a> 
+        <a href="{{gitData.link}}" target="_blank">{{gitData.text}}
+            {{#unless hideIcon}}
+                <span class="fa fa-external-link"></span>
+            {{/unless}}
+        </a>
     {{/if}}
 </template>

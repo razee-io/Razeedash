@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 import { Resources } from '../../../api/resource/resources';
@@ -67,16 +68,43 @@ export class ResourceHistDiff extends React.Component{
 
 export class ResourceYamlDisplay extends React.Component{
     componentWillMount(){
+        var updateTime = _.get(window.location.hash.match(/hist=([0-9]+)/), '[1]', null);
+        if(updateTime){
+            updateTime = parseInt(updateTime);
+        }
+
         this.renderDropdown = this.renderDropdown.bind(this);
         this.switchToUpdateTime = this.switchToUpdateTime.bind(this);
+        this.jumpToHistIfRequired = this.jumpToHistIfRequired.bind(this);
 
         this.setState({
             loading: true,
         });
-        this.switchToUpdateTime(null);
+        this.switchToUpdateTime(updateTime);
+    }
+
+    jumpToHistIfRequired(){
+        if(window.location.hash.match(/hist=([0-9]+)/)){
+            ReactDOM.findDOMNode(this).scrollIntoView();
+        }
+    }
+
+    componentDidMount(){
+        this.jumpToHistIfRequired();
     }
 
     switchToUpdateTime(timestamp){
+        var findClosestYamlUpdateTimestamp = (timestamp)=>{
+            if(!timestamp){
+                return null;
+            }
+            var sortedResourceYamlHistItems = _.sortBy(this.props.resourceYamlHistItems, (resourceYamlHistItem)=>{
+                return Math.abs(timestamp - resourceYamlHistItem.updated);
+            });
+            return _.get(sortedResourceYamlHistItems, `0.updated`, null);
+        };
+        timestamp = findClosestYamlUpdateTimestamp(timestamp) || timestamp;
+        timestamp = timestamp - 0;
         this.setState({
             updatedTime: timestamp,
             loading: true,
@@ -140,7 +168,7 @@ export class ResourceYamlDisplay extends React.Component{
             newYamlObj = JSON.parse(newYamlStr);
         });
         return (
-            <div className="card mt-0">
+            <div className="card mt-0" id="hist">
                 <h4 className="card-header text-muted d-flex align-items-center">
                     <div className="mr-3">
                         Resource

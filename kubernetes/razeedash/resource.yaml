@@ -24,7 +24,6 @@ items:
       selector:
         matchLabels:
           app: razeedash
-          razee/watch-resource: "lite"
       strategy:
         type: RollingUpdate
       template:

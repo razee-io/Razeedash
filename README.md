@@ -1,6 +1,6 @@
 # Razeedash
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/razee-io/Razeedash.svg)](https://greenkeeper.io/)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=razee-io/razeedeploy-core)](https://dependabot.com)
 
 ![Travis Build Status](https://api.travis-ci.com/razee-io/Razeedash.svg?branch=master)
 <https://travis-ci.com/razee-io/razeedash>

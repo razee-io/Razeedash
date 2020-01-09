@@ -5,7 +5,7 @@ LABEL maintainer="Michael McKay <mckaymic@us.ibm.com>"
 ARG BUILD_ID
 ARG LAST_COMMIT_ID
 
-ENV METEORD_DIR="/opt/meteord" BUILD_PACKAGES="python make g++"
+ENV METEORD_DIR="/opt/meteord" BUILD_PACKAGES="python3 make g++"
 
 WORKDIR /root
 
@@ -16,6 +16,7 @@ RUN apk update \
 	&& apk add ${BUILD_PACKAGES} \
 	&& mkdir -p /root \
 	&& mkdir -p /app \
+  && npm config set unsafe-perm true \
 	&& npm install -g npm@4 \
 	&& npm install -g node-gyp@latest \
 	&& node-gyp install \

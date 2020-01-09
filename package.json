@@ -63,7 +63,7 @@
         "simpl-schema": "^1.5.5",
         "toastr": "^2.1.4",
         "unidiff": "^1.0.2",
-        "uuid": "^3.3.2"
+        "uuid": "^3.3.3"
     },
     "devDependencies": {
         "babel-plugin-istanbul": "^5.1.0",

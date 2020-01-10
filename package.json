@@ -46,7 +46,7 @@
         "jquery": "^3.4.1",
         "jwt-decode": "^2.2.0",
         "keypair": "^1.0.1",
-        "lodash": "^4.17.14",
+        "lodash": "^4.17.15",
         "meteor-node-stubs": "^0.4.1",
         "moment": "^2.22.2",
         "moment-duration-format": "^2.2.2",

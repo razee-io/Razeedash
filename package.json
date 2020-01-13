@@ -51,7 +51,7 @@
         "moment": "^2.22.2",
         "moment-duration-format": "^2.3.2",
         "mustache": "^3.1.0",
-        "object-hash": "^2.0.0",
+        "object-hash": "^2.0.1",
         "plotly.js-dist": "^1.52.0",
         "popper.js": "^1.16.0",
         "react": "^16.8.5",

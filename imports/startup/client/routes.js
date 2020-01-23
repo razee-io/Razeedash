@@ -25,6 +25,7 @@ import '../../ui/components/breadcrumbs';
 import '../../ui/components/loading';
 
 import '../../ui/pages/resources';
+import '../../ui/pages/userprofile';
 import '../../ui/pages/not-found';
 import '../../ui/pages/clusters';
 import '../../ui/pages/cluster';
@@ -42,6 +43,15 @@ Routes.route('/', {
     action() {
         BlazeLayout.render('Base_layout', { main: 'Razee_welcome', doesntRequireOrgIdLoaded: true });
     },
+});
+
+Routes.route('/profile', {	
+    name: 'profile',	
+    title: 'Profile',	
+    parent: 'welcome',	
+    action() {	
+        BlazeLayout.render('Base_layout', { main: 'UserProfile_home', doesntRequireOrgIdLoaded: true });	
+    },	
 });
 
 // puts /:orgName/ in the url

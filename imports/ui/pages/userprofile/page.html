@@ -1,0 +1,73 @@
+<!-- 	
+ Copyright 2019 IBM Corp. All Rights Reserved.	
+ Licensed under the Apache License, Version 2.0 (the "License");	
+ you may not use this file except in compliance with the License.	
+ You may obtain a copy of the License at	
+      http://www.apache.org/licenses/LICENSE-2.0	
+ Unless required by applicable law or agreed to in writing, software	
+ distributed under the License is distributed on an "AS IS" BASIS,	
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.	
+ See the License for the specific language governing permissions and	
+ limitations under the License.	
+-->	
+
+<template name="UserProfile_home">	
+  {{#if Template.subscriptionsReady}}	
+    {{#if currentUser}}	
+      <div id="dc_home" class="container-fluid h-10 mt-10">	
+          <div class="container-fluid">	
+              <div class="card">	
+                  <div class="card-header">	
+                      <h2 class="text-muted mb-0">	
+                          <i class="fa fa-user-o" aria-hidden="true"></i> User Profile	
+                      </h2>	
+                  </div>	
+                  <div class="card-body">	
+                      <form>	
+                          <div class="form-group">	
+                              <label for="inputName">Name</label>	
+                              {{#if localUser}}	
+                                  <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Email" value="{{localUserName}}" readonly>	
+                              {{else}}	
+                                  <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Email" value="{{currentUser.profile.name}}" readonly>	
+                                  <small id="emailHelp" class="form-text text-muted">This comes from {{scmLabel}} and cannot be updated.</small>	
+                              {{/if}}	
+                          </div>	
+  
+                          {{#unless localUser}} 	
+                              {{#unless bitbucketUser}}	
+                              <div class="form-group">	
+                                  <label for="inputEmail">Email address</label>	
+                                  <input type="email" 	
+                                      class="form-control" 	
+                                      id="inputEmail" 	
+                                      aria-describedby="emailHelp" 	
+                                      placeholder="email" 	
+                                      value="{{or currentUser.services.github.email currentUser.services.ghe.email}}" 	
+                                      readonly>	
+                                  <small id="emailHelp" class="form-text text-muted">This comes from {{scmLabel}} and cannot be updated.</small>	
+                              </div>	
+                              {{/unless}}	
+                          {{/unless}}	
+  
+                          <div class="form-group">	
+                              <label for="inputUserid">User ID</label>	
+                              <input type="text" class="form-control" id="inputUserid" placeholder="userid" value="{{currentUser._id}}" readonly>	
+                          </div>	
+                          <div class="form-group">	
+                              <label for="inputApiKey">API Key</label>	
+                              <div class="input-group">	
+                                  <input type="text" class="form-control" placeholder="No API key" aria-label="API Key" value="{{currentUser.apiKey}}" readonly>	
+                                  <span class="input-group-btn">	
+                                      <button class="btn btn-primary" type="button">Generate</button>	
+                                  </span>	
+                              </div>	
+                          </div>	
+                      </form>	
+                  </div>	
+              </div>	
+          </div>	
+      </div>	
+    {{/if}}	
+  {{/if}}	
+  </template>

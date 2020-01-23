@@ -56,7 +56,7 @@ var setTitleToLastCrumb = (crumbs)=>{
 Template.breadcrumbs.helpers({
     getBreadcrumbs(){
         let breadcrumbs = [];
-        const ignoredCrumbs = ['welcome', 'org', 'root'];
+        const ignoredCrumbs = ['welcome', 'org', 'root', 'profile'];
         try {
             breadcrumbs = Breadcrumb.getAll();
         }catch(e){

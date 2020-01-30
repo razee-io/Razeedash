@@ -19,6 +19,7 @@ import { Meteor } from 'meteor/meteor';
 import { Subscriptions } from './subscriptions.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 import uuid from 'uuid/v4';
+import { pub } from '/imports/api/lib/pubsub';
 
 // https://docs.meteor.com/api/check.html
 const NonEmptyString = Match.Where((x) => {
@@ -27,7 +28,7 @@ const NonEmptyString = Match.Where((x) => {
 });
 
 Meteor.methods({
-    updateSubscription(orgId, groupId, groupName, tags=[], resourceId='', resourceName='', version='', versionName=''){
+    async updateSubscription(orgId, groupId, groupName, tags=[], resourceId='', resourceName='', version='', versionName=''){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( groupId, String );
@@ -37,27 +38,36 @@ Meteor.methods({
         check( resourceName, String );
         check( version, String);
         check( versionName, String);
-        
+
         Subscriptions.update(
-            { 
+            {
                 'org_id': orgId,
-                uuid: groupId 
-            }, 
-            { 
-                $set: 
-                { 
-                    'name': groupName,
-                    'tags': tags,
-                    'channel_uuid': resourceId,
-                    'channel': resourceName,
-                    'version': versionName,
-                    'version_uuid': version,
-                    'updated': new Date() 
-                } 
-            });
+                uuid: groupId
+            },
+            {
+                $set:
+                    {
+                        'name': groupName,
+                        'tags': tags,
+                        'channel_uuid': resourceId,
+                        'channel': resourceName,
+                        'version': versionName,
+                        'version_uuid': version,
+                        'updated': new Date()
+                    }
+            }
+        );
+
+        var msg = {
+            orgId,
+            groupName,
+            subscription: await Subscriptions.findOne({ 'org_id': orgId, uuid: groupId }),
+        };
+        pub('updateSubscription', msg);
+
         return true;
     },
-    addSubscription(orgId, groupName, tags=[], resourceId='', resourceName='', version='', versionName='' ){
+    async addSubscription(orgId, groupName, tags=[], resourceId='', resourceName='', version='', versionName='' ){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( groupName, NonEmptyString);
@@ -74,18 +84,32 @@ Meteor.methods({
             'tags': tags,
             'channel_uuid': resourceId,
             'channel': resourceName,
-            'version': versionName, 
+            'version': versionName,
             'version_uuid': version,
             'created': new Date()
         });
+
+        var msg = {
+            orgId,
+            groupName,
+        };
+        pub('addSubscription', msg);
+
         return true;
     },
-    removeSubscription(orgId, groupName){
+    async removeSubscription(orgId, groupName){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( groupName, String );
-        
+
         Subscriptions.remove({ 'org_id': orgId, 'name': groupName });
+
+        var msg = {
+            orgId,
+            groupName,
+        };
+        pub('removeSubscription', msg);
+
         return true;
     },
 

@@ -98,6 +98,8 @@ items:
                   optional: true
             - name: app_name
               value: Razeedash
+            - name: REDIS_CONN_JSON
+              value: '{"host":"redis-service", "port": 6379}'
             image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"
             workingDir: /app
             imagePullPolicy: Always

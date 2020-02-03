@@ -1,0 +1,34 @@
+<template name="SubscriptionsHelpModal">
+        <div class="modal js-group-help-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Subscriptions help</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Add a subscription</p>
+                        <dl>
+                            <dt>Name(required)</dt>
+                            <dd>Add a name for the subscription</dd>
+
+                            <dt>Tags(required)</dt>
+                            <dd>Add one or more tags</dd>
+
+                            <dt>Channel(required)</dt>
+                            <dd>Select a channel.  If you don't see any channels then go to the <code>Channels</code> section and add a new channel</dd>
+
+                            <dt>Version(required)</dt>
+                            <dd>Select a version for the channel.  Use the RazeeDash api to upload a new version</dd>
+
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>

@@ -32,6 +32,7 @@ import '../../ui/pages/cluster';
 import '../../ui/pages/welcome';
 import '../../ui/pages/org';
 import '../../ui/pages/razeeWelcome';
+import '../../ui/pages/deployables';
 
 const Routes = FlowRouter.group({
     name: 'base_route',
@@ -80,6 +81,15 @@ orgedRoutes.route('/org', {
     parent: 'welcome',
     action: function() {
         BlazeLayout.render('Base_layout', { main: 'OrgSingle', });
+    }
+});
+
+orgedRoutes.route('/deployables', {
+    name: 'deployables',
+    title: 'Deployables',
+    parent: 'welcome',
+    action: function() {
+        BlazeLayout.render('Base_layout', { main: 'page_deployables', });
     }
 });
 

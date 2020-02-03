@@ -38,3 +38,9 @@ import '../../api/resourceYamlHist/methods.js';
 
 import '../../api/externalApplications/server/publications.js';
 import '../../api/externalApplications/methods.js';
+
+import '../../api/deployables/channels/server/publications.js';
+import '../../api/deployables/channels/methods.js';
+
+import '../../api/deployables/subscriptions/server/publications.js';
+import '../../api/deployables/subscriptions/methods.js';

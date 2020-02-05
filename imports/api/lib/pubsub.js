@@ -1,12 +1,19 @@
 var _ = require('lodash');
 var Redis = require('ioredis');
 
+import log from './log.js';
+
 var getNewClient = ()=>{
     var conf = JSON.parse(process.env.REDIS_CONN_JSON || '{}');
     return new Redis(conf);
 };
 var redisClient = getNewClient();
 var subClient = getNewClient();
+
+redisClient.on('error', async(error)=>{
+    log.warn({ error }, 'redis client error');
+});
+
 
 var getQueueName = (chanName)=>{
     return `pubsub_queue_${chanName}`;
@@ -71,6 +78,10 @@ var sub = (chanName, filters=[], onMsg=null)=>{
 };
 
 var chanNamesToSubs = {};
+
+subClient.on('error', async(error)=>{
+    log.warn({ error }, 'redis error');
+});
 
 subClient.on('message', async(chanName, pubMsg)=>{
     var msg = pubMsg;

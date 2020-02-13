@@ -75,22 +75,26 @@ exports.buildSearchForClusterName = (orgId, searchStr) => {
     return search;
 };
 
-exports.buildSearchForResourcesName = (orgId, searchStr = '', fromTime, toTime) => {
+exports.buildSearchForResourcesName = (orgId, searchStr = '', fromTime, toTime, isServer = false) => {
     var ands = [];
     var tokens = _.filter(searchStr.split(/\s+/));
     if(tokens.length > 0) {
         ands = _.map(tokens, (token) => {
-            var searchRegex = {$regex: token, $options: 'i',};
-            var ors = [
-                {cluster_id: searchRegex,},
-                {cluster_name: searchRegex,},
-                {kind: searchRegex,},
-                {selfLink: searchRegex},
-            ];
-            var out = {
-                $or: ors,
-            };
-            return out;
+            if(isServer) {
+                return { '$text': { '$search': token, '$caseSensitive': false } };
+            } else {
+                var searchRegex = {$regex: token, $options: 'i',};
+                var ors = [
+                    {cluster_id: searchRegex,},
+                    {cluster_name: searchRegex,},
+                    {'searchableData.name': searchRegex},
+                    {'searchableData.namespace': searchRegex},
+                    {'searchableData.kind': searchRegex},
+                    {kind: searchRegex,},
+                    {selfLink: searchRegex},
+                ];
+                return { '$or': ors };
+            }
         });
     }
     if(fromTime && toTime){

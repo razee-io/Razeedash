@@ -26,5 +26,13 @@ Resources.deny({
 });
 
 if ( Meteor.isServer ) {
-    Resources._ensureIndex( { 'cluster_id': 'text', 'searchableData.name': 'text', 'searchableData.namespace': 'text' } );
+    Resources._ensureIndex( { 
+        'cluster_id': 'text', 
+        'cluster_name': 'text',
+        'searchableData.name': 'text', 
+        'searchableData.namespace': 'text', 
+        'searchableData.kind': 'text',
+        'selfLink': 'text'
+    },
+    {name: 'cluster_id_text_searchableData.name_text_searchableData.namespace_text' } );
 }

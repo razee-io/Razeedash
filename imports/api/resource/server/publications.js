@@ -99,16 +99,16 @@ Meteor.publish('resourcesSearch', function(orgId, searchStr='', limit=50, fromTi
             selfLink: 1,
             created: 1,
             updated: 1,
-            searchableData: 1
+            searchableData: 1,
+            deleted: 1
         }
     };
     let search = {org_id: orgId, deleted: false };
     if (searchStr || fromTime || toTime) {
-        search = utils.buildSearchForResourcesName(orgId, searchStr, fromTime, toTime);
+        search = utils.buildSearchForResourcesName(orgId, searchStr, fromTime, toTime, true);
         if (!search) {
             return [];
         }
-        search.$and.unshift({ $text: { $search: searchStr, $caseSensitive: false } });
     } 
     return Resources.find(search, options);
 });

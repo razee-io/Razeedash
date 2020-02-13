@@ -25,14 +25,18 @@ Resources.deny({
     remove() { return true; },
 });
 
-if ( Meteor.isServer ) {
-    Resources._ensureIndex( { 
-        'cluster_id': 'text', 
-        'cluster_name': 'text',
-        'searchableData.name': 'text', 
-        'searchableData.namespace': 'text', 
-        'searchableData.kind': 'text',
-        'selfLink': 'text'
-    },
-    {name: 'cluster_id_text_searchableData.name_text_searchableData.namespace_text' } );
+try {
+    if ( Meteor.isServer ) {
+        Resources._ensureIndex( { 
+            'cluster_id': 'text', 
+            'cluster_name': 'text',
+            'searchableData.name': 'text', 
+            'searchableData.namespace': 'text', 
+            'searchableData.kind': 'text',
+            'selfLink': 'text'
+        },
+        {name: 'cluster_id_text_searchableData.name_text_searchableData.namespace_text' } );
+    }
+} catch (error) {
+    console.log(error);
 }

@@ -20,6 +20,7 @@ import { Subscriptions } from './subscriptions.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 import uuid from 'uuid/v4';
 import { pub } from '/imports/api/lib/pubsub';
+import { logUserAction } from '../../userLog/utils.js';
 
 // https://docs.meteor.com/api/check.html
 const NonEmptyString = Match.Where((x) => {
@@ -38,6 +39,8 @@ Meteor.methods({
         check( resourceName, String );
         check( version, String);
         check( versionName, String);
+
+        logUserAction(Meteor.userId(), 'updateSubscription', `Update subscription ${orgId}:${groupId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
         Subscriptions.update(
             {
@@ -77,6 +80,8 @@ Meteor.methods({
         check( version, String);
         check( versionName, String);
 
+        logUserAction(Meteor.userId(), 'addSubscription', `Add subscription ${orgId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
+
         Subscriptions.insert({
             'org_id': orgId,
             'name': groupName,
@@ -101,6 +106,8 @@ Meteor.methods({
         requireOrgAccess(orgId);
         check( orgId, String );
         check( groupName, String );
+
+        logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${groupName}`);
 
         Subscriptions.remove({ 'org_id': orgId, 'name': groupName });
 

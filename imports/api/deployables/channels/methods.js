@@ -20,6 +20,8 @@ import { Channels } from './channels';
 import { DeployableVersions } from './deployableVersions';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 import { updateDeployablesCountStat } from '../../stat/utils.js';
+import { logUserAction } from '../../userLog/utils.js';
+
 import uuid from 'uuid/v4';
 
 // https://docs.meteor.com/api/check.html
@@ -34,7 +36,9 @@ Meteor.methods({
         check( orgId, String );
         check( appId, String );
         check( channelName, String );
-        
+
+        logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
+
         Channels.update(
             { 
                 'org_id': orgId,
@@ -54,6 +58,8 @@ Meteor.methods({
         check( orgId, String );
         check( channelName, NonEmptyString);
 
+        logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
+
         Channels.insert({
             'org_id': orgId,
             'name': channelName,
@@ -70,6 +76,8 @@ Meteor.methods({
         check( channelName, String );
         check( resourceId, String );
         
+        logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${channelName}:${resourceId}`);
+
         Channels.remove({ 'org_id': orgId, 'name': channelName });
         DeployableVersions.remove({ 'org_id': orgId, 'channel_id': resourceId});
         updateDeployablesCountStat(orgId);

@@ -99,7 +99,14 @@ Template.Subscriptions.helpers({
         }
         let versions = DeployableVersions.find({'org_id': Session.get('currentOrgId'), 'channel_name': channel}).fetch();
         return versions;
-    }
+    },
+    owner(id) {
+        const user = Meteor.users.findOne({ _id: id });
+        if (!user) {
+            return '';
+        }
+        return user.profile.name;
+    },
 });
 
 Template.Subscriptions.events({
@@ -111,7 +118,7 @@ Template.Subscriptions.events({
     'click .js-add-group'(e, instance) {
         e.preventDefault();
         const groupName = $(e.target).closest('.group-item-new').find('input[name="groupName"]').val();
-        const groupTags = $(e.target).closest('.group-item-new').find('input[name="groupTags"]').val().split(/[ ,]+/);
+        const groupTags = $(e.target).closest('.group-item-new').find('input[name="groupTags"]').val().split(/[ ,]+/).filter(String);
         const resourceId = $(e.target).closest('.group-item-new').find('.resource-dropdown').val();
         const resourceName = instance.selectedChannel.get();
         const resourceVersion = $(e.target).closest('.group-item-new').find('.version-dropdown').val();
@@ -220,7 +227,7 @@ Template.Subscriptions.events({
         e.preventDefault();
         const groupId = $(e.target).closest('.group-item-edit').data('id');
         const updatedName = $(e.target).closest('.group-item-edit').find('input[name="groupName"]').val();
-        const updatedTags = $(e.target).closest('.group-item-edit').find('input[name="groupTags"]').val().split(/[ ,]+/);
+        const updatedTags = $(e.target).closest('.group-item-edit').find('input[name="groupTags"]').val().split(/[ ,]+/).filter(String);
         const resourceId = $(e.target).closest('.group-item-edit').find('.resource-dropdown').val();
         const resourceName = $(e.target).closest('.group-item-edit').find('.resource-dropdown option:selected').text();
         const resourceVersion = $(e.target).closest('.group-item-edit').find('.version-dropdown').val();

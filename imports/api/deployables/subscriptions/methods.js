@@ -91,6 +91,7 @@ Meteor.methods({
             'channel': resourceName,
             'version': versionName,
             'version_uuid': version,
+            'owner': Meteor.userId(),
             'created': new Date()
         });
 

@@ -24,3 +24,8 @@ Meteor.publish('subscriptions', function(orgId) {
     requireOrgAccess(orgId);
     return Subscriptions.find({ org_id: orgId });
 });
+
+Meteor.publish('users.byIds', function(userIds) {
+    check( userIds, Array);
+    return Meteor.users.find({ _id: {$in: userIds} }, { fields: { 'profile.name': true } });
+});

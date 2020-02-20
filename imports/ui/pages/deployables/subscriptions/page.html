@@ -13,7 +13,8 @@
                         <div class="d-none d-lg-block row-header">
                             <div class="row">
                                 <div class="col-lg-2">Name</div>
-                                <div class="col-lg-4">Tags</div>
+                                <div class="col-lg-2">Owner</div>
+                                <div class="col-lg-2">Tags</div>
                                 <div class="col-lg-2">Channel</div>
                                 <div class="col-lg-2">Version</div>
                                 <div class="col-lg-2">Action</div>
@@ -34,7 +35,11 @@
                                         <input type="text" name="groupName" value="{{subscription.name}}" class="form-control" required autofocus/>
                                         <div class="invalid-feedback"> Please enter a unique name </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
+                                      <div class="d-block d-lg-none row-header-sm">Owner</div>
+                                      <input type="text" name="groupOwner" value="{{owner subscription.owner}}" class="form-control" disabled/>
+                                    </div>
+                                    <div class="col-lg-2">
                                         <div class="d-block d-lg-none row-header-sm">Tags</div>
                                         <input type="text" name="groupTags" value="{{subscription.tags}}" class="form-control" required autofocus/>
                                         <div class="invalid-feedback"> Please enter a tag</div>
@@ -71,7 +76,11 @@
                                         <div class="d-block d-lg-none row-header-sm">Name</div>
                                         <div class="group-edit">{{subscription.name}}</div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
+                                      <div class="d-block d-lg-none row-header-sm">Owner</div>
+                                      <div class="group-edit">{{owner subscription.owner}} </div>
+                                    </div>
+                                    <div class="col-lg-2">
                                         <div class="d-block d-lg-none row-header-sm">Tags</div>
                                         <div class="group-edit">
                                           {{#each tag in tags subscription}}
@@ -120,7 +129,11 @@
                                     <input type="text" name="groupName" class="form-control" required autofocus/>
                                     <div class="invalid-feedback"> Please enter a unique name </div>
                                 </div>
-                                <div class="col-lg-4">                                   
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Owner</div>
+                                    <input type="text" name="groupOwner" value="{{owner currentUser._id}}" class="form-control" disabled/>
+                                </div>
+                                <div class="col-lg-2">                                   
                                         <div class="d-block d-lg-none row-header-sm">Tags</div>
                                         <input type="text" name="groupTags" class="form-control" required autofocus placeholder="tag1, tag2, tag3"/>
                                         <div class="invalid-feedback"> Please enter a tag</div>

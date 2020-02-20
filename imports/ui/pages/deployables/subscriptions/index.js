@@ -54,6 +54,13 @@ Template.Subscriptions.helpers({
     },
     subscriptions(){
         const groups = Subscriptions.find({'org_id': Session.get('currentOrgId')}).fetch();
+
+        // get all subscription owner ids and subscribe.
+        const ownerIds = groups.map( (sub) =>  sub.owner )
+            .filter( (element, index, arr) => index === arr.indexOf(element)) // remove duplicates
+            .filter(Boolean);  // remove undefined items from the array
+        Meteor.subscribe('users.byIds', ownerIds);
+
         return groups;        
     },
     editMode(name) {

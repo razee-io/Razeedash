@@ -55,7 +55,24 @@
         {{/if}}
       </ul>
 
-      <ul class="navbar-nav">
+      <ul class="navbar-nav js-settings">
+      {{#if org}}
+        <li class="nav-item dropdown">
+          <a tabindex="0" class="nav-link" href="#" id="js-settingsDropdown" title="Razee" data-content="Add a cluster to RazeeDash" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="text-muted fa fa-cog"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="js-settingsDropdown">
+            {{#if hasOrgsDefined }}	
+                <a class="dropdown-item js-add-cluster" data-toggle="tooltip"  href="">	
+                  <i class="text-muted fa fa-plus-circle" aria-hidden="true"></i> Add a cluster
+                </a>	
+              <a class="dropdown-item" href="{{pathFor 'org' baseOrgName=org.name}}">	
+                <i class="text-muted fa fa-users" aria-hidden="true"></i> Manage Org</a>	
+            {{/if}}
+          </div>
+        </li>
+      {{/if}}
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{#if localUser}}
@@ -79,6 +96,9 @@
       {{/if}}
     </div>
   </header>
+  {{#if org}}	
+    {{> addCluster org=org}}
+  {{/if}}
 </template>
 
 <template name="nav_org_dropdown">

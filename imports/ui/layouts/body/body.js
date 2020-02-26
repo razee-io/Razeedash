@@ -136,7 +136,7 @@ Template.nav.events({
     },
     'click .js-add-cluster'(e){
         e.preventDefault();
-        var $modal = $('.js-add-cluster-modal');
+        const $modal = $('.js-add-cluster-modal');
         $modal.modal('show');
         return false;
     }

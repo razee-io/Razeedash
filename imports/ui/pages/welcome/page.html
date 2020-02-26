@@ -36,16 +36,6 @@
                         {{> inactiveClusters}}
                     </div>
                 </div>
-            {{else}}
-                <div class="container row mb-2 mt-4">To view cluster data in RazeeDash you'll first need to run this command in your cluster:</div>
-                <div class="row">
-                    <div class="col-sm-10">
-                        <div class="input-group mb-3">
-                            <code class="form-control text-truncate">kubectl create -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
-                            <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
-                        </div>
-                    </div>
-                </div>
             {{/if}}
         </div>
     {{/if}}

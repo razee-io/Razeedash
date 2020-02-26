@@ -403,4 +403,8 @@ Template.registerHelper('getClusterNameById', (clusterId) => {
     return cluster.metadata.name || clusterId;
 });
 
+Template.registerHelper('org', () => {
+    return Orgs.findOne({ name: FlowRouter.getParam('baseOrgName') });
+});
+
 import './routes.js';

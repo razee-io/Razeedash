@@ -22,7 +22,19 @@
                     {{> nav}}
                         <div class="container-fluid px-0">
                             {{> breadcrumbs }}
-                            {{> Template.dynamic template=main}}
+                            {{#if hasRazeeData}}
+                              {{> Template.dynamic template=main}}
+                            {{else}}
+                                <div class="card">
+                                    <div class="card-header cardHeader d-flex no-block">
+                                        <h5 class="text-muted my-0">No data</h5>
+                                    </div>
+                                    <div class="card-body p-1">
+                                        <div class="m-3">No clusters were found in Razee. Go to the <i class="fa fa-cog m-1 text-muted"></i> settings menu to add a cluster.
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
                         </div>
                     {{> footer}}
                 {{else}}

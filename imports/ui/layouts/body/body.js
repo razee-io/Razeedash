@@ -29,6 +29,7 @@ import { Tracker } from 'meteor/tracker';
 import _ from 'lodash';
 import { Template } from 'meteor/templating';
 import { Stats } from '/imports/api/stat/stats.js';
+import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Breadcrumb } from 'meteor/ahref:flow-router-breadcrumb';
 
 import { hasOrgsDefined } from '../../../startup/client';
@@ -48,9 +49,9 @@ Template.Base_layout.helpers({
 Template.Base_layout.onRendered(function() {
     this.autorun(()=>{
         this.subscribe('userData');
+        this.subscribe('clusters.org', Session.get('currentOrgId'));
         var orgName = Session.get('currentOrgName');
         this.subscribe('orgIdByName', orgName);
-
         Meteor.call('hasOrgs', function(err, result) {
             hasOrgsDefined.set(result);
         });
@@ -80,6 +81,11 @@ Template.Base_layout.helpers({
     currentOrgName(){
         return Session.get('currentOrgName');
     },
+    hasRazeeData () {
+        const clusters = Clusters.find({ org_id: Session.get('currentOrgId')}).count();
+        return (clusters > 0) ? true : false;
+    }
+
 });
 
 Template.nav.helpers({

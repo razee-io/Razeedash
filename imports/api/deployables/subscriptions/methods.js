@@ -18,7 +18,7 @@ import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { Subscriptions } from './subscriptions.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { pub } from '/imports/api/lib/pubsub';
 import { logUserAction } from '../../userLog/utils.js';
 

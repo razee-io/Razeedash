@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { Orgs } from './orgs.js';
 import ghe from '../lib/ghe.js';
 import bitbucket from '../lib/bitbucket.js';

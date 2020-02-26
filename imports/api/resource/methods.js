@@ -16,27 +16,12 @@
 
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
-import { Orgs } from '../org/orgs.js';
 import { Resources } from './resources.js';
-import { tokenCrypt } from '/imports/both/utils.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
 import moment from 'moment';
 import _ from 'lodash';
 
 Meteor.methods({
-    getResourceData(clusterId, resourceName){
-        check( clusterId, String );
-        check( resourceName, String );
-        var resource = Resources.findOne({ cluster_id: clusterId, selfLink: resourceName });
-        if(!resource){
-            return null;
-        }
-        var org = Orgs.findOne({ _id: resource.org_id });
-        if(!org){
-            throw new Meteor.Error(`couldnt find org id "${resource.org_id}" from resource._id "${resource._id}"`);
-        }
-        return tokenCrypt.decrypt(resource.data, org.orgKeys[0]);
-    },
     async getActiveDepsPerService(orgId){
         requireOrgAccess(orgId);
         var out = await Resources.rawCollection().aggregate( [

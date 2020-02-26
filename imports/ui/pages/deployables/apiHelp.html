@@ -1,16 +1,14 @@
 <template name="api_example">
   <span>
     Use the RazeeDash api to upload a version. For example, 
-    <pre>
-      <code>
-curl --url "{{apiUrl}}api/v1/channels/${CHANNEL}/version" \
+    <pre class="mb-0">
+<code>curl --url "{{apiUrl}}api/v1/channels/${CHANNEL}/version" \
 --header "content-type: text/yaml" \
 --header "razee-org-key: {{firstOrgKey org}}" \
 --header "resource-name: ${VERSION}" \
 --header "x-api-key: ${X_API_KEY}" \
 --header "x-user-id: ${X_USER_ID}" \
---data-binary @resource.yaml
-      </code>
+--data-binary @resource.yaml</code>
     </pre>
       <div><code>CHANNEL</code> is the channel name you defined in RazeeDash</div>
       <div><code>VERSION</code> is a unique verison representing your resource, e.g., <code>master-001</code></div>

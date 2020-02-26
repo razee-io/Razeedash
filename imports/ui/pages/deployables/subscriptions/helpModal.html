@@ -1,6 +1,6 @@
 <template name="SubscriptionsHelpModal">
         <div class="modal js-group-help-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Subscriptions help</h5>
@@ -33,8 +33,8 @@
                           <div>
                             <pre>
 kubectl create cm clustersubscription \
---from-literal=RAZEE_API={{apiUrl}} \
---from-literal=RAZEE_ORG_KEY={{firstOrgKey org}} \
+--from-literal=RAZEE_API='{{apiUrl}}' \
+--from-literal=RAZEE_ORG_KEY='{{firstOrgKey org}}' \
 --from-literal=RAZEE_TAGS='comma-separated-tags-go-here'
                             </pre>
                           </div>

@@ -22,7 +22,7 @@ import { requireOrgAccess } from '/imports/api/org/utils.js';
 import { updateDeployablesCountStat } from '../../stat/utils.js';
 import { logUserAction } from '../../userLog/utils.js';
 
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 // https://docs.meteor.com/api/check.html
 const NonEmptyString = Match.Where((x) => {

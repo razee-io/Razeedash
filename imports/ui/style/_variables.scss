@@ -371,7 +371,7 @@ $table-left-padding: 1.25rem;
 // $btn-block-spacing-y:            .5rem !default;
 //
 // // Allows for customizing button radius independently from global border radius
-// $btn-border-radius:              $border-radius !default;
+$btn-border-radius-sm:              0 !default;
 // $btn-border-radius-lg:           $border-radius-lg !default;
 // $btn-border-radius-sm:           $border-radius-sm !default;
 //
@@ -537,6 +537,7 @@ $table-left-padding: 1.25rem;
 //
 // $dropdown-item-padding-y:        .25rem !default;
 // $dropdown-item-padding-x:        1.5rem !default;
+$dropdown-item-padding-x:        1rem !default;
 //
 // $dropdown-header-color:          $gray-600 !default;
 //

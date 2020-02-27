@@ -20,6 +20,7 @@ import './body.html';
 import './footer.html';
 import '../../pages/login';
 import '../../components/addCluster';
+import '../../components/noClusters';
 
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
@@ -49,8 +50,11 @@ Template.Base_layout.helpers({
 Template.Base_layout.onRendered(function() {
     this.autorun(()=>{
         this.subscribe('userData');
-        this.subscribe('clusters.org', Session.get('currentOrgId'));
         var orgName = Session.get('currentOrgName');
+        const orgId = Session.get('currentOrgId');
+        if(orgId) {
+            this.subscribe('clusters.org', orgId);
+        } 
         this.subscribe('orgIdByName', orgName);
         Meteor.call('hasOrgs', function(err, result) {
             hasOrgsDefined.set(result);
@@ -81,7 +85,16 @@ Template.Base_layout.helpers({
     currentOrgName(){
         return Session.get('currentOrgName');
     },
-    hasRazeeData () {
+    skipClusterCheck() {
+        // Don't show the 'noClusters' template on these routes
+        const route = currentRoute.get();
+        if(route === 'root' || route === 'org' || route === 'profile') {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    hasClusters () {
         const clusters = Clusters.find({ org_id: Session.get('currentOrgId')}).count();
         return (clusters > 0) ? true : false;
     }

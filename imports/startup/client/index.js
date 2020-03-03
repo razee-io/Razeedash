@@ -407,4 +407,15 @@ Template.registerHelper('org', () => {
     return Orgs.findOne({ name: FlowRouter.getParam('baseOrgName') });
 });
 
+Template.registerHelper('apiUrl', () => {
+    let apiUrl = 'RAZEE_API';
+    if(Meteor.settings.public.RAZEEDASH_API_URL){
+        apiUrl = Meteor.settings.public.RAZEEDASH_API_URL;
+        if(apiUrl.substr(-1) !== '/') {
+            apiUrl += '/';
+        }
+    }
+    return apiUrl;
+});
+
 import './routes.js';

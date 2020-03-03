@@ -40,7 +40,6 @@
         "clipboard": "^2.0.4",
         "color-hash": "^1.0.3",
         "core-js": "^3.6.4",
-        "crypto-js": "^3.1.9-1",
         "debounce": "^1.2.0",
         "font-awesome": "^4.7.0",
         "ioredis": "^4.16.0",

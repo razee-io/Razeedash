@@ -18,6 +18,7 @@ import { Meteor } from 'meteor/meteor';
 import { Stats } from './stats.js';
 import { Clusters } from '../cluster/clusters/clusters.js';
 import { Resources } from '../resource/resources.js';
+import { Subscriptions } from '../deployables/subscriptions/subscriptions.js';
 
 Meteor.methods({
     updateResourceStats(orgId){
@@ -27,6 +28,7 @@ Meteor.methods({
         }
         const clusterCount = Clusters.find({org_id: orgId}).count();
         const resourceCount = Resources.find({org_id: orgId, deleted: false}).count();
-        Stats.update({ org_id: orgId }, { $set: { deploymentCount: resourceCount, clusterCount: clusterCount } } );
+        const deployablesCount = Subscriptions.find({org_id: orgId}).count();
+        Stats.update({ org_id: orgId }, { $set: { deploymentCount: resourceCount, clusterCount: clusterCount, deployablesCount: deployablesCount  } } );
     },
 });

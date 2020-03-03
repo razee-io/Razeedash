@@ -159,6 +159,7 @@ Template.Subscriptions.events({
             if(error) {
                 toastr.error('Error adding a subscription', error);
             }
+            Meteor.call('updateResourceStats', Session.get('currentOrgId'));
         });
         showNewGroupRow.set(false);
         editMode.set(false);
@@ -195,6 +196,7 @@ Template.Subscriptions.events({
                 if(error) {
                     toastr.error(`Error removing the subscription ${groupName}`, error);
                 }
+                Meteor.call('updateResourceStats', Session.get('currentOrgId'));
             });
         }
         return false;

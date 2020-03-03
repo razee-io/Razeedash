@@ -139,6 +139,7 @@ Template.nav.helpers({
     },
     clusterCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'clusterCount') || 0).toLocaleString(),
     deploymentCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deploymentCount') || 0).toLocaleString(),
+    deployablesCount: () => (_.get(Stats.findOne({org_id:Session.get('currentOrgId')}), 'deployablesCount') || 0).toLocaleString()
 });
 
 Template.nav.events({

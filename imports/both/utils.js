@@ -15,7 +15,6 @@
 */
 
 import _ from 'lodash';
-import CryptoJS from 'crypto-js';
 
 exports.sanitizeRegexStr = (str) => {
     return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -133,15 +132,4 @@ exports.buildSearchForResourcesName = (orgId, searchStr = '', fromTime, toTime, 
         $and: ands,
     };
     return search;
-};
-
-export const tokenCrypt = {
-    encrypt: (str, token)=>{
-        var out = CryptoJS.AES.encrypt(str, token).toString();
-        return out;
-    },
-    decrypt: (str, token)=>{
-        var out = CryptoJS.AES.decrypt(str, token).toString(CryptoJS.enc.Utf8);
-        return out;
-    },
 };

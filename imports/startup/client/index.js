@@ -80,13 +80,13 @@ Template.registerHelper('bitbucketUser', () => {
 });
 
 Template.registerHelper('clusterYamlUrl', (key) => {
-    let url = Meteor.absoluteUrl(`api/install/cluster?orgKey=${key}`);
+    let url = Meteor.absoluteUrl(`api/install/razeedeploy-job?orgKey=${key}`);
     if(Meteor.settings.public.RAZEEDASH_API_URL){
         let apiUrl = Meteor.settings.public.RAZEEDASH_API_URL;
         if(apiUrl.substr(-1) !== '/') {
             apiUrl += '/';
         }
-        url = `${apiUrl}api/install/cluster?orgKey=${key}`;
+        url = `${apiUrl}api/install/razeedeploy-job?orgKey=${key}`;
     }
     return url;
 });

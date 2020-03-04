@@ -34,7 +34,8 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 ### Mongo connection options
 
 You can optionally define a MONGO_OPTIONS environment variable to set mongo connection string settings. For example,
-to ensure that meteor connects using `ssl=true` you could use 
+to ensure that meteor connects using `ssl=true` you could use
+
 ```shell
 export MONGO_OPTIONS='{"ssl": true}'
 ```

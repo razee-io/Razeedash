@@ -43,6 +43,12 @@ items:
                 secretKeyRef:
                   name: razeedash-secret
                   key: mongo_url
+            - name: MONGO_OPTIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: razeedash-config
+                  key: mongo_options
+                  optional: true
             - name: OAUTH_SECRET_KEY
               valueFrom:
                 secretKeyRef:

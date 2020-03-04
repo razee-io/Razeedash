@@ -22,6 +22,7 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 | Name             | Required | Value                    | Description |
 | ----             | -------- | -----                    | ----------- |
 | MONGO_URL        | Required | -                        | URL to your mongo instance |
+| MONGO_OPTIONS    | Optional | -                        | Set additional mongo connection string options |
 | OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
 | GITHUB_URL       | Optional | <https://github.com>     | Required when using GitHub Enterprise authentication |
 | GITHUB_API       | Optional | <https://api.github.com> | Required when using GitHub Enterprise authentication |
@@ -29,6 +30,15 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 | BITBUCKET_API    | Optional | <https://api.bitbucket.org/2.0/> | Required when using Bitbucket Enterprise authentication |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
 | LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
+
+### Mongo connection options
+
+You can optionally define a MONGO_OPTIONS environment variable to set mongo connection string settings. For example,
+to ensure that meteor connects using `ssl=true` you could use
+
+```shell
+export MONGO_OPTIONS='{"ssl": true}'
+```
 
 ### Register GitHub application
 

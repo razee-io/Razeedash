@@ -88,7 +88,7 @@ Template.Base_layout.helpers({
     skipClusterCheck() {
         // Don't show the 'noClusters' template on these routes
         const route = currentRoute.get();
-        if(route === 'root' || route === 'org' || route === 'profile') {
+        if(route === 'root' || route === 'org' || route === 'profile' || route === 'deployables') {
             return true;
         } else {
             return false;

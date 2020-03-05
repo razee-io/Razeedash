@@ -37,6 +37,7 @@ deploy:
       branch: deploy_master_builds
   - provider: releases
     file: /tmp/resource.yaml
+    overwrite: true
     skip_cleanup: true
     draft: true
     on:

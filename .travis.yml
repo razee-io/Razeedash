@@ -39,7 +39,7 @@ deploy:
     file: /tmp/resource.yaml
     overwrite: true
     skip_cleanup: true
-    draft: true
+    prerelease: true
     on:
       branch: deploy_master_builds
     api_key: "${GITHUB_TOKEN}"

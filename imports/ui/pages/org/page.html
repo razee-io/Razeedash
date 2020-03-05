@@ -66,9 +66,9 @@
                         </label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                                <code class="form-control text-truncate" id="org_command">kubectl create -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
+                                <code class="form-control text-truncate" id="org_command">kubectl apply -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
+                                    <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl apply -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
                                 </div>
                             </div>
                         </div>

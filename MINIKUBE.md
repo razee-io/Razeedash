@@ -87,7 +87,7 @@
        for example:
 
        ```bash
-       kubectl create -f "http://localhost:3333/api/install/razeedeploy-job?orgKey=<use_the_value_shown_in_razeedash>"
+       kubectl apply -f "http://localhost:3333/api/install/razeedeploy-job?orgKey=<use_the_value_shown_in_razeedash>"
        ```
 
        Example output:

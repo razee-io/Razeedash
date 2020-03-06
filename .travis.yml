@@ -40,9 +40,8 @@ deploy:
     file: /tmp/resource.yaml
     overwrite: true
     skip_cleanup: true
-    draft: true
+    prerelease: true
     name: master
-    tag_name: master
     on:
       branch: fix_travis 
     api_key: "${GITHUB_TOKEN}"

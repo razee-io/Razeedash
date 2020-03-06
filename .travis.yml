@@ -40,7 +40,7 @@ deploy:
     file: /tmp/resource.yaml
     overwrite: true
     skip_cleanup: true
-    prerelease: true
+    draft: true
     name: master
     tag_name: master
     on:

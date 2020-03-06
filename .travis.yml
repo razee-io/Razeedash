@@ -19,10 +19,9 @@ script:
   # - npm test || travis_terminate 1
   - meteor build --directory .build --architecture=os.linux.x86_64 --server-only
   - export HASH=`git log --pretty=format:'%h' -n 1`
-  - export COMMIT_TRUNC=`git rev-parse --short=5 HEAD`
   - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
   - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
-  - if [ "${TRAVIS_BRANCH}" = "fix_travis" ]; then export TRAVIS_TAG=${COMMIT_TRUNC}; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
+  - if [ "${TRAVIS_BRANCH}" = "master" ]; then export TRAVIS_TAG="master"; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
   - docker images
   - ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
 
@@ -35,15 +34,14 @@ deploy:
     script: docker push "quay.io/razee/razeedash:${TRAVIS_TAG}"
     skip_cleanup: true
     on:
-      branch: fix_travis
+      branch: master
   - provider: releases
     file: /tmp/resource.yaml
     overwrite: true
     skip_cleanup: true
     prerelease: true
-    tag_name: master
     on:
-      branch: fix_travis 
+      branch: master 
     api_key: "${GITHUB_TOKEN}"
 
   # Deploy alpha builds

@@ -41,6 +41,7 @@ deploy:
     overwrite: true
     skip_cleanup: true
     prerelease: true
+    tag_name: master
     on:
       branch: fix_travis 
     api_key: "${GITHUB_TOKEN}"

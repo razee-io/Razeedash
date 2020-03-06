@@ -21,7 +21,7 @@ script:
   - export HASH=`git log --pretty=format:'%h' -n 1`
   - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
   - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
-  - if [ "${TRAVIS_BRANCH}" = "master" ]; then export TRAVIS_TAG="master"; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
+  - if [ "${TRAVIS_BRANCH}" = "master" ]; then export TRAVIS_TAG=${TRAVIS_COMMIT}; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
   - docker images
   - ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
 
@@ -40,6 +40,8 @@ deploy:
     overwrite: true
     skip_cleanup: true
     prerelease: true
+    name: master
+    target_commitish: master
     on:
       branch: master
     api_key: "${GITHUB_TOKEN}"

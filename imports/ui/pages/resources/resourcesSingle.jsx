@@ -14,6 +14,18 @@ import { Session } from "meteor/session";
 import { StrDiff } from '../../components/strDiff/index.jsx';
 import Mustache from 'mustache';
 
+var getResourceData = (resource)=>{
+    var data;
+    try{
+        data = JSON.parse(resource.data);
+    }catch(e){
+        data = {
+            error: 'failed to load',
+        };
+    }
+    return data;
+};
+
 export class ResourcesSingle extends React.Component {
     render() {
         if(this.props.isLoading){
@@ -218,7 +230,7 @@ export class ResourceYamlDisplay extends React.Component{
 
 export class ResourcesSingle_default extends React.Component{
     render(){
-        var data = JSON.parse(this.props.resource.data);
+        var data = getResourceData(this.props.resource);
         var kind = this.props.resource.searchableData.kind;
         var KindResourceTagName = null;
         if(resourceKinds[kind]){
@@ -256,7 +268,7 @@ class ExternalApps extends React.Component{
             return nameRegEx.test(resourceName) && kindRegEx.test(resourceKind);
         });
 
-        const urlTemplate = JSON.parse(this.props.resource.data);
+        const urlTemplate = getResourceData(this.props.resource);
         if(filteredApps && filteredApps.length > 0 ) {
             return (
                 <ul className="externalApp list-unstyled">
@@ -309,7 +321,7 @@ class ResourceKindAttrTable extends React.Component{
             };
         });
         
-        const resourceData = JSON.parse(this.props.resource.data);
+        const resourceData = getResourceData(this.props.resource);
         if(resourceData.metadata && resourceData.metadata.annotations) {
             for (let attrKey in resourceData.metadata.annotations) {
                 rows.push({ name: `Annotation: ${attrKey}`, val: resourceData.metadata.annotations[attrKey] })

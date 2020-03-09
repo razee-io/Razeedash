@@ -11,9 +11,9 @@
               <div id="add-cluster-modal" class="modal-body">
                   <div class="col-sm-12">
                     <div class="input-group mb-3">
-                      <code class="form-control text-truncate" id="add-cluster">kubectl create -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
+                      <code class="form-control text-truncate" id="add-cluster">kubectl apply -f "{{clusterYamlUrl (firstOrgKey org)}}"</code>
                       <div class="input-group-append">
-                        <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl create -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
+                        <button class="btn btn-primary copy-button" type="button" data-clipboard-text="kubectl apply -f &quot;{{clusterYamlUrl (firstOrgKey org)}}&quot;">Copy</button>
                       </div>
                     </div>
                   </div>

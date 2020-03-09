@@ -21,7 +21,7 @@ script:
   - export HASH=`git log --pretty=format:'%h' -n 1`
   - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
   - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
-  - if [ "${TRAVIS_BRANCH}" = "master" ]; then export TRAVIS_TAG="master"; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
+  #- if [ "${TRAVIS_BRANCH}" = "master" ]; then export TRAVIS_TAG="master"; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
   - docker images
   - ./build/process-template.sh kubernetes/razeedash/resource.yaml >/tmp/resource.yaml
 
@@ -30,19 +30,19 @@ before_deploy:
 
 deploy:
   # Deploy master builds
-  - provider: script
-    script: docker push "quay.io/razee/razeedash:${TRAVIS_TAG}"
-    skip_cleanup: true
-    on:
-      branch: master
-  - provider: releases
-    file: /tmp/resource.yaml
-    overwrite: true
-    skip_cleanup: true
-    prerelease: true
-    on:
-      branch: master 
-    api_key: "${GITHUB_TOKEN}"
+#  - provider: script
+#    script: docker push "quay.io/razee/razeedash:${TRAVIS_TAG}"
+#    skip_cleanup: true
+#    on:
+#      branch: master
+#  - provider: releases
+#    file: /tmp/resource.yaml
+#    overwrite: true
+#    skip_cleanup: true
+#    prerelease: true
+#    on:
+#      branch: master
+#    api_key: "${GITHUB_TOKEN}"
 
   # Deploy alpha builds
   - provider: script

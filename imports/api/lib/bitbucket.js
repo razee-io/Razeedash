@@ -53,7 +53,7 @@ function listTeams(loggedInUserObj){
                 }
             });
         } catch (err) {
-            log.info({ err }, 'Could not get team data using the refreshToken');
+            log.info('Could not get team data using the refreshToken', { err } );
             return false;
         }    
     }

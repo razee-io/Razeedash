@@ -15,7 +15,7 @@
         "start": "meteor run",
         "debug": "meteor run --inspect",
         "lint": "run-s eslint yamllint jsonlint dockerlint markdownlint",
-        "eslint": "node_modules/eslint/bin/eslint.js .",
+        "eslint": "node_modules/eslint/bin/eslint.js --fix .",
         "yamllint": "node_modules/.bin/yamllint .travis.yml *.yaml services/razeedash/*.yaml",
         "jsonlint": "node_modules/.bin/jsonlint --quiet *.json",
         "dockerlint": "node_modules/.bin/dockerlint Dockerfile",

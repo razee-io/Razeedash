@@ -14,7 +14,7 @@ install:
 
 script:
  # Audit npm packages. Fail build whan a PR audit fails, otherwise report the vulnerability and proceed.
-  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --low; else npx audit-ci --low || true; fi || travis_terminate 1
+  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --moderate; else npx audit-ci --moderate|| true; fi || travis_terminate 1
   - npm run lint || travis_terminate 1
   - npm test || travis_terminate 1
   - meteor build --directory .build --architecture=os.linux.x86_64 --server-only

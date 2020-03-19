@@ -20,7 +20,7 @@ import log from '../lib/log.js';
 
 Meteor.methods({
     generateApikey() {
-        log.info({ userid: this.userId }, 'Generate API key');
+        log.info('Generate API key', { userid: this.userId });
         const newKey = Random.hexString(32);
         Meteor.users.update(this.userId, { $set: { apiKey: newKey } });
     },

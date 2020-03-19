@@ -11,7 +11,7 @@ var redisClient = getNewClient();
 var subClient = getNewClient();
 
 redisClient.on('error', async(error)=>{
-    log.warn({ error }, 'redis client error');
+    log.warn('redis client error', { error });
 });
 
 
@@ -80,7 +80,7 @@ var sub = (chanName, filters=[], onMsg=null)=>{
 var chanNamesToSubs = {};
 
 subClient.on('error', async(error)=>{
-    log.warn({ error }, 'redis error');
+    log.warn('redis error', { error });
 });
 
 subClient.on('message', async(chanName, pubMsg)=>{

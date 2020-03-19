@@ -36,7 +36,7 @@ function listOrgs(loggedInUserObj){
     try {
         response = HTTP.get(url, options);
     }catch(e){
-        log.info({ e }, 'http error');
+        log.info('http error', { e });
         return false;
     }
     const data = response.data;

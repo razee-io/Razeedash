@@ -14,15 +14,15 @@
 * limitations under the License.
 */
 
-import bunyan from 'bunyan';
+const winston = require('winston');
 
-var log = bunyan.createLogger({
-    name: 'razeedash',
-    streams: [{
-        level: (process.env.LOG_LEVEL || 'info'),
-        stream: process.stdout // log LOG_LEVEL and above to stdout
-    }],
-    serializers: bunyan.stdSerializers
+const log = winston.createLogger({
+    level:  (process.env.LOG_LEVEL || 'info'),
+    format: winston.format.json(),
+    defaultMeta: { service: 'razeedash' },
+    transports: [
+        new winston.transports.Console(),
+    ],
 });
 
 export default log;

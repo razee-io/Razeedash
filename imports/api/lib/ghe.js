@@ -22,7 +22,7 @@ import _ from 'lodash';
 import { loginType } from './login.js';
 
 function listOrgs(loggedInUserObj){
-    const url = `${Meteor.settings.public.GITHUB_API}user/memberships/orgs?state=active`;
+    const url = `${Meteor.settings.public.GITHUB_API}user/memberships/orgs?state=active&per_page=100`;
     const serviceName = loginType();
     const token = OAuth.openSecret( loggedInUserObj.services[serviceName].accessToken, loggedInUserObj._id );
     

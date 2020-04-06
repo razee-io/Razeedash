@@ -24,9 +24,9 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 | MONGO_URL        | Required | -                        | URL to your mongo instance |
 | MONGO_OPTIONS    | Optional | -                        | Set additional mongo connection string options |
 | OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
-| GITHUB_URL       | Optional | <https://github.com>     | Required when using GitHub Enterprise authentication |
-| GITHUB_API       | Optional | <https://api.github.com> | Required when using GitHub Enterprise authentication |
-| BITBUCKET_URL    | Optional | <https://bitbucket.org>     | Required when using Bitbucket Enterprise authentication |
+| GITHUB_URL       | Optional | <https://github.com/>     | Required when using GitHub Enterprise authentication |
+| GITHUB_API       | Optional | <https://api.github.com/> | Required when using GitHub Enterprise authentication |
+| BITBUCKET_URL    | Optional | <https://bitbucket.org/>     | Required when using Bitbucket Enterprise authentication |
 | BITBUCKET_API    | Optional | <https://api.bitbucket.org/2.0/> | Required when using Bitbucket Enterprise authentication |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
 | LAST_COMMIT_ID   | Optional | GitHub commit hashcode   | `git log --pretty=format:'%h' -n 1` |
@@ -60,8 +60,8 @@ Example registration for running locally.
     apiVersion: v1
     kind: ConfigMap
     data:
-        github_url: github.your_company.com
-        github_api: github.your_company.com/api/v3
+        github_url: https://github.your_company.com/
+        github_api: https://github.your_company.com/api/v3/
     ```
 
 ### Using Bitbucket Enterprise authentication
@@ -72,8 +72,8 @@ Add `bitbucket_url` and `bitbucket_api` to the `razeedash-config` ConfigMap. For
     apiVersion: v1
     kind: ConfigMap
     data:
-        bitbucket_url: bitbucket.your_company.org
-        bitbucket_api: api.bitbucket.your_company.org/2.0/
+        bitbucket_url: https://bitbucket.your_company.org/
+        bitbucket_api: https://api.bitbucket.your_company.org/2.0/
 ```
 
 ### Deploy components

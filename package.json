@@ -38,7 +38,7 @@
         "bootstrap-datepicker": "^1.7.1",
         "clipboard": "^2.0.6",
         "color-hash": "^1.0.3",
-        "core-js": "^3.6.4",
+        "core-js": "^3.6.5",
         "debounce": "^1.2.0",
         "font-awesome": "^4.7.0",
         "ioredis": "^4.16.0",

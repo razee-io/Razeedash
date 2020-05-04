@@ -32,6 +32,7 @@ import '../../api/stat/methods.js';
 
 import '../../api/user/server/publications.js';
 import '../../api/user/methods.js';
+import '../../api/user/token.js';
 
 import '../../api/resourceYamlHist/server/publications.js';
 import '../../api/resourceYamlHist/methods.js';

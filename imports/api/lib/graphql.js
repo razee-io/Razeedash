@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+import { Meteor } from 'meteor/meteor';
+
 const { ApolloLink } = require('apollo-link');
 const ApolloClient = require('apollo-boost').ApolloClient;
 const fetch = require('cross-fetch/polyfill').fetch;
@@ -21,36 +23,39 @@ const createHttpLink = require('apollo-link-http').createHttpLink;
 const { onError } = require('apollo-link-error');
 const InMemoryCache = require('apollo-cache-inmemory').InMemoryCache;
 
-// TODO: remove hard coded stuff
-const API_HOST = 'http://localhost:3333';
-const ORG_KEY = '';
+const { generateUserToken } = require('/imports/api/user/token');
 
-const httpLink = createHttpLink({
-    uri: `${API_HOST}/graphql`,
-    fetch: fetch,
-    headers: {
-        'razee-org-key': ORG_KEY,
-    }
-});
+const getQueryClient = async (orgId) => {
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors)
-        graphQLErrors.map(({ message, extensions }) => {
-            console.error(`[GraphQL error]: Message: ${message}, Type: ${extensions.code}`);
-        });
-    if (networkError) {
-        console.error(`[Network error]: ${networkError}`);
-    }
-});
+    const httpLink = createHttpLink({
+        uri: `${Meteor.settings.public.RAZEEDASH_API_URL}/graphql`,
+        fetch: fetch,
+        headers: {
+            'userToken': generateUserToken(orgId)
+        }
+    });
 
-const links = ApolloLink.from ([
-    errorLink,
-    httpLink,
-]);
+    const errorLink = onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors)
+            graphQLErrors.map(({ message, extensions }) => {
+                console.error(`[GraphQL error]: Message: ${message}, Type: ${extensions.code}`);
+            });
+        if (networkError) {
+            console.error(`[Network error]: ${networkError}`);
+        }
+    });
 
-const queryClient = new ApolloClient({
-    link: links,
-    cache: new InMemoryCache(),
-});
+    const links = ApolloLink.from ([
+        errorLink,
+        httpLink,
+    ]);
 
-exports.queryClient = queryClient;
+    const client = new ApolloClient({
+        link: links,
+        cache: new InMemoryCache(),
+    });
+
+    return client;
+};
+
+exports.getQueryClient = getQueryClient;

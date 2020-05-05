@@ -27,8 +27,7 @@ const generateUserToken = (orgId) => {
     const org = Orgs.findOne({_id: orgId});
     const secret = org.orgKeys[0];
     const token = jwt.sign({ 'userId': user, 'orgId': orgId}, secret);
-    Meteor.users.update(user, { $set: { userToken: token } });
-
+    // Meteor.users.update(user, { $set: { userToken: token } });
     return token;
 };
 

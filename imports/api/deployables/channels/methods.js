@@ -16,13 +16,11 @@
 
 import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
-import { Channels } from './channels';
-import { DeployableVersions } from './deployableVersions';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
-import { updateDeployablesCountStat } from '../../stat/utils.js';
 import { logUserAction } from '../../userLog/utils.js';
 
-import { v4 as uuid } from 'uuid';
+const { getQueryClient } = require('/imports/api/lib/graphql.js');
+const gql = require('graphql-tag');
 
 // https://docs.meteor.com/api/check.html
 const NonEmptyString = Match.Where((x) => {
@@ -31,7 +29,7 @@ const NonEmptyString = Match.Where((x) => {
 });
 
 Meteor.methods({
-    updateChannel(orgId, appId, channelName){
+    async updateChannel(orgId, appId, channelName){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( appId, String );
@@ -39,38 +37,48 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
 
-        Channels.update(
-            { 
+        let client = await getQueryClient(orgId);
+        return client.mutate({
+            mutation: gql`
+              mutation EditChannel($org_id: String!, $uuid: String!, $name: String!) {
+                editChannel(org_id: $org_id, uuid: $uuid, name: $name) { 
+                    uuid
+                    name
+                    success
+                  }
+              }
+            `,
+            variables: {
                 'org_id': orgId,
-                uuid: appId
-            }, 
-            { 
-                $set: 
-                { 
-                    'name': channelName,
-                    'updated': new Date() 
-                } 
-            });
-        return true;
+                'uuid': appId,
+                'name': channelName
+            }
+        });
     },
-    addChannel(orgId, channelName ){
+    async addChannel(orgId, channelName ){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( channelName, NonEmptyString);
 
         logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
 
-        Channels.insert({
-            'org_id': orgId,
-            'name': channelName,
-            'uuid': uuid(),
-            'created': new Date(),
-            'versions': [],
+        let client = await getQueryClient(orgId);
+        return client.mutate({
+            mutation: gql`
+              mutation AddChannel($org_id: String!, $name: String!) {
+                addChannel(org_id: $org_id, name: $name) { 
+                    uuid
+                  }
+              }
+            `,
+            variables: {
+                'org_id': orgId,
+                'name': channelName
+            }
         });
-        updateDeployablesCountStat(orgId);
-        return true;
+        // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
-    removeChannel(orgId, channelName, resourceId ){
+    async removeChannel(orgId, channelName, resourceId ){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( channelName, String );
@@ -78,10 +86,24 @@ Meteor.methods({
         
         logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${channelName}:${resourceId}`);
 
-        Channels.remove({ 'org_id': orgId, 'name': channelName });
-        DeployableVersions.remove({ 'org_id': orgId, 'channel_id': resourceId});
-        updateDeployablesCountStat(orgId);
-        return true;
+        let client = await getQueryClient(orgId);
+        return client.mutate({
+            mutation: gql`
+              mutation RemoveChannel($org_id: String!, $uuid: String!) {
+                removeChannel(org_id: $org_id, uuid: $uuid) { 
+                    uuid
+                    success
+                  }
+              }
+            `,
+            variables: {
+                'org_id': orgId,
+                'uuid': resourceId
+            }
+        });
+        // Channels.remove({ 'org_id': orgId, 'name': channelName });
+        // DeployableVersions.remove({ 'org_id': orgId, 'channel_id': resourceId});
+        // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
 
 });

@@ -6,6 +6,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Channels } from '/imports/api/deployables/channels/channels';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
+
 import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -74,8 +75,8 @@ Template.Channels.events({
         Meteor.call('addChannel', Session.get('currentOrgId'), resourceName,  (error)=>{
             if(error) {
                 console.log(error);
-                toastr.error('Error adding a resource', error);
-            }
+                toastr.error('Error adding a resource', error.message);
+            } 
         });
         showNewAppRow.set(false);
         editMode.set(false);
@@ -97,7 +98,7 @@ Template.Channels.events({
         if(resourceName) {
             Meteor.call('removeChannel', Session.get('currentOrgId'), resourceName, resourceId, (error)=>{
                 if(error) {
-                    toastr.error(`Error removing the resource ${resourceName}`, error);
+                    toastr.error(`Error removing the resource ${resourceName}`, error.message);
                 }
             });
         }
@@ -151,7 +152,7 @@ Template.Channels.events({
         
         Meteor.call('updateChannel', Session.get('currentOrgId'), appId, updatedName, (error) => {
             if(error) {
-                toastr.error('Error updating the resource', error);
+                toastr.error('Error updating the resource', error.message);
             }
         });
 

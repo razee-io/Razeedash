@@ -25,11 +25,12 @@ const InMemoryCache = require('apollo-cache-inmemory').InMemoryCache;
 
 const getQueryClient = async () => {
 
+    const token = Meteor.user().apiKey ? Meteor.user().apiKey : Meteor.call('generateApikey');
     const httpLink = createHttpLink({
         uri: `${Meteor.settings.public.RAZEEDASH_API_URL}/graphql`,
         fetch: fetch,
         headers: {
-            'userToken': Meteor.user().apiKey
+            'userToken': token
         }
     });
 

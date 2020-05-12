@@ -37,7 +37,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
 
-        let client = await getQueryClient(orgId);
+        let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation EditChannel($org_id: String!, $uuid: String!, $name: String!) {
@@ -62,7 +62,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
 
-        let client = await getQueryClient(orgId);
+        let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation AddChannel($org_id: String!, $name: String!) {
@@ -86,7 +86,7 @@ Meteor.methods({
         
         logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${channelName}:${resourceId}`);
 
-        let client = await getQueryClient(orgId);
+        let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation RemoveChannel($org_id: String!, $uuid: String!) {

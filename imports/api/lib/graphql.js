@@ -23,15 +23,13 @@ const createHttpLink = require('apollo-link-http').createHttpLink;
 const { onError } = require('apollo-link-error');
 const InMemoryCache = require('apollo-cache-inmemory').InMemoryCache;
 
-const { generateUserToken } = require('/imports/api/user/token');
-
-const getQueryClient = async (orgId) => {
+const getQueryClient = async () => {
 
     const httpLink = createHttpLink({
         uri: `${Meteor.settings.public.RAZEEDASH_API_URL}/graphql`,
         fetch: fetch,
         headers: {
-            'userToken': generateUserToken(orgId)
+            'userToken': Meteor.user().apiKey
         }
     });
 

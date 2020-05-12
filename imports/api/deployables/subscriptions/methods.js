@@ -41,7 +41,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'updateSubscription', `Update subscription ${orgId}:${groupId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
-        let client = await getQueryClient(orgId);
+        let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation EditSubscription($org_id: String!, $uuid: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
@@ -72,7 +72,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'addSubscription', `Add subscription ${orgId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
-        let client = await getQueryClient(orgId);
+        let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation AddSubscription($org_id: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
@@ -98,7 +98,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${groupName}:${uuid}`);
 
-        let client = await getQueryClient(orgId);
+        let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
             mutation RemoveSubscription($org_id: String!, $uuid: String!) {

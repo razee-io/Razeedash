@@ -26,8 +26,13 @@ const InMemoryCache = require('apollo-cache-inmemory').InMemoryCache;
 const getQueryClient = async () => {
 
     const token = Meteor.user().apiKey ? Meteor.user().apiKey : Meteor.call('generateApikey');
+
+    // strip any trailing / from RAZEEDASH_API_URL
+    const regex = /\/*$/gi;
+    const API_HOST = Meteor.settings.public.RAZEEDASH_API_URL.replace(regex, '');
+
     const httpLink = createHttpLink({
-        uri: `${Meteor.settings.public.RAZEEDASH_API_URL}/graphql`,
+        uri: `${API_HOST}/graphql`,
         fetch: fetch,
         headers: {
             'userToken': token

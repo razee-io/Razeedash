@@ -74,8 +74,7 @@ Template.Channels.events({
 
         Meteor.call('addChannel', Session.get('currentOrgId'), resourceName,  (error)=>{
             if(error) {
-                console.log(error);
-                toastr.error('Error adding a resource', error.message);
+                toastr.error(error.error, 'Error adding the channel');
             } 
         });
         showNewAppRow.set(false);
@@ -98,7 +97,7 @@ Template.Channels.events({
         if(resourceName) {
             Meteor.call('removeChannel', Session.get('currentOrgId'), resourceName, resourceId, (error)=>{
                 if(error) {
-                    toastr.error(`Error removing the resource ${resourceName}`, error.message);
+                    toastr.error(error.error, `Error removing ${resourceName}`);
                 }
             });
         }
@@ -152,7 +151,7 @@ Template.Channels.events({
         
         Meteor.call('updateChannel', Session.get('currentOrgId'), appId, updatedName, (error) => {
             if(error) {
-                toastr.error('Error updating the resource', error.message);
+                toastr.error(error.error, 'Error updating the channel');
             }
         });
 

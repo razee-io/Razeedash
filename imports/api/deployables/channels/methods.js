@@ -38,7 +38,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
 
         let client = await getQueryClient();
-        return client.mutate({
+        let response = await client.mutate({
             mutation: gql`
               mutation EditChannel($org_id: String!, $uuid: String!, $name: String!) {
                 editChannel(org_id: $org_id, uuid: $uuid, name: $name) { 
@@ -53,7 +53,10 @@ Meteor.methods({
                 'uuid': appId,
                 'name': channelName
             }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
         });
+        return response;
     },
     async addChannel(orgId, channelName ){
         requireOrgAccess(orgId);
@@ -63,7 +66,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
 
         let client = await getQueryClient();
-        return client.mutate({
+        const response = await client.mutate({
             mutation: gql`
               mutation AddChannel($org_id: String!, $name: String!) {
                 addChannel(org_id: $org_id, name: $name) { 
@@ -75,7 +78,10 @@ Meteor.methods({
                 'org_id': orgId,
                 'name': channelName
             }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
         });
+        return response;
         // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
     async removeChannel(orgId, channelName, resourceId ){
@@ -87,22 +93,24 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${channelName}:${resourceId}`);
 
         let client = await getQueryClient();
-        return client.mutate({
+        const response = await client.mutate({
             mutation: gql`
-              mutation RemoveChannel($org_id: String!, $uuid: String!) {
-                removeChannel(org_id: $org_id, uuid: $uuid) { 
-                    uuid
-                    success
-                  }
-              }
-            `,
+            mutation RemoveChannel($org_id: String!, $uuid: String!) {
+              removeChannel(org_id: $org_id, uuid: $uuid) { 
+                  uuid
+                  success
+                }
+            }
+          `,
             variables: {
                 'org_id': orgId,
                 'uuid': resourceId
             }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
         });
-        // Channels.remove({ 'org_id': orgId, 'name': channelName });
-        // DeployableVersions.remove({ 'org_id': orgId, 'channel_id': resourceId});
+
+        return response;
         // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
 

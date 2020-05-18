@@ -35,7 +35,7 @@ const getQueryClient = async () => {
         uri: `${API_HOST}/graphql`,
         fetch: fetch,
         headers: {
-            'userToken': token
+            'x-api-key': token
         }
     });
 

@@ -66,7 +66,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
 
         let client = await getQueryClient();
-        const response = await client.mutate({
+        return client.mutate({
             mutation: gql`
               mutation AddChannel($org_id: String!, $name: String!) {
                 addChannel(org_id: $org_id, name: $name) { 
@@ -81,7 +81,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-        return response;
         // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
     async removeChannel(orgId, channelName, resourceId ){

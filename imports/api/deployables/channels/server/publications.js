@@ -23,11 +23,11 @@ import { DeployableVersions } from '../deployableVersions';
 Meteor.publish('channels', function(orgId) {
     check( orgId, String );
     requireOrgAccess(orgId);
-    return Channels.find({ org_id: orgId });
+    return Channels.find({ org_id: orgId }, {pollingIntervalMs: 1000});
 });
 
 Meteor.publish('deployableVersions', function(orgId) {
     check( orgId, String );
     requireOrgAccess(orgId);
-    return DeployableVersions.find({ org_id: orgId });
+    return DeployableVersions.find({ org_id: orgId }, {pollingIntervalMs: 1000});
 });

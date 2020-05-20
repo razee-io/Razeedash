@@ -42,7 +42,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'updateSubscription', `Update subscription ${orgId}:${groupId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
         let client = await getQueryClient();
-        const response = await client.mutate({
+        return client.mutate({
             mutation: gql`
               mutation EditSubscription($org_id: String!, $uuid: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
                 editSubscription(org_id: $org_id, uuid: $uuid, name: $name, tags: $tags, channel_uuid: $channel_uuid, version_uuid: $version_uuid) { 
@@ -61,7 +61,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-        return response;
     },
     async addSubscription(orgId, groupName, tags=[], resourceId='', resourceName='', version='', versionName='' ){
         requireOrgAccess(orgId);
@@ -76,7 +75,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'addSubscription', `Add subscription ${orgId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
         let client = await getQueryClient();
-        const response = await client.mutate({
+        return client.mutate({
             mutation: gql`
               mutation AddSubscription($org_id: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
                 addSubscription(org_id: $org_id, name: $name, tags: $tags, channel_uuid: $channel_uuid, version_uuid: $version_uuid) { 
@@ -94,7 +93,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-        return response;
     },
     async removeSubscription(orgId, groupName, uuid){
         requireOrgAccess(orgId);
@@ -105,7 +103,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${groupName}:${uuid}`);
 
         let client = await getQueryClient();
-        const response = await client.mutate({
+        return client.mutate({
             mutation: gql`
             mutation RemoveSubscription($org_id: String!, $uuid: String!) {
               removeSubscription(org_id: $org_id, uuid: $uuid) { 
@@ -120,7 +118,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-        return response;
     },
 
 });

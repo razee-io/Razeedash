@@ -38,7 +38,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
 
         let client = await getQueryClient();
-        let response = await client.mutate({
+        return await client.mutate({
             mutation: gql`
               mutation EditChannel($org_id: String!, $uuid: String!, $name: String!) {
                 editChannel(org_id: $org_id, uuid: $uuid, name: $name) { 
@@ -56,7 +56,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-        return response;
     },
     async addChannel(orgId, channelName ){
         requireOrgAccess(orgId);
@@ -81,7 +80,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-        // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
     async removeChannel(orgId, channelName, resourceId ){
         requireOrgAccess(orgId);
@@ -92,7 +90,7 @@ Meteor.methods({
         logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${channelName}:${resourceId}`);
 
         let client = await getQueryClient();
-        const response = await client.mutate({
+        return client.mutate({
             mutation: gql`
             mutation RemoveChannel($org_id: String!, $uuid: String!) {
               removeChannel(org_id: $org_id, uuid: $uuid) { 
@@ -108,9 +106,6 @@ Meteor.methods({
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
-
-        return response;
-        // TODO: move updateDeployablesCountStat(orgId) to it's own meteor method and call it from the client
     },
 
 });

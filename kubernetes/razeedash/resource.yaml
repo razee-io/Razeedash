@@ -95,7 +95,6 @@ items:
                 configMapKeyRef:
                   name: razeedash-config
                   key: razeedash_api_url
-                  optional: true
             - name: LOGIN_TYPE
               valueFrom:
                 configMapKeyRef:

@@ -41,7 +41,7 @@
         "core-js": "^3.6.4",
         "debounce": "^1.2.0",
         "font-awesome": "^4.7.0",
-        "ioredis": "^4.16.0",
+        "ioredis": "^4.17.3",
         "jquery": "^3.4.1",
         "jwt-decode": "^2.2.0",
         "keypair": "^1.0.1",

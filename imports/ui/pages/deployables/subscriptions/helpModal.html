@@ -29,13 +29,16 @@
 
                         </dl>
                         <div class="mt-3"><a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> can be used on any cluster that you want
-                          to subscribe to an uploaded resource.  Your cluster(s) can subscribe by first creating a <code>clustersubscription</code> config map and then installing ClusterSubscription on your cluster
+                          to subscribe to an uploaded resource.  Your cluster(s) can subscribe by first creating a <code>clustersubscription</code> config map and secret and then installing ClusterSubscription on your cluster
                           <div>
                             <pre class="bg-light">
 kubectl create cm clustersubscription \
 --from-literal=RAZEE_API='{{apiUrl}}' \
---from-literal=RAZEE_ORG_KEY='{{firstOrgKey org}}' \
 --from-literal=RAZEE_TAGS='comma-separated-tags-go-here'
+
+kubectl create secret generic clustersubscription \
+--from-literal=RAZEE_ORG_KEY='{{firstOrgKey org}}' \
+
                             </pre>
                           </div>
                           <div>

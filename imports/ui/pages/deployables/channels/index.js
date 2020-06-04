@@ -6,6 +6,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Channels } from '/imports/api/deployables/channels/channels';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
+import Clipboard from 'clipboard';
 
 import _ from 'lodash';
 import { Session } from 'meteor/session';
@@ -23,6 +24,10 @@ Template.Channels.onCreated(function() {
         Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
         editMode.set(false);
     });
+});
+
+Template.Channels.onRendered( () => {
+    new Clipboard('.copy-button');
 });
 
 Template.Channels.helpers({

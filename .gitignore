@@ -11,3 +11,4 @@ npm-debug.log
 .vscode/settings.json
 dev-envvars.sh
 .vscode
+.nvmrc

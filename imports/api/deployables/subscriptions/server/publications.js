@@ -22,7 +22,7 @@ import { requireOrgAccess } from '/imports/api/org/utils.js';
 Meteor.publish('subscriptions', function(orgId) {
     check( orgId, String );
     requireOrgAccess(orgId);
-    return Subscriptions.find({ org_id: orgId });
+    return Subscriptions.find({ org_id: orgId }, {pollingIntervalMs: 1000});
 });
 
 Meteor.publish('users.byIds', function(userIds) {

@@ -6,6 +6,8 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Channels } from '/imports/api/deployables/channels/channels';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
+import Clipboard from 'clipboard';
+
 import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -22,6 +24,10 @@ Template.Channels.onCreated(function() {
         Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
         editMode.set(false);
     });
+});
+
+Template.Channels.onRendered( () => {
+    new Clipboard('.copy-button');
 });
 
 Template.Channels.helpers({
@@ -73,9 +79,8 @@ Template.Channels.events({
 
         Meteor.call('addChannel', Session.get('currentOrgId'), resourceName,  (error)=>{
             if(error) {
-                console.log(error);
-                toastr.error('Error adding a resource', error);
-            }
+                toastr.error(error.error, 'Error adding the channel');
+            } 
         });
         showNewAppRow.set(false);
         editMode.set(false);
@@ -97,7 +102,7 @@ Template.Channels.events({
         if(resourceName) {
             Meteor.call('removeChannel', Session.get('currentOrgId'), resourceName, resourceId, (error)=>{
                 if(error) {
-                    toastr.error(`Error removing the resource ${resourceName}`, error);
+                    toastr.error(error.error, `Error removing ${resourceName}`);
                 }
             });
         }
@@ -151,7 +156,7 @@ Template.Channels.events({
         
         Meteor.call('updateChannel', Session.get('currentOrgId'), appId, updatedName, (error) => {
             if(error) {
-                toastr.error('Error updating the resource', error);
+                toastr.error(error.error, 'Error updating the channel');
             }
         });
 

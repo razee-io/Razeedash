@@ -15,7 +15,8 @@
                             <div class="row">
                                 <div class="col-lg-2">Name</div>
                                 <div class="col-lg-2">Versions</div>
-                                <div class="col-lg-8">Action</div>
+                                <div class="col-lg-4">ID</div>
+                                <div class="col-lg-4">Action</div>
                             </div>
                         </div>
                         {{#unless channels}}
@@ -49,11 +50,16 @@
                                         <div class="d-block d-lg-none row-header-sm">Versions</div>
                                         <div>{{resourceVersions channel.uuid}}</div>
                                     </div>
-                                    <!-- <div class="col-lg-2">
-                                        <div class="d-block d-lg-none row-header-sm">Deployments</div>
-                                        <div>0</div>
-                                    </div> -->
-                                    <div class="col-lg-8 action-col">
+                                    <div class="col-lg-4">
+                                        <div class="d-block d-lg-none row-header-sm">ID</div>
+                                          <div class="input-group">
+                                            <code class="form-control text-truncate">{{channel.uuid}}"</code>
+                                            <div class="input-group-append">
+                                              <button class="btn btn-primary copy-button" type="button" data-clipboard-text="&quot;{{channel.uuid}}&quot;">Copy</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div class="col-lg-4 action-col">
                                         <div class="d-block d-lg-none row-header-sm">Action</div>
                                         <button class="btn btn-danger rounded-0 js-resource-remove {{buttonStatus}}" data-name="{{channel.name}}" alt="remove this app from RazeeDash"> Remove </button>
                                         <div class="modal js-delete-resource-modal action-col" tabindex="-1" role="dialog">

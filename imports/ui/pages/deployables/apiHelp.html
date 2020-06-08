@@ -2,16 +2,27 @@
   <span>
     Use the RazeeDash api to upload a version. For example, 
     <pre class="mb-0 bg-light">
-<code>curl --url "{{apiUrl}}api/v1/channels/${CHANNEL}/version" \
---header "content-type: text/yaml" \
---header "razee-org-key: {{firstOrgKey org}}" \
---header "resource-name: ${VERSION}" \</code>
-{{#if currentUser.apiKey}}<code>--header "x-api-key: </code>{{currentUser.apiKey}}<code>" \</code>
-{{else}}<code>--header "x-api-key: </code><a href="" class="js-generate-key">Generate api key</a><code>" \</code>
-{{/if}}<code>--header "x-user-id: {{currentUser._id}}" \
---data-binary @resource.yaml</code>
+<code>curl --url "{{apiUrl}}graphql \
+     --header 'content-type: multipart/form-data' \</code>
+{{#if currentUser.apiKey}}<code>     --header "x-api-key: </code>{{currentUser.apiKey}}<code>" \</code>
+{{else}}<code>     --header "x-api-key: </code><a href="" class="js-generate-key">Generate api key</a><code>" \</code>
+{{/if}}<code>     --form 'operations={
+    "query": "mutation addChannelVersion($org_id:String!, $channel_uuid:String!, $name:String!, $type:String!, $file:Upload!, $description:String) {\n  addChannelVersion(org_id:$org_id,channel_uuid:$channel_uuid, name:$name, type:$type, file:$file, description:$description){\n    success\n    version_uuid\n  }\n}",
+    "variables": {
+      "org_id": "{{orgId}}",
+      "channel_uuid": "${CHANNEL_UUID}",
+      "name": "${VERSION}",
+      "type": "application/yaml",
+      "file": null,
+      "description": null
+    },
+    "operationName": "addChannelVersion"
+  }' \
+    --form 'map={"localfile":["variables.file"]}' \
+    --form localfile=@resource.yaml</code>
+  
     </pre>
-      <div><code>CHANNEL</code> is the channel name you defined in RazeeDash</div>
+      <div><code>CHANNEL_UUID</code> is the id of the channel you defined in RazeeDash</div>
       <div><code>VERSION</code> is a unique verison representing your resource, e.g., <code>master-001</code></div>
   </span>
 </template>

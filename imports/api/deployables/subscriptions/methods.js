@@ -16,11 +16,10 @@
 
 import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
-import { Subscriptions } from './subscriptions.js';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
-import { v4 as uuid } from 'uuid';
-import { pub } from '/imports/api/lib/pubsub';
 import { logUserAction } from '../../userLog/utils.js';
+const { getQueryClient } = require('/imports/api/lib/graphql.js');
+const gql = require('graphql-tag');
 
 // https://docs.meteor.com/api/check.html
 const NonEmptyString = Match.Where((x) => {
@@ -42,33 +41,26 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'updateSubscription', `Update subscription ${orgId}:${groupId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
-        Subscriptions.update(
-            {
+        let client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+              mutation EditSubscription($org_id: String!, $uuid: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
+                editSubscription(org_id: $org_id, uuid: $uuid, name: $name, tags: $tags, channel_uuid: $channel_uuid, version_uuid: $version_uuid) { 
+                    uuid
+                  }
+              }
+          `,
+            variables: {
                 'org_id': orgId,
-                uuid: groupId
-            },
-            {
-                $set:
-                    {
-                        'name': groupName,
-                        'tags': tags,
-                        'channel_uuid': resourceId,
-                        'channel': resourceName,
-                        'version': versionName,
-                        'version_uuid': version,
-                        'updated': new Date()
-                    }
+                'uuid': groupId,
+                'name': groupName,
+                'tags': tags,
+                'channel_uuid': resourceId,
+                'version_uuid': version,
             }
-        );
-
-        var msg = {
-            orgId,
-            groupName,
-            subscription: await Subscriptions.findOne({ 'org_id': orgId, uuid: groupId }),
-        };
-        pub('updateSubscription', msg);
-
-        return true;
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
     },
     async addSubscription(orgId, groupName, tags=[], resourceId='', resourceName='', version='', versionName='' ){
         requireOrgAccess(orgId);
@@ -82,43 +74,50 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'addSubscription', `Add subscription ${orgId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
 
-        Subscriptions.insert({
-            'org_id': orgId,
-            'name': groupName,
-            'uuid': uuid(),
-            'tags': tags,
-            'channel_uuid': resourceId,
-            'channel': resourceName,
-            'version': versionName,
-            'version_uuid': version,
-            'owner': Meteor.userId(),
-            'created': new Date()
+        let client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+              mutation AddSubscription($org_id: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
+                addSubscription(org_id: $org_id, name: $name, tags: $tags, channel_uuid: $channel_uuid, version_uuid: $version_uuid) { 
+                    uuid
+                  }
+              }
+            `,
+            variables: {
+                'org_id': orgId,
+                'name': groupName,
+                'tags': tags,
+                'channel_uuid': resourceId,
+                'version_uuid': version,
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
         });
-
-        var msg = {
-            orgId,
-            groupName,
-        };
-        pub('addSubscription', msg);
-
-        return true;
     },
-    async removeSubscription(orgId, groupName){
+    async removeSubscription(orgId, groupName, uuid){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( groupName, String );
+        check( uuid, String );
 
-        logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${groupName}`);
+        logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${groupName}:${uuid}`);
 
-        Subscriptions.remove({ 'org_id': orgId, 'name': groupName });
-
-        var msg = {
-            orgId,
-            groupName,
-        };
-        pub('removeSubscription', msg);
-
-        return true;
+        let client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+            mutation RemoveSubscription($org_id: String!, $uuid: String!) {
+              removeSubscription(org_id: $org_id, uuid: $uuid) { 
+                  uuid
+                }
+            }
+          `,
+            variables: {
+                'org_id': orgId,
+                'uuid': uuid
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
     },
 
 });

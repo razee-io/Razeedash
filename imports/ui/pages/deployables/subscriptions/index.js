@@ -157,7 +157,7 @@ Template.Subscriptions.events({
 
         Meteor.call('addSubscription', Session.get('currentOrgId'), groupName, groupTags, resourceId, resourceName, resourceVersion, resourceVersionName, (error)=>{
             if(error) {
-                toastr.error('Error adding a subscription', error);
+                toastr.error(error.error, 'Error adding a subscription');
             }
             Meteor.call('updateResourceStats', Session.get('currentOrgId'));
         });
@@ -190,11 +190,12 @@ Template.Subscriptions.events({
         const $modal = $el.closest('.modal');
         const $container = $modal.closest('.group-item');
         const groupName= $container.data('name') + '';
+        const uuid = $container.data('id') + '';
         $modal.modal('hide');
         if(groupName) {
-            Meteor.call('removeSubscription', Session.get('currentOrgId'), groupName, (error)=>{
+            Meteor.call('removeSubscription', Session.get('currentOrgId'), groupName, uuid, (error)=>{
                 if(error) {
-                    toastr.error(`Error removing the subscription ${groupName}`, error);
+                    toastr.error(error.error, 'Error removing the subscription');
                 }
                 Meteor.call('updateResourceStats', Session.get('currentOrgId'));
             });
@@ -265,7 +266,7 @@ Template.Subscriptions.events({
         
         Meteor.call('updateSubscription', Session.get('currentOrgId'), groupId, updatedName, updatedTags, resourceId, resourceName, resourceVersion, resourceVersionName, (error) => {
             if(error) {
-                toastr.error('Error updating the subscription', error);
+                toastr.error(error.error, 'Error updating the subscription');
             }
         });
 

@@ -2,7 +2,7 @@
   <span>
     Use the RazeeDash api to upload a version. For example, 
     <pre class="mb-0 bg-light">
-<code>curl --url "{{apiUrl}}graphql \
+<code>curl --url {{apiUrl}}graphql \
      --header 'content-type: multipart/form-data' \</code>
 {{#if currentUser.apiKey}}<code>     --header "x-api-key: </code>{{currentUser.apiKey}}<code>" \</code>
 {{else}}<code>     --header "x-api-key: </code><a href="" class="js-generate-key">Generate api key</a><code>" \</code>

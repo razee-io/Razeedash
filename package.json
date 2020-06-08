@@ -76,7 +76,7 @@
         "chai": "^4.2.0",
         "cross-env": "^7.0.2",
         "dockerlint": "^0.3.1",
-        "eslint": "^7.1.0",
+        "eslint": "^7.2.0",
         "jsonlint": "^1.6.2",
         "markdownlint-cli": "^0.23.1",
         "npm-run-all": "^4.1.1",

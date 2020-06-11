@@ -52,12 +52,10 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-block d-lg-none row-header-sm">ID</div>
-                                          <div class="input-group">
-                                            <code class="form-control text-truncate">{{channel.uuid}}</code>
-                                            <div class="input-group-append">
-                                              <button class="btn btn-primary copy-button" type="button" data-clipboard-text="{{channel.uuid}}">Copy</button>
-                                            </div>
-                                          </div>
+                                        <div class="channel-id">{{channel.uuid}}</div>
+                                        <span class="btn btn-small copy-button clipboard-icon" data-clipboard-text="{{channel.uuid}}" >
+                                          <i class="fa fa-clone" title="Copy to clipboard"></i>
+                                        </span>
                                     </div>
                                     <div class="col-lg-4 action-col">
                                         <div class="d-block d-lg-none row-header-sm">Action</div>

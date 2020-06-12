@@ -32,7 +32,8 @@ import { Orgs } from '/imports/api/org/orgs';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
 import { Session } from 'meteor/session';
 import { Accounts } from 'meteor/accounts-base';
-import { localUser, loginType, getServiceConfiguration } from '/imports/api/lib/login.js';
+import { localUser, loginType, getServiceConfiguration, sanitizeUrl } from '/imports/api/lib/login.js';
+import { ServiceConfiguration } from 'meteor/service-configuration';
 
 Accounts.ui.config( { requestPermissions: { 
     github: ['read:user', 'read:org'],
@@ -145,19 +146,16 @@ Template.registerHelper('meteorSetting', (name)=>{
     return _.get(Meteor.settings.public, name, null);
 });
 
-Template.registerHelper('githubUrl', ()=>{
-    return Meteor.settings.public.GITHUB_URL;
-});
-Template.registerHelper('bitbucketUrl', ()=>{
-    return Meteor.settings.public.BITBUCKET_URL;
-});
 Template.registerHelper('scmUrl', ()=>{
     const service = getServiceConfiguration();
     let scmLink = '';
     if(service === 'bitbucket') {
         scmLink = Meteor.settings.public.BITBUCKET_URL;
+    } else if(service === 'ghe') {
+        let {gheURL} = ServiceConfiguration.configurations.findOne({ service: 'ghe' }, {fields: {gheURL: 1}});
+        scmLink = sanitizeUrl(gheURL);
     } else {
-        scmLink = Meteor.settings.public.GITHUB_URL;
+        scmLink = 'https://github.com/';
     }
     return scmLink.endsWith('/') ? scmLink : scmLink + '/';
 });
@@ -290,12 +288,6 @@ Template.registerHelper('outputDisabled', (disabled) => {
 });
 Template.registerHelper('outputDisabledFlipped', (disabled) => {
     return (disabled ? '' : 'disabled');
-});
-
-Template.registerHelper('commitHref', (commitId, deployment=null)=>{
-    const githubOrgName = Session.get('currentOrgName');
-    const githubProjName = deployment.searchableData.name;
-    return `${Meteor.settings.public.GITHUB_URL}${githubOrgName}/${githubProjName}/commit/${commitId}`;
 });
 
 Template.registerHelper('valuesJoined', (values) => {

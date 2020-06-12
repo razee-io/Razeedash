@@ -52,8 +52,6 @@ const migrateUnencryptedUsers = () => {
 
 Meteor.startup(()=>{
     // envs copied over to client
-    Meteor.settings.public.GITHUB_URL = process.env.GITHUB_URL || 'https://github.com/';
-    Meteor.settings.public.GITHUB_API = process.env.GITHUB_API || 'https://api.github.com/';
     Meteor.settings.public.BITBUCKET_URL = process.env.BITBUCKET_URL || 'https://bitbucket.org/';
     Meteor.settings.public.BITBUCKET_API = process.env.BITBUCKET_API || 'https://api.bitbucket.org/2.0/';
     Meteor.settings.public.RAZEE_GITHUB_URL = 'https://github.com/razee-io/razeedash';
@@ -65,7 +63,7 @@ Meteor.startup(()=>{
     };
     versionInfo.str = `${versionInfo.buildId}_${versionInfo.lastCommitId}`;
     Meteor.settings.public.version = versionInfo;
-    
+
     if ( process.env.OAUTH_SECRET_KEY ) {
         migrateUnencryptedUsers();
     }

@@ -27,6 +27,19 @@ AccountsTemplates.configure({
     },
 });
 
+const sanitizeUrl = (url) => {
+
+    const httpCheck = /^((http|https):\/\/)/;
+    if(!httpCheck.test(url)) {
+        url = `https://${url}`;
+    }
+
+    const trailingSlash = /\/*$/gi;
+    const newUrl = url.replace(trailingSlash, '');
+
+    return newUrl;
+};
+
 // A user can logon via github, github enterprise, bitbucket or they can create a local id/password stored in mongo
 // `localUser` is used throughout our code so that we can skip calls to the github api for local users
 function localUser() {
@@ -47,4 +60,4 @@ function getServiceConfiguration() {
     return config ? config.service : undefined;
 }
 
-export { localUser, loginType, getServiceConfiguration };
+export { localUser, loginType, getServiceConfiguration, sanitizeUrl };

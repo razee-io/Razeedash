@@ -19,13 +19,20 @@ import { OAuth } from 'meteor/oauth';
 import { HTTP } from 'meteor/http';
 import log from './log.js';
 import _ from 'lodash';
-import { loginType } from './login.js';
+import { ServiceConfiguration } from 'meteor/service-configuration';
+import { loginType, sanitizeUrl } from './login.js';
 
 function listOrgs(loggedInUserObj){
-    const url = `${Meteor.settings.public.GITHUB_API}user/memberships/orgs?state=active&per_page=100`;
     const serviceName = loginType();
+    let gitUrl = 'https://api.github.com';
+    if(serviceName === 'ghe') {
+        let {gheURL} = ServiceConfiguration.configurations.findOne({ service: 'ghe' }, {fields: {gheURL: 1}});
+        gitUrl = sanitizeUrl(gheURL) + '/api/v3';
+    } 
+
+    const url = `${gitUrl}/user/memberships/orgs?state=active&per_page=100`;
     const token = OAuth.openSecret( loggedInUserObj.services[serviceName].accessToken, loggedInUserObj._id );
-    
+
     const options = {
         headers: {
             Authorization: `bearer ${token}`,

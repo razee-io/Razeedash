@@ -46,7 +46,7 @@ meteortesting:mocha-core@5.2.0_3
 gadicc:blaze-react-component
 accounts-github@1.4.3
 github-config-ui@1.0.1
-ibmcloud:accounts-ghe
+ibmcloud:accounts-ghe@3.0.0
 useraccounts:core
 useraccounts:unstyled
 service-configuration@1.0.11

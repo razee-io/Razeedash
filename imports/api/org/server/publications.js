@@ -29,12 +29,8 @@ Meteor.publish('orgs', function(names){
 });
 
 Meteor.publish('orgsForUser', function(){
-    var orgNames = [];
-    if(Meteor.user() && Meteor.user().bitbucket) {
-        orgNames = _.map(Meteor.user().bitbucket.teams || [], 'name');
-        return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs: 1 });
-    } else if(Meteor.user() && Meteor.user().github) {
-        orgNames = _.map(Meteor.user().github.orgs || [], 'name');
+    if(Meteor.user() && (Meteor.user().bitbucket || Meteor.user().github)) {
+        const orgNames = _.map(Meteor.user().orgs || [], 'name');
         return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs: 1 });
     } else {
         // local users should be able to see see all orgs with type local

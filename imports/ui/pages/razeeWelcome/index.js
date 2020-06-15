@@ -47,24 +47,15 @@ Template.SelectOrg.helpers({
             const localOrgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch().sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
             return localOrgs;
         } else {
-            if(loginType() === 'bitbucket') {
-                return _.get(Meteor.user(), 'bitbucket.teams', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
-            } else {
-                return _.get(Meteor.user(), 'github.orgs', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
-            }
+            return _.get(Meteor.user(), 'orgs', []).sort((a,b)=>a.name.toLowerCase().localeCompare(b.name.toLowerCase())) || [];
         }
     },
     orgExists(name){
         return !!Orgs.findOne({ name });
     },
     isAdminOfOrg(name){
-        var orgs;
-        if(loginType() === 'bitbucket') {
-            orgs = _.get(Meteor.user(), 'bitbucket.teams', []);
-        } else {
-            orgs = _.get(Meteor.user(), 'github.orgs', []);
-        }
-        var org = _.find(orgs, (org)=>{
+        const orgs = _.get(Meteor.user(), 'orgs', []);
+        const org = _.find(orgs, (org)=>{
             return org.name === name;
         });
         return (org && org.role === 'admin');

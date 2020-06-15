@@ -58,10 +58,10 @@ Meteor.methods({
         if(userObj && !localUser()) {
             if(loginType() === 'bitbucket') {
                 let teams = bitbucket.listTeams(userObj);
-                Meteor.users.update({ _id: userObj._id}, { $set: { 'bitbucket.teams': teams} });
+                Meteor.users.update({ _id: userObj._id}, { $set: { 'bitbucket.teams': teams, 'orgs': teams} });
             } else {
                 let orgs = ghe.listOrgs(userObj);
-                Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs } });
+                Meteor.users.update({ _id: userObj._id}, { $set: { 'github.orgs': orgs, 'orgs': orgs } });
             }
         } 
     },

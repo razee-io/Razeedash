@@ -59,8 +59,8 @@ const migrateUserOrgs = () => {
         orgs: { $exists: false },
         $or: [
             { 'github.orgs': { $exists: true } }, 
-            { 'bitbucket.teams': { $exists: true }
-            }]
+            { 'bitbucket.teams': { $exists: true }}
+        ]
     });
     cursor.forEach((userDoc) => {
         log.info(`migrating orgs for ${userDoc._id}`);

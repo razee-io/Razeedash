@@ -352,11 +352,7 @@ Template.registerHelper('iconForOrgName', (orgName) => {
     if(localUser()) {
         orgs = Orgs.find({ type: 'local' }, { name: 1 }).fetch();
     } else {
-        if(loginType() === 'bitbucket') {
-            orgs = _.get(Meteor.user(), 'bitbucket.teams', []);
-        } else {
-            orgs = _.get(Meteor.user(), 'github.orgs', []);
-        }
+        orgs = _.get(Meteor.user(), 'orgs', []);
     } 
 
     var selectedOrg = _.find(orgs, (org)=>{

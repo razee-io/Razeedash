@@ -28,7 +28,8 @@ Meteor.publish('userData', function() {
                 'apiKey': 1, 
                 'profile': 1, 
                 'github': 1, 
-                'bitbucket': 1 
+                'bitbucket': 1,
+                'orgs': 1 
             },
         });
     } else {

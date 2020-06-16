@@ -20,6 +20,7 @@ import './register-api.js';
 
 import { Meteor } from 'meteor/meteor';
 import { OAuthEncryption } from 'meteor/oauth-encryption';
+import log from '/imports/api/lib/log.js';
 import _ from 'lodash';
 
 const migrateUnencryptedUsers = () => {
@@ -50,6 +51,33 @@ const migrateUnencryptedUsers = () => {
     });
 };
 
+// Move any github and bitbucket user orgs to a lower level in the user object
+//   user.github.orgs[]     -> user.orgs[]
+//   user.bitbucket.teams[] -> user.orgs[]
+const migrateUserOrgs = () => {
+    const cursor = Meteor.users.find({ 
+        orgs: { $exists: false },
+        $or: [
+            { 'github.orgs': { $exists: true } }, 
+            { 'bitbucket.teams': { $exists: true }}
+        ]
+    });
+    cursor.forEach((userDoc) => {
+        log.info(`migrating orgs for ${userDoc._id}`);
+        let userOrgs;
+        if(userDoc.github && userDoc.github.orgs) {
+            userOrgs = userDoc.github.orgs;
+        } else {
+            userOrgs = userDoc.bitbucket.teams;
+        }
+        try{
+            Meteor.users.update({'_id': userDoc._id}, { $set: { 'orgs': userOrgs} });
+        } catch (error){
+            log.error(error);
+        }
+    });
+};
+
 Meteor.startup(()=>{
     // envs copied over to client
     Meteor.settings.public.GITHUB_URL = process.env.GITHUB_URL || 'https://github.com/';
@@ -69,4 +97,5 @@ Meteor.startup(()=>{
     if ( process.env.OAUTH_SECRET_KEY ) {
         migrateUnencryptedUsers();
     }
+    migrateUserOrgs();
 });

@@ -85,6 +85,9 @@ Template.SelectOrg.events({
 Template.SelectOrg_git.helpers({
     scmIcon() {
         return loginType() === 'bitbucket' ? 'fa-bitbucket' : 'fa-github';
+    },
+    orgName() {
+        return Template.currentData().org.name;
     }
 });
 

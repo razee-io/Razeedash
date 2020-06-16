@@ -24,8 +24,6 @@ When deploying RazeeDash these variables can be set by adding them to the `razee
 | MONGO_URL        | Required | -                        | URL to your mongo instance |
 | MONGO_OPTIONS    | Optional | -                        | Set additional mongo connection string options |
 | OAUTH_SECRET_KEY | Optional | -                        | GitHub OAuth Secret Key |
-| GITHUB_URL       | Optional | <https://github.com/>     | Required when using GitHub Enterprise authentication |
-| GITHUB_API       | Optional | <https://api.github.com/> | Required when using GitHub Enterprise authentication |
 | BITBUCKET_URL    | Optional | <https://bitbucket.org/>     | Required when using Bitbucket Enterprise authentication |
 | BITBUCKET_API    | Optional | <https://api.bitbucket.org/2.0/> | Required when using Bitbucket Enterprise authentication |
 | BUILD_ID         | Optional | Travis build ID          | Travis Build ID |
@@ -51,18 +49,6 @@ Example registration for running locally.
 | Description | Local development |
 | Homepage URL | <http://localhost:3000> |
 | User authorization callback URL | <http://localhost:3000/_oauth/github> |
-
-### Using GitHub Enterprise for authentication
-
-- Add `github_url` and `github_api` to the `razeedash-config` ConfigMap.  For example:
-
-    ```yaml
-    apiVersion: v1
-    kind: ConfigMap
-    data:
-        github_url: https://github.your_company.com/
-        github_api: https://github.your_company.com/api/v3/
-    ```
 
 ### Using Bitbucket Enterprise authentication
 

@@ -1,0 +1,16 @@
+<template name="configureLoginServiceDialogForGhe">
+    <p>
+        First, you'll need to get a GitHub Client ID. Follow these steps:
+    </p>
+    <ol>
+        <li>
+            Visit your enterprise GitHub site and go to<br/> Settings -> Developer settings -> OAuth Apps -> New OAuth App
+        </li>
+        <li>
+            Set Homepage URL to: <span class="url">{{siteUrl}}</span>
+        </li>
+        <li>
+            Set Authorization callback URL to: <span class="url">{{siteUrl}}_oauth/ghe</span>
+        </li>
+    </ol>
+</template>

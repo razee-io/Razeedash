@@ -55,18 +55,6 @@ items:
                   name: razeedash-secret
                   key: oauth_secret_key
                   optional: true
-            - name: GITHUB_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: github_url
-                  optional: true
-            - name: GITHUB_API
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: github_api
-                  optional: true
             - name: BITBUCKET_URL
               valueFrom:
                 configMapKeyRef:

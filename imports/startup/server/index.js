@@ -56,13 +56,11 @@ const migrateUnencryptedUsers = () => {
 //   user.bitbucket.teams[] -> user.orgs[]
 const migrateUserOrgs = () => {
     const cursor = Meteor.users.find({ 
-        $and: [
-            {orgs: {$exists: false}},
-            {$or: [
-                {'github.orgs': {$exists: true}},
-                {'bitbucket.teams': {$exists: true}},
-            ]}
-        ]
+        orgs: { $exists: false },
+        $or: [
+            { 'github.orgs': { $exists: true } }, 
+            { 'bitbucket.teams': { $exists: true }
+            }]
     });
     cursor.forEach((userDoc) => {
         log.info(`migrating orgs for ${userDoc._id}`);

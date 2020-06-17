@@ -18,6 +18,7 @@ import _ from 'lodash';
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { Orgs } from '../orgs.js';
+import { localUser } from '../../lib/login.js';
 
 Meteor.publish('orgIdByName', function(orgName){
     return Orgs.find({ name: orgName }, { _id: 1, name: 1, customSearchableAttrs: 1});
@@ -29,13 +30,13 @@ Meteor.publish('orgs', function(names){
 });
 
 Meteor.publish('orgsForUser', function(){
-    if(Meteor.user() && (Meteor.user().bitbucket || Meteor.user().github)) {
-        const orgNames = _.map(Meteor.user().orgs || [], 'name');
-        return Orgs.find({ name: { $in: orgNames } }, { name: 1, orgYaml: 1, customSearchableAttrs: 1 });
-    } else {
+    if(localUser()) {
         // local users should be able to see see all orgs with type local
         return Orgs.find({ type: 'local' }, { name: 1, customSearchableAttrs: 1 });
-    }
+    } else {
+        const orgNames = _.map(Meteor.user().orgs || [], 'name');
+        return Orgs.find({ name: { $in: orgNames } }, { name: 1, customSearchableAttrs: 1 });
+    } 
 });
 
 Meteor.publish('gheOrg', (orgName)=>{

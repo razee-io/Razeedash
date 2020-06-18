@@ -14,7 +14,7 @@
                             <div class="row">
                                 <div class="col-lg-2">Name</div>
                                 <div class="col-lg-2">Owner</div>
-                                <div class="col-lg-2">Tags</div>
+                                <div class="col-lg-2">Labels</div>
                                 <div class="col-lg-2">Channel</div>
                                 <div class="col-lg-2">Version</div>
                                 <div class="col-lg-2">Action</div>
@@ -40,9 +40,9 @@
                                       <input type="text" name="groupOwner" value="{{owner subscription.owner}}" class="form-control" disabled/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <div class="d-block d-lg-none row-header-sm">Tags</div>
+                                        <div class="d-block d-lg-none row-header-sm">Labels</div>
                                         <input type="text" name="groupTags" value="{{subscription.tags}}" class="form-control" required autofocus/>
-                                        <div class="invalid-feedback"> Please enter a tag</div>
+                                        <div class="invalid-feedback"> Please enter a label</div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="d-block d-lg-none row-header-sm">Channel</div>
@@ -81,7 +81,7 @@
                                       <div class="group-edit">{{owner subscription.owner}} </div>
                                     </div>
                                     <div class="col-lg-2">
-                                        <div class="d-block d-lg-none row-header-sm">Tags</div>
+                                        <div class="d-block d-lg-none row-header-sm">Labels</div>
                                         <div class="group-edit">
                                           {{#each tag in tags subscription}}
                                             <a href="#" class="badge badge-primary">{{tag}}</a>
@@ -134,9 +134,9 @@
                                     <input type="text" name="groupOwner" value="{{owner currentUser._id}}" class="form-control" disabled/>
                                 </div>
                                 <div class="col-lg-2">                                   
-                                        <div class="d-block d-lg-none row-header-sm">Tags</div>
-                                        <input type="text" name="groupTags" class="form-control" required autofocus placeholder="tag1, tag2, tag3"/>
-                                        <div class="invalid-feedback"> Please enter a tag</div>
+                                        <div class="d-block d-lg-none row-header-sm">Label</div>
+                                        <input type="text" name="groupTags" class="form-control" required autofocus placeholder="label1, label2, label3"/>
+                                        <div class="invalid-feedback"> Please enter a label</div>
                                 </div>
                                 <div class="col-lg-2">
                                         <div class="d-block d-lg-none row-header-sm">Channel</div>

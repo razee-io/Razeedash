@@ -84,12 +84,15 @@ orgedRoutes.route('/org', {
     }
 });
 
-orgedRoutes.route('/deployables', {
+orgedRoutes.route('/deployables/:tabId', {
     name: 'deployables',
-    title: 'Deployables',
+    title: ':tabId',
     parent: 'welcome',
-    action: function() {
-        BlazeLayout.render('Base_layout', { main: 'page_deployables', });
+    action: function(params) {
+        if ( !params.tabId ) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        BlazeLayout.render('Base_layout', { main: 'page_deployables', tabId: params.tabId });
     }
 });
 

@@ -14,9 +14,9 @@
                             <dt>Name(required)</dt>
                             <dd>Add a name for the subscription</dd>
 
-                            <dt>Tags(required)</dt>
-                            <dd>Add one or more tags. 
-                            Any cluster that includes these tags by using 
+                            <dt>Labels(required)</dt>
+                            <dd>Add one or more labels. 
+                            Any cluster that includes these labels by using 
                             <a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> will get the 
                             resource applied to that cluster
                             </dd>
@@ -29,18 +29,7 @@
 
                         </dl>
                         <div class="mt-3"><a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> can be used on any cluster that you want
-                          to subscribe to an uploaded resource.  Your cluster(s) can subscribe by first creating a <code>clustersubscription</code> config map and secret and then installing ClusterSubscription on your cluster
-                          <div>
-                            <pre class="bg-light">
-kubectl create cm clustersubscription \
---from-literal=RAZEE_API='{{apiUrl}}' \
---from-literal=RAZEE_TAGS='comma-separated-tags-go-here'
-
-kubectl create secret generic clustersubscription \
---from-literal=RAZEE_ORG_KEY='{{firstOrgKey org}}' \
-
-                            </pre>
-                          </div>
+                          to subscribe to an uploaded resource.  Your cluster(s) can subscribe by installing ClusterSubscription on your cluster
                           <div>
                             <pre class="bg-light">
 

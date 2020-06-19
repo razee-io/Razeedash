@@ -1,5 +1,10 @@
 $grey:#ced4da;
+$grey-hover: #dae0e5;
 
+.resource-dropdown:hover, .version-dropdown:hover{
+  cursor: pointer;
+  background-color: $grey-hover;
+}
 .group-edit {
     min-height: 37px;
     cursor: pointer;

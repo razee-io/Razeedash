@@ -5,6 +5,7 @@ import './helpModal.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Subscriptions } from '/imports/api/deployables/subscriptions/subscriptions.js';
+import { Labels } from '/imports/api/deployables/labels/labels.js';
 import { Channels } from '/imports/api/deployables/channels/channels.js';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions.js';
 import _ from 'lodash';
@@ -21,6 +22,8 @@ Template.Subscriptions.onCreated(function() {
     this.autorun(()=>{
         Meteor.subscribe('subscriptions', Session.get('currentOrgId'));
         Meteor.subscribe('channels', Session.get('currentOrgId'));
+        Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
+        Meteor.subscribe('labels', Session.get('currentOrgId'));
         editMode.set(false);
     });
 });
@@ -51,6 +54,10 @@ Template.Subscriptions.helpers({
     },
     showNewGroupRow() {
         return showNewGroupRow.get();
+    },
+    labels(){
+        const labels = Labels.find({'orgId': Session.get('currentOrgId')}).fetch();
+        return labels;        
     },
     subscriptions(){
         const groups = Subscriptions.find({'org_id': Session.get('currentOrgId')}).fetch();
@@ -125,7 +132,7 @@ Template.Subscriptions.events({
     'click .js-add-group'(e, instance) {
         e.preventDefault();
         const groupName = $(e.target).closest('.group-item-new').find('input[name="groupName"]').val();
-        const groupTags = $(e.target).closest('.group-item-new').find('input[name="groupTags"]').val().split(/[ ,]+/).filter(String);
+        const groupTags = $(e.target).closest('.group-item-new').find('select.js-labels-select').val();
         const resourceId = $(e.target).closest('.group-item-new').find('.resource-dropdown').val();
         const resourceName = instance.selectedChannel.get();
         const resourceVersion = $(e.target).closest('.group-item-new').find('.version-dropdown').val();
@@ -136,7 +143,7 @@ Template.Subscriptions.events({
             return false;
         }
         if(!groupTags|| groupTags.length == 0) {
-            $(e.target).closest('.group-item-new').find('input[name="groupTags"]').addClass('is-invalid').focus();
+            $(e.target).closest('.group-item-new').find('.dropdown.js-labels-select').addClass('is-invalid').focus();
             return false;
         }
         if(!resourceName) {
@@ -237,7 +244,7 @@ Template.Subscriptions.events({
         e.preventDefault();
         const groupId = $(e.target).closest('.group-item-edit').data('id');
         const updatedName = $(e.target).closest('.group-item-edit').find('input[name="groupName"]').val();
-        const updatedTags = $(e.target).closest('.group-item-edit').find('input[name="groupTags"]').val().split(/[ ,]+/).filter(String);
+        const updatedTags = $(e.target).closest('.group-item-edit').find('select.js-labels-select').val();
         const resourceId = $(e.target).closest('.group-item-edit').find('.resource-dropdown').val();
         const resourceName = $(e.target).closest('.group-item-edit').find('.resource-dropdown option:selected').text();
         const resourceVersion = $(e.target).closest('.group-item-edit').find('.version-dropdown').val();

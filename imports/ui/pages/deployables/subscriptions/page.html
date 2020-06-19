@@ -40,9 +40,7 @@
                                       <input type="text" name="groupOwner" value="{{owner subscription.owner}}" class="form-control" disabled/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <div class="d-block d-lg-none row-header-sm">Labels</div>
-                                        <input type="text" name="groupTags" value="{{subscription.tags}}" class="form-control" required autofocus/>
-                                        <div class="invalid-feedback"> Please enter a label</div>
+                                        {{> LabelSelect labels=labels subscription=subscription}}
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="d-block d-lg-none row-header-sm">Channel</div>
@@ -134,9 +132,7 @@
                                     <input type="text" name="groupOwner" value="{{owner currentUser._id}}" class="form-control" disabled/>
                                 </div>
                                 <div class="col-lg-2">                                   
-                                        <div class="d-block d-lg-none row-header-sm">Label</div>
-                                        <input type="text" name="groupTags" class="form-control" required autofocus placeholder="label1, label2, label3"/>
-                                        <div class="invalid-feedback"> Please enter a label</div>
+                                  {{> LabelSelect labels=labels }}
                                 </div>
                                 <div class="col-lg-2">
                                         <div class="d-block d-lg-none row-header-sm">Channel</div>

@@ -1,5 +1,6 @@
 
 import './subscriptions/index.js';
+import './subscriptions/labelSelect.js';
 import './channels/index.js';
 import './labels/index.js';
 import './page.html';

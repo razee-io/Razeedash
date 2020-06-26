@@ -65,7 +65,7 @@
         "react-popper": "^2.2.3",
         "reactstrap": "^8.4.1",
         "shelljs": "^0.8.4",
-        "simpl-schema": "^1.5.7",
+        "simpl-schema": "^1.8.0",
         "toastr": "^2.1.4",
         "unidiff": "^1.0.2",
         "uuid": "^8.1.0",

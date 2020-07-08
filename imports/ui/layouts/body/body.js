@@ -106,10 +106,15 @@ Template.nav.helpers({
         return FlowRouter.pathFor('App.home');
     },
     isActive(routeName) {
-        let breadcrumbs = Breadcrumb.getAll();
-        var routeTree = _.map(breadcrumbs, 'routeName'); // arr of routeNames for this route and its parent routes
-        if (_.includes(routeTree, routeName)) {
-            return 'active';
+        try {
+            let breadcrumbs = Breadcrumb.getAll();
+            var routeTree = _.map(breadcrumbs, 'routeName'); // arr of routeNames for this route and its parent routes
+            if (_.includes(routeTree, routeName)) {
+                return 'active';
+            }
+        
+        } catch (err) {
+            console.error(err);
         }
         return '';
     },

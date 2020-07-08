@@ -1,5 +1,13 @@
 $grey:#ced4da;
 
+.details-card {
+  height: 280px;
+  overflow-y: hidden;
+}
+.footer-buttons {
+  position: relative;
+  bottom: 5px;
+}
 .channel-id {
   width: 290px;
   display: inline-block;
@@ -16,6 +24,7 @@ $grey:#ced4da;
     padding-left: 0px;
 }
 .resource-item {
+    cursor: pointer;
     line-height: 2.5;
     margin-bottom: 2px;
     &:hover {

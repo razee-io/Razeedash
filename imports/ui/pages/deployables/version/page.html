@@ -1,0 +1,17 @@
+<template name="channel_version">
+  {{#if Template.subscriptionsReady}}
+  <div class="card border-light m-2">
+      <!-- <h4 class="card-header text-muted">{{version.name}}</h4> -->
+      {{> version_details version=version }}
+  </div>
+  <div class="card border-light m-2">
+      <div class="card">
+        <div class="card-body p-0">
+          <div id="editor">
+            <pre data-id={{version.channel_uuid}} id="editor" class="border rounded">{{resourceDetails}}</pre>
+          </div>
+        </div>
+      </div>
+  </div>
+{{/if}}
+</template>

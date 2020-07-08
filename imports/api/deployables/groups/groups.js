@@ -17,14 +17,14 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 
-export const Labels = new Mongo.Collection('labels');
+export const Groups = new Mongo.Collection('groups');
 
-Labels.deny({
+Groups.deny({
     insert() { return true; },
     update() { return true; },
     remove() { return true; },
 });
 
 if ( Meteor.isServer ) {
-    Labels._ensureIndex( { 'org_id': 1, 'name': 1 } );
+    Groups._ensureIndex( { 'org_id': 1, 'name': 1 } );
 }

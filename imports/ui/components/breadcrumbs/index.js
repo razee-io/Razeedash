@@ -17,6 +17,7 @@
 import './breadcrumbs.html';
 import './breadcrumbs.scss';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
+import { Channels } from '/imports/api/deployables/channels/channels';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -56,7 +57,7 @@ var setTitleToLastCrumb = (crumbs)=>{
 Template.breadcrumbs.helpers({
     getBreadcrumbs(){
         let breadcrumbs = [];
-        const ignoredCrumbs = ['welcome', 'org', 'root', 'profile', 'deployables'];
+        const ignoredCrumbs = ['welcome', 'org', 'root', 'profile', 'groups', 'channels', 'groups' ];
         try {
             breadcrumbs = Breadcrumb.getAll();
         }catch(e){
@@ -73,6 +74,19 @@ Template.breadcrumbs.helpers({
         return (crumbs.length > 0);
     },
     getDisplayName(crumb){
+        if(crumb.routeName === 'channel.details') {
+            let displayName;
+            try{
+                const channelId = crumb.params.id;
+                const name = Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': channelId }, { fields: { 'name': 1 }});
+                if(name) {
+                    displayName = name.name;
+                }
+            }catch(e){
+                console.error(e);
+            } 
+            return displayName;
+        }
         if(crumb.routeName === 'resource.cluster') {
             var name = '';
             try{

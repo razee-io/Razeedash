@@ -1,5 +1,5 @@
 <template name="SubscriptionsHelpModal">
-        <div class="modal js-group-help-modal" tabindex="-1" role="dialog">
+        <div class="modal js-subscription-help-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -14,15 +14,12 @@
                             <dt>Name(required)</dt>
                             <dd>Add a name for the subscription</dd>
 
-                            <dt>Labels(required)</dt>
-                            <dd>Add one or more labels. 
+                            <dt>Cluster groups(required)</dt>
+                            <dd>Add one or more groups. 
                             Any cluster that includes these labels by using 
                             <a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> will get the 
                             resource applied to that cluster
                             </dd>
-
-                            <dt>Channel(required)</dt>
-                            <dd>Select a channel.  If you don't see any channels then go to the <code>Channels</code> section and add a new channel</dd>
 
                             <dt>Version(required)</dt>
                             <dd>Select a version to associate with the subscription</dd>

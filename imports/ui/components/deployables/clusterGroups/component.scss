@@ -1,27 +1,17 @@
 $grey:#ced4da;
-$grey-hover: #dae0e5;
 
-.resource-dropdown:hover, .version-dropdown:hover{
-  cursor: pointer;
-  background-color: $grey-hover;
+.dropdown.bootstrap-select {
+    width: 100% !important;
 }
-.group-edit {
-    min-height: 37px;
-    cursor: pointer;
-}
-#group-table .container-fluid {
-    padding-left: 0px;
-}
+
 .group-item {
     line-height: 2.5;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     &:hover {
         background-color: rgba(0,0,0,.075);
     }
 }
-.group-item-edit {
-    margin-bottom: 2px;
-}
+
 .group-item.disabled {
   pointer-events: none;
 }
@@ -51,21 +41,7 @@ $grey-hover: #dae0e5;
         border-bottom: solid 1px $grey;
         padding-bottom: 10px;
     }
-    .group-item-edit {
-        line-height: 3.5;
-    }
     .form-control {
         height: 39px;
     }
-    .group-edit {
-        display: block;
-        width: 100%;
-        height: 39px;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.875rem;
-        font-weight: 400;
-        line-height: 1.9;
-        border: 1px solid $grey;
-        border-radius: 0px;
-    } 
 }

@@ -1,20 +1,15 @@
 
-import './subscriptions/index.js';
-import './subscriptions/labelSelect.js';
-import './channels/index.js';
-import './labels/index.js';
+import '../../components/deployables/channels';
+import './versions';
+import './version';
+import '../../components/deployables/clusterGroups';
+import '../../components/icons';
+import './channel/index.js';
 import './page.html';
 import './apiHelp.html';
-import { Meteor } from 'meteor/meteor';	
 import { Template } from 'meteor/templating';	
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-
-Template.api_example.events({	
-    'click .js-generate-key': function() {	
-        Meteor.call('generateApikey');	
-    }	
-});	
 
 Template.api_example.helpers({
     orgId() {

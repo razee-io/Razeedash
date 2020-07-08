@@ -25,6 +25,13 @@ Meteor.publish('subscriptions', function(orgId) {
     return Subscriptions.find({ org_id: orgId }, {pollingIntervalMs: 1000});
 });
 
+Meteor.publish('subscriptions.byChannel', function(orgId, channelId) {
+    check( orgId, String );
+    check( channelId, String );
+    requireOrgAccess(orgId);
+    return Subscriptions.find({ org_id: orgId, channel_uuid: channelId }, {pollingIntervalMs: 1000});
+});
+
 Meteor.publish('users.byIds', function(userIds) {
     check( userIds, Array);
     return Meteor.users.find({ _id: {$in: userIds} }, { fields: { 'profile.name': true } });

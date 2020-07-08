@@ -59,8 +59,9 @@
                               <div class="input-group">	
                                   <input type="text" class="form-control" placeholder="No API key" aria-label="API Key" value="{{currentUser.apiKey}}" readonly>	
                                   <span class="input-group-btn">	
-                                      <button class="btn btn-primary" type="button">Generate</button>	
+                                      <button class="btn btn-primary js-key-btn" type="button">Generate</button>	
                                   </span>	
+                                  {{> UserProfile_key }}
                               </div>	
                           </div>	
                       </form>	
@@ -71,3 +72,25 @@
     {{/if}}	
   {{/if}}	
   </template>
+
+  <Template name="UserProfile_key">
+    <div id="js-key-modal" class="modal action-col" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">API key</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to create a new API Key?</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                <button type="button" class="btn btn-primary js-key-modal-confirm">Generate</button>
+                </div>
+            </div>
+        </div>
+</div>
+  </Template>

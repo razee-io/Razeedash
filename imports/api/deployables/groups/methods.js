@@ -28,18 +28,18 @@ const NonEmptyString = Match.Where((x) => {
 });
 
 Meteor.methods({
-    async addLabel(orgId, name){
+    async addGroup(orgId, name){
         requireOrgAccess(orgId);
         check( orgId, String );
         check( name, NonEmptyString);
 
-        logUserAction(Meteor.userId(), 'addLabel', `Add label ${orgId}:${name}`);
+        logUserAction(Meteor.userId(), 'addGroup', `Add group ${orgId}:${name}`);
 
         let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-              mutation AddLabel($orgId: String!, $name: String!) {
-                addLabel(orgId: $orgId, name: $name) { 
+              mutation AddGroup($orgId: String!, $name: String!) {
+                addGroup(orgId: $orgId, name: $name) { 
                     uuid
                   }
               }
@@ -52,19 +52,18 @@ Meteor.methods({
             throw new Meteor.Error(err.message);
         });
     },
-    async removeLabel(orgId, labelName, uuid){
+    async removeGroup(orgId, uuid){
         requireOrgAccess(orgId);
         check( orgId, String );
-        check( labelName, String );
         check( uuid, String );
 
-        logUserAction(Meteor.userId(), 'removeLabel', `Remove label ${orgId}:${labelName}:${uuid}`);
+        logUserAction(Meteor.userId(), 'removeGroup', `Remove group ${orgId}:${uuid}`);
 
         let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-            mutation RemoveLabel($orgId: String!, $uuid: String!) {
-              removeLabel(orgId: $orgId, uuid: $uuid) { 
+            mutation RemoveGroup($orgId: String!, $uuid: String!) {
+              removeGroup(orgId: $orgId, uuid: $uuid) { 
                   uuid
                   success
                 }
@@ -73,6 +72,32 @@ Meteor.methods({
             variables: {
                 'orgId': orgId,
                 'uuid': uuid
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
+    },
+    async groupClusters(orgId, uuid, clusters){
+        requireOrgAccess(orgId);
+        check( orgId, String );
+        check( uuid, String );
+        check( clusters, [String]);
+
+        logUserAction(Meteor.userId(), 'groupClusters', `Group clusters ${orgId}:${uuid}:${clusters}`);
+
+        const client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+            mutation GroupClusters($orgId: String!, $uuid: String!, $clusters: [String]!) {
+              groupClusters(orgId: $orgId, uuid: $uuid, clusters: $clusters) { 
+                modified
+              }
+            }
+          `,
+            variables: {
+                'orgId': orgId,
+                'uuid': uuid,
+                'clusters': clusters
             }
         }).catch( (err) => {
             throw new Meteor.Error(err.message);

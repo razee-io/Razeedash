@@ -28,91 +28,87 @@ const NonEmptyString = Match.Where((x) => {
 });
 
 Meteor.methods({
-    async updateSubscription(orgId, groupId, groupName, tags=[], resourceId='', resourceName='', version='', versionName=''){
+    async updateSubscription(orgId, subscriptionId, subscriptionName, groups=[], channelId='', version=''){
         requireOrgAccess(orgId);
         check( orgId, String );
-        check( groupId, String );
-        check( groupName, NonEmptyString);
-        check( tags, Array );
-        check( resourceId, String );
-        check( resourceName, String );
+        check( subscriptionId, String );
+        check( subscriptionName, NonEmptyString);
+        check( groups, Array );
+        check( channelId, String );
         check( version, String);
-        check( versionName, String);
 
-        logUserAction(Meteor.userId(), 'updateSubscription', `Update subscription ${orgId}:${groupId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
+        logUserAction(Meteor.userId(), 'updateSubscription', `Update subscription ${orgId}:${subscriptionId}:${subscriptionName}:${groups}:${channelId}:${version}`);
 
         let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-              mutation EditSubscription($org_id: String!, $uuid: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
-                editSubscription(org_id: $org_id, uuid: $uuid, name: $name, tags: $tags, channel_uuid: $channel_uuid, version_uuid: $version_uuid) { 
+              mutation EditSubscription($orgId: String!, $uuid: String!, $name: String!, $groups: [String!]!, $channelUuid: String!, $versionUuid: String!) {
+                editSubscription(orgId: $orgId, uuid: $uuid, name: $name, groups: $groups, channelUuid: $channelUuid, versionUuid: $versionUuid) { 
                     uuid
                   }
               }
           `,
             variables: {
-                'org_id': orgId,
-                'uuid': groupId,
-                'name': groupName,
-                'tags': tags,
-                'channel_uuid': resourceId,
-                'version_uuid': version,
+                'orgId': orgId,
+                'uuid': subscriptionId,
+                'name': subscriptionName,
+                'groups': groups,
+                'channelUuid': channelId,
+                'versionUuid': version,
             }
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
     },
-    async addSubscription(orgId, groupName, tags=[], resourceId='', resourceName='', version='', versionName='' ){
+    async addSubscription(orgId, subscriptionName, groups=[], channelId='', version=''){
         requireOrgAccess(orgId);
         check( orgId, String );
-        check( groupName, NonEmptyString);
-        check( tags, Array );
-        check( resourceId, String );
-        check( resourceName, String );
+        check( subscriptionName, NonEmptyString);
+        check( groups, Array );
+        check( channelId, String );
         check( version, String);
-        check( versionName, String);
 
-        logUserAction(Meteor.userId(), 'addSubscription', `Add subscription ${orgId}:${groupName}:${tags}:${resourceId}:${resourceName}:${version}:${versionName}`);
+        logUserAction(Meteor.userId(), 'addSubscription', `Add subscription ${orgId}:${subscriptionName}:${groups}:${channelId}:${version}`);
 
         let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-              mutation AddSubscription($org_id: String!, $name: String!, $tags: [String!]!, $channel_uuid: String!, $version_uuid: String!) {
-                addSubscription(org_id: $org_id, name: $name, tags: $tags, channel_uuid: $channel_uuid, version_uuid: $version_uuid) { 
+              mutation AddSubscription($orgId: String!, $name: String!, $groups: [String!]!, $channelUuid: String!, $versionUuid: String!) {
+                addSubscription(orgId: $orgId, name: $name, groups: $groups, channelUuid: $channelUuid, versionUuid: $versionUuid) { 
                     uuid
                   }
               }
             `,
             variables: {
-                'org_id': orgId,
-                'name': groupName,
-                'tags': tags,
-                'channel_uuid': resourceId,
-                'version_uuid': version,
+                'orgId': orgId,
+                'name': subscriptionName,
+                'groups': groups,
+                'channelUuid': channelId,
+                'versionUuid': version,
             }
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
     },
-    async removeSubscription(orgId, groupName, uuid){
+    async removeSubscription(orgId, subscriptionName, uuid){
         requireOrgAccess(orgId);
         check( orgId, String );
-        check( groupName, String );
+        check( subscriptionName, String );
         check( uuid, String );
 
-        logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${groupName}:${uuid}`);
+        logUserAction(Meteor.userId(), 'removeSubscription', `Remove subscription ${orgId}:${subscriptionName}:${uuid}`);
 
         let client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-            mutation RemoveSubscription($org_id: String!, $uuid: String!) {
-              removeSubscription(org_id: $org_id, uuid: $uuid) { 
+            mutation RemoveSubscription($orgId: String!, $uuid: String!) {
+              removeSubscription(orgId: $orgId, uuid: $uuid) { 
                   uuid
                 }
             }
           `,
             variables: {
-                'org_id': orgId,
+                'orgId': orgId,
                 'uuid': uuid
             }
         }).catch( (err) => {

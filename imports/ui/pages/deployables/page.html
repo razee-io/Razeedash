@@ -4,33 +4,31 @@
       <div class="card-block my-1">
         <div class="row">
           <div class="col">
-            <div class="p-2">
-              <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                   <a class="nav-link show {{isActiveTab 'channels'}}" href="channels" role="tab" aria-controls="profile" aria-selected="false" tabname="channels">
-                    <i class="fa fa-file" aria-hidden="true"></i> Channels
+                    {{ > icon_file_ruled }} Channels
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link {{isActiveTab 'labels'}}" href="labels" role="tab" aria-controls="profile" aria-selected="false" tabname="labels">
-                    <i class="fa fa-tags" aria-hidden="true"></i> Labels
+                  <a class="nav-link {{isActiveTab 'groups'}}" href="groups" role="tab" aria-controls="profile" aria-selected="false" tabname="groups">
+                    {{> icon_tags }} Cluster groups
                   </a>
                 </li>
               </ul>
 
               {{#if isActiveTab "channels"}}
                 <div class="card border-top-0 border-bottom">
-                  {{> Channels }}
-                  {{> Subscriptions }}
+                    {{> channels }}
                 </div>
               {{/if}}
-              
-              {{#if isActiveTab "labels"}}
+
+              {{#if isActiveTab "groups"}}
                 <div class="card border-top-0 border-bottom">
-                  {{> Labels }}
+                    {{> cluster_groups }}
                 </div>
-              {{/if}}
-            </div>
+              {{/if}} 
+
           </div>
         </div>
       </div>

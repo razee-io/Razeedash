@@ -1,0 +1,208 @@
+<template name="channel_single">
+  <div class="card border-light m-2">
+    {{#if channel}}
+    <div class="row">
+      <div class="col-sm-6 ">
+        {{> channel_versions_recent channel=channel versions=channel.versions}}
+      </div>
+      <div class="col-sm-6 ">
+        {{> channel_details channel=channel}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        {{> Subscriptions }} 
+      </div>
+    </div>
+    {{else}}
+      <div class="col-sm-12 ">
+        <div class="card">
+        {{> portletHeader title='Not found' }}
+          <div class="card-body">
+            This channel was not found. View your list of channels <a href="{{pathFor 'deployables'}}">here</a>. 
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="channel_versions_recent">
+  <div class="card details-card">
+    {{> portletHeader title='Recent versions' }}
+    <div class="card-body ">
+      {{#each version in versions}}
+        <div class="row">
+          <div class="col"> Version: 
+            <span class="btn btn-link js-version-details pb-0 pt-0" data-id="{{version.uuid}}">{{version.name}}</span>
+          </div> 
+        </div>
+        <div class="row pb-2">
+          <div class="col"> {{localeDate version.created}} </div>
+        </div>
+      {{/each}}
+      
+      {{#unless versions}}
+            {{> no_versions}}
+      {{/unless}}
+
+    </div>
+    <div class="card-footer bg-white">
+      <div class="footer-buttons">
+            <button class="btn btn-link pl-0 js-add-resource-btn text-decoration-none {{buttonStatus}}" data-name="{{channel.name}}" alt="upload a new version to Razee"> Add version {{> icon_plus}}</button>	
+            {{#if versions}}
+            <button class="btn btn-link pl-0 js-view-all-channels {{buttonStatus}} float-right" data-name="{{channel.name}}" alt="view all versions"> View all </button>	
+            {{/if}}
+      <div class="modal js-add-resource-modal action-col" tabindex="-1" role="dialog">	
+        <div class="modal-dialog" role="document">	
+            <div class="modal-content">	
+                <div class="modal-header">	
+                    <h5 class="modal-title">Select a file or paste yaml for "{{channel.name}}" below</h5>	
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">	
+                        <span aria-hidden="true">&times;</span>	
+                    </button>	
+                </div>	
+                <div class="modal-body">	
+                    <div class="form-group">	
+                        <label for="yaml-upload-name">Version Name</label>	
+                        <input type="text" class="form-control" name="versionName" id="yaml-upload-name" aria-describedby="yaml-name" placeholder="ex: 0.0.1">	
+                        <small id="yaml-name" class="form-text text-muted invalid-feedback">Name is required</small>	
+                    </div>	
+                    <div class="form-group">	
+                        <label for="yaml-upload-description">Description</label>	
+                        <input type="text" class="form-control" name="versionDescription" id="yaml-upload-description" aria-describedby="yaml-description" placeholder="Enter a description(optional)">	
+                    </div>	
+                    <div class="input-group">	
+                        <div class="custom-file">	
+                          <input type="file" class="custom-file-input" id="yaml-upload">	
+                          <label class="custom-file-label" name="versionUpload" for="yaml-upload">Choose file</label>	
+                        </div>	
+                    </div>	
+                    <div class="yaml-upload-error"> The file upload failed</div>	
+
+                    {{#if isLoading}}	
+                        <div class="spinner-border text-primary" role="status">	
+                            <span class="sr-only">Loading...</span>	
+                        </div>	
+                    {{else}}	
+                        <pre data-id={{channel.uuid}} id="editor" class="border rounded"></pre>
+                    {{/if}}	
+                </div>	
+                <div class="modal-footer">	
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>	
+                <button type="button" class="btn btn-primary js-add-resource-confirm">Upload</button>	
+                </div>	
+            </div>	
+        </div>	
+      </div>
+    </div>
+    </div>
+  </div>
+</template>
+
+<template name="channel_details">
+  <div class="card details-card">
+    {{> portletHeader title='Details' }}
+    <div class="card-body">
+      <div class="row pb-2">
+        <div class="col-lg-3">Name</div>
+        <div class="col">
+          {{#if editMode channel.uuid}}
+              {{> channel_edit_form channel=channel}}
+          {{else}}
+              {{channel.name}}
+              <button class="btn pl-0">
+              <svg class="bi bi-pencil-square ml-2 js-channel-edit" data-id="{{channel.uuid}}" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg>
+              </button>
+          {{/if}}
+        </div>
+      </div>
+      <div class="row pb-2">
+        <div class="col-lg-3">Versions</div>
+        <div class="col">{{channel.versions.length}}</div>
+      </div>
+      <div class="row pb-2">
+        <div class="col-lg-3">ID</div>
+        <div class="col">
+          {{channel.uuid}} 
+          <span class="btn btn-small copy-button clipboard-icon p-0" data-clipboard-text="{{channel.uuid}}" data-toggle="tooltip" data-placement="top" title="Copied" >
+            <i class="fa fa-clone" title="Copy to clipboard"></i>
+          </span>
+        </div>
+      </div>
+      <div class="row pb-2">
+        <div class="col-lg-3">Created</div>
+        <div class="col">{{localeDate channel.created}}</div>
+      </div>
+      <!-- <div class="row mt-3">
+        <div class="col js-resource-remove"><a href="">Delete channel</a></div>
+      </div> -->
+    </div>
+    <div class="card-footer bg-white">
+      <div class="footer-buttons">
+            <button class="btn btn-link pl-0 js-resource-remove" alt="delete this channel from Razee"> Delete channel</button>	
+      </div>
+    </div>
+    {{> channel_delete_modal channel=channel }}
+
+  </div>
+</template>
+
+<template name="channel_edit_form">
+  <div class="form-row">
+    <div class="col">
+      <input type="text" id="js-channel-input" class="form-control js-channel-input" name="resourceName" placeholder="name">
+      <div class="invalid-feedback"> Please enter a unique name </div>
+    </div>
+    <div class="col">
+    <button class="btn btn-primary rounded-0 js-update-resource" type="submit">Save</button>
+    <button class="btn btn-warning rounded-0 js-cancel-edit-resource">Cancel</button>
+      <!-- <input type="text" class="form-control" placeholder="Last name"> -->
+    </div>
+  </div>
+  <!-- <div class="col-lg-4">
+    <input type="text" name="resourceName" value="{{channel.name}}" class="form-control" required autofocus/>
+    <div class="invalid-feedback"> Please enter a unique name </div>
+    <button class="btn btn-primary rounded-0 js-update-resource" type="submit">Save</button>
+    <button class="btn btn-warning rounded-0 js-cancel-edit-resource">Cancel</button>
+  </div> -->
+</template>
+
+<template name="channel_delete_modal">
+  <div id="modal-{{channel.uuid}}" data-id={{channel.uuid}} class="modal action-col" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove "{{channel.name}}"</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove <strong>"{{channel.name}}"</strong> and all of its versions?</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary js-delete-resource-confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</template>
+
+
+<template name="no_versions">
+    <div class="row"> 
+      <div class="col">
+        <h3>No versions yet</h3>
+      </div>
+    </div>  
+    <div class="row mt-2"> 
+      <div class="col">
+        Upload your first version for this channel by clicking the Add version link.
+      </div>
+    </div>  
+</template>

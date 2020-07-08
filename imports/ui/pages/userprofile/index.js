@@ -18,10 +18,25 @@ import './page.scss';
 import './page.html';	
 import { Meteor } from 'meteor/meteor';	
 import { Template } from 'meteor/templating';	
+import toastr from 'toastr';
 
 Template.UserProfile_home.events({	
-    'click button': function() {	
-        Meteor.call('generateApikey');	
+    'click .js-key-btn': function(e) {	
+        e.preventDefault();	
+        const $modal = $('#js-key-modal');	
+        $modal.modal('show');
+        return false;
+    },
+    'click .js-key-modal-confirm': function() {	
+        const $modal = $('#js-key-modal');	
+        Meteor.call('generateApikey', (error)=> {
+            if(error) {
+                toastr.error(error.message, 'Error creating an api key');
+                console.error(error);
+            }
+        });
+        $modal.modal('hide');
+        return false;
     }	
 });	
 

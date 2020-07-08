@@ -1,0 +1,51 @@
+<template name="GroupSelect">
+    {{#if groups}}
+    <select id="mysel" class="selectpicker js-group-select" multiple title="Select cluster groups" data-style="bg-light">
+        {{#each group in groups}}
+          {{> GroupOption group=group subscription=subscription}}
+        {{/each}}
+    </select>
+    <div class="invalid-feedback"> Please choose a cluster group</div>
+    {{else}}
+        {{> NoGroups}}
+    {{/if}}
+</template>
+
+<template name="GroupOption">
+    <option {{selectStatus}}>{{group.name}}</option>
+</template>
+
+<template name="ddmenu">
+  <div class="dropdown-menu">
+    <form class="px-4 py-3">
+      <div class="form-group">
+        <label for="addGroupDropdown">Cluster group name</label>
+        <input type="text" class="form-control" id="js-new-group" placeholder="ex: dev-clusters">
+      </div>
+      <button type="submit" class="btn btn-primary js-add-group">Create</button>
+    </form>
+  </div>
+</template>
+
+<template name="NewGroupOption">
+  <option>
+  <input type='text' 
+         class='form-control' 
+         onKeyDown='event.stopPropagation();' 
+         onKeyPress='addSelectInpKeyPress(this,event)' 
+         onClick='event.stopPropagation()' 
+         placeholder='Add a cluster group'/> 
+  </option>
+</template>
+
+<template name="NoGroups">
+  <div class="dropdown">
+    <button class="btn dropdown-toggle" 
+            type="button" 
+            data-toggle="dropdown" 
+            aria-haspopup="true" 
+            aria-expanded="false">Add a cluster group
+    </button>
+    {{> ddmenu}}
+  </div>
+</template>

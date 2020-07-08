@@ -1,0 +1,104 @@
+<template name="channels">
+  {{#if Template.subscriptionsReady}}
+    <div class="card border-light m-2">
+         <!-- {{ > ChannelsHelpModal }} -->
+        <!-- <h4 class="card-header text-muted">Channels
+            <a href="" class="js-resource-help"><i class="fa fa-question-circle text-muted"></i></a>
+        </h4> -->
+        <div class="card-body">
+            <form id="resource-table" class="needs-validation" novalidate>
+                
+                <div class="container-fluid">
+                    <!-- on small screens this header row will be hidden  -->
+                    {{#if channels}}
+                    <div class="d-none d-lg-block row-header">
+                        <div class="row">
+                            <div class="col-lg-2">Name</div>
+                            <div class="col-lg-2">Versions</div>
+                            <div class="col-lg-2">Subscriptions</div>
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{#if showNoChannelsMessage}}
+                        {{> no_channels }}
+                    {{/if}}
+
+                    {{#each channel in channels}}
+                            <div class="row {{editModeClass channel.uuid}} js-channel-details" data-name="{{channel.name}}" data-id="{{channel.uuid}}">
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Name</div>
+                                    {{#if editMode channel.uuid}}
+                                        {{> channel_edit_form channel=channel}}
+                                    {{else}}
+                                        <div>{{channel.name}}</div>
+                                    {{/if}}
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Versions</div>
+                                    <div>{{resourceVersions channel.uuid}}</div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="d-block d-lg-none row-header-sm">Subscriptions</div>
+                                    <div>{{subscriptions channel.uuid}}</div>
+                                </div>
+                                <!-- <div class="col-lg-4">
+                                    <div class="d-block d-lg-none row-header-sm">ID</div>
+                                    <div class="channel-id">{{channel.uuid}}</div>
+                                    <span class="btn btn-small copy-button clipboard-icon " data-clipboard-text="{{channel.uuid}}" data-toggle="tooltip" data-placement="top" title="Copied" >
+                                      <i class="fa fa-clone " title="Copy to clipboard"></i>
+                                    </span>
+                                </div> -->
+                                <!-- <div class="col-lg-4 action-col">
+                                    <div class="d-block d-lg-none row-header-sm">Action</div>
+                                    {{#if editMode channel.uuid}}
+                                        <button class="btn btn-primary rounded-0 js-update-resource" type="submit">Save</button>
+                                        <button class="btn btn-warning rounded-0 js-cancel-edit-resource">Cancel</button>
+                                    {{else}}
+                                        {{> ChannelActions channel=channel}}
+                                    {{/if}}
+                                </div> -->
+                            </div>
+                    {{/each}}
+                    {{#if showNewAppRow }}
+                        {{> channel_add }}
+                    {{/if}}
+                </div>
+            </form>
+            {{#unless showNewAppRow}}
+                <div>
+                    <button class="mt-2 btn btn-link js-create-resource pl-0 text-decoration-none" type="submit">Add {{> icon_plus}}</button>
+                </div>
+            {{/unless}}
+        </div>
+    </div>
+  {{/if}}
+</template>
+
+<template name="channel_add">
+  <div class="row resource-item-new">
+    <div class="col-lg-2">                                   
+        <div class="d-block d-lg-none row-header-sm">Name</div>
+        <input type="text" name="resourceName" class="form-control" placeholder="ex: webapp, backend, etc" required autofocus/>
+        <div class="invalid-feedback"> Please enter a unique name </div>
+    </div>
+    <div class="col-lg-2 action-col">
+        <div class="d-block d-lg-none row-header-sm">Action</div>
+        <button class="btn btn-primary rounded-0 js-add-resource">Save</button>
+        <button class="btn btn-warning rounded-0 js-cancel-add-resource">Cancel</button>
+    </div>
+  </div>
+</template>
+
+<template name="no_channels">
+    <div class="row"> 
+      <div class="col">
+        <h3>No channels have been defined</h3>
+      </div>
+    </div>  
+    <div class="row mt-2"> 
+      <div class="col">
+        Consistently deploy and manage your Kubernetes resource configurations using Channels and Cluster Groups.
+      </div>
+    </div>  
+</template>

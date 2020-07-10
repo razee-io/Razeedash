@@ -5,6 +5,7 @@ import './version';
 import '../../components/deployables/clusterGroups';
 import '../../components/icons';
 import './channel/index.js';
+import './clusterGroup/index.js';
 import './page.html';
 import './apiHelp.html';
 import { Template } from 'meteor/templating';	

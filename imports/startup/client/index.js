@@ -53,6 +53,14 @@ export let hasOrgsDefined = new ReactiveVar(true);
 Template['customAtForm'].replaces('atForm');
 Template['customAtOauth'].replaces('atOauth');
 
+Template.registerHelper('owner', (id) => {
+    const user = Meteor.users.findOne({ _id: id });
+    if (!user) {
+        return '';
+    }
+    return user.profile.name;
+});
+
 Template.registerHelper('localUserName', () => {
     let loggedInUser = '';
     let userName= _.get(Meteor.user(), 'emails', []);
@@ -378,7 +386,9 @@ Template.registerHelper('generateQueryString', (qsValue) => {
 
 Template.registerHelper('getClusterName', (cluster) => {
     let clusterName = cluster.cluster_id;
-    if(cluster.metadata && cluster.metadata.name) {
+    if(cluster.registration && cluster.registration.name) {
+        clusterName = cluster.registration.name;
+    } else if(cluster.metadata && cluster.metadata.name) {
         clusterName = cluster.metadata.name;
     }
     return clusterName;
@@ -388,7 +398,13 @@ Template.registerHelper('getClusterNameById', (clusterId) => {
     if(!cluster){
         return clusterId;
     } 
-    return cluster.metadata.name || clusterId;
+    let clusterName = cluster.cluster_id;
+    if(cluster.registration && cluster.registration.name) {
+        clusterName = cluster.registration.name;
+    } else if(cluster.metadata && cluster.metadata.name) {
+        clusterName = cluster.metadata.name;
+    }
+    return clusterName;
 });
 
 Template.registerHelper('org', () => {

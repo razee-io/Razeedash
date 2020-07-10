@@ -58,7 +58,6 @@ const getQueryClient = async () => {
         link: links,
         cache: new InMemoryCache(),
     });
-
     return client;
 };
 

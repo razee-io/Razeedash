@@ -104,13 +104,6 @@ Template.Subscriptions.helpers({
         let versions = DeployableVersions.find({'org_id': Session.get('currentOrgId'), 'channel_id': channelId}).fetch();
         return versions;
     },
-    owner(id) {
-        const user = Meteor.users.findOne({ _id: id });
-        if (!user) {
-            return '';
-        }
-        return user.profile.name;
-    },
 });
 
 Template.SusbscriptionActions.events({

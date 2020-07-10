@@ -103,5 +103,31 @@ Meteor.methods({
             throw new Meteor.Error(err.message);
         });
     },
+    async unGroupClusters(orgId, uuid, clusters){
+        requireOrgAccess(orgId);
+        check( orgId, String );
+        check( uuid, String );
+        check( clusters, [String]);
+
+        logUserAction(Meteor.userId(), 'UnGroupClusters', `UnGroup clusters ${orgId}:${uuid}:${clusters}`);
+
+        const client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+            mutation UnGroupClusters($orgId: String!, $uuid: String!, $clusters: [String]!) {
+              unGroupClusters(orgId: $orgId, uuid: $uuid, clusters: $clusters) { 
+                modified
+              }
+            }
+          `,
+            variables: {
+                'orgId': orgId,
+                'uuid': uuid,
+                'clusters': clusters
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
+    },
 
 });

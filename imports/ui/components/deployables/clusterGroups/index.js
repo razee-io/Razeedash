@@ -9,12 +9,14 @@ import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveDict } from 'meteor/reactive-dict'; 
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import toastr from 'toastr';
 
 let editMode = new ReactiveVar(false);
 let showNewGroupRow = new ReactiveVar(false);
 let clickedItem = new ReactiveVar(null);
+let updating = new ReactiveVar(null);
 const state = new ReactiveDict();
 
 // eslint-disable-next-line no-unused-vars
@@ -94,38 +96,38 @@ Template.clusters_in_group.helpers({
     clustersInGroup() {
         const inst = Template.instance();
         const uuid = inst.data.group.uuid;
-        const maxDisplayItems = 2;
+        const maxDisplayItems = inst.data.limit;
         const clusters = Clusters.find({ org_id: Session.get('currentOrgId'), 'groups.uuid': {$in: [uuid]}}).fetch();
         let clusterNames = clusters.map(cluster => {
             return clusterName(cluster);
         });
-        // TODO: return an array of objects instead
-            //  -- includes cluster name, cluster uuid and whether or not it should be displayed as a pill 
-        // console.log(clusterNames);
-        let results = clusterNames.slice(0,maxDisplayItems);
-        if(clusterNames.length > maxDisplayItems) {
-            const len = clusterNames.length;
-            const remaining = len - maxDisplayItems;
-            results.push(`+${remaining} more`); 
+        if(maxDisplayItems) {
+            let results = clusterNames.slice(0,maxDisplayItems);
+            if(clusterNames.length > maxDisplayItems) {
+                const len = clusterNames.length;
+                const remaining = len - maxDisplayItems;
+                results.push(`+${remaining} more`); 
+            }
+            return results;
+        } else {
+            return clusterNames;
         }
-        return results;
     },
 });
 
 Template.clusters_in_group.events({
     'click'() {
-        // console.log($(e.currentTarget));
-        // console.log(Template.instance().data.group);
         clickedItem.set(Template.instance().data.group);
-        // console.log('darrrr matey');
-        // console.log('was', editMode.get());
-        // editMode.set(true);
-        // console.log('now',editMode.get());
     }
-
 });
 
 Template.cluster_group_list.helpers({
+    updating() {
+        return updating.get();
+    },
+    loaded() {
+        return groupsHandle && groupsHandle.ready();
+    },
     getCurrentClusters(group) {
         // console.log(group);
         const uuid = group.uuid;
@@ -176,7 +178,47 @@ Template.cluster_group_list.helpers({
     },
 });
 
+Template.cluster_group_actions.events({
+    'click .js-set-edit-mode, keypress .js-set-edit-mode'() {
+        clickedItem.set(Template.instance().data.group);
+    },
+    'click .js-group-details, keypress .js-group-details'(e, template) {
+        const uuid = template.data.group.uuid;
+        const params = { 
+            baseOrgName: Session.get('currentOrgName'),
+            tabId: 'groups',
+            id: uuid
+        };
+        const $modal = $('.js-add-group-modal');
+        $modal.modal('hide');
+        FlowRouter.go('channel.details', params );
+    },
+    'click .js-label-remove, keypress .js-label-remove'(e, template){
+        const uuid = template.data.group.uuid;
+        
+        e.preventDefault();
+        // prevent the delete modal from displaying when adding/editing a row and using the enter key
+        if(showNewGroupRow.get() || editMode.get()) {
+            return false;
+        }
+        const $modal = $(`.js-delete-label-modal[data-id=${uuid}]`);
+        $modal.modal('show');
+        $('.js-actions-dropdown').dropdown('hide');
+        return false;
+    },
+});
 Template.cluster_group_list.events({
+    'click .js-group-details, keypress .js-group-details'(e) {
+        const id = $(e.target).data('id');
+        const params = { 
+            baseOrgName: Session.get('currentOrgName'),
+            tabId: 'groups',
+            id: id
+        };
+        const $modal = $('.js-add-group-modal');
+        $modal.modal('hide');
+        FlowRouter.go('channel.details', params );
+    },
     'click .js-add-label'(e) {
         e.preventDefault();
         const labelName = $(e.target).closest('.group-item-new').find('input[name="groupName"]').val();
@@ -258,36 +300,26 @@ Template.cluster_group_list.events({
         $(e.target).closest('.group-item-new').find('input[name="groupName"]').focus();
         editMode.set(true);
     },
-    'click .js-delete-label-confirm'(e) {
-        const $el = $(e.currentTarget);
-        const $modal = $el.closest('.js-delete-label-modal');
-        const $container = $modal.closest('.group-item');
-        // const labelName = $container.data('name') + '';
-        const uuid = $container.data('id') + '';
-        $modal.modal('hide');
-        Meteor.call('removeGroup', Session.get('currentOrgId'), uuid,  (error)=>{
-            if(error) {
-                toastr.error(error.error, 'Error removing the label');
-            }
-        });
-        return false;
-    },
-    'click .js-cancel-delete-label'(e) {
-        e.preventDefault();
-        const $modal = $('.js-delete-label-modal');
-        $modal.modal('hide');
-    },
-    'click .js-label-remove, keypress .js-label-remove'(e){
-        e.preventDefault();
-        // prevent the delete modal from displaying when adding/editing a row and using the enter key
-        if(showNewGroupRow.get() || editMode.get()) {
-            return false;
-        }
-        var $el = $(e.currentTarget);
-        var $modal = $el.siblings('.js-delete-label-modal');
-        $modal.modal('show');
-        return false;
-    },
+    // 'click .js-delete-label-confirm'(e) {
+    //     const $el = $(e.currentTarget);
+    //     const $modal = $el.closest('.js-delete-label-modal');
+    //     const $container = $modal.closest('.group-item');
+    //     const uuid = $container.data('id') + '';
+    //     $modal.modal('hide');
+    //     Meteor.call('removeGroup', Session.get('currentOrgId'), uuid,  (error)=>{
+    //         if(error) {
+    //             toastr.error(error.error, 'Error removing the cluster group');
+    //             editMode.set(false);
+    //             clickedItem.set(null);
+    //         }
+    //     });
+    //     return false;
+    // },
+    // 'click .js-cancel-delete-label'(e) {
+    //     e.preventDefault();
+    //     const $modal = $('.js-delete-label-modal');
+    //     $modal.modal('hide');
+    // },
     'click .js-label-help'(e){
         e.preventDefault();
         var $modal = $('.js-label-help-modal');
@@ -300,15 +332,84 @@ Template.cluster_group_list.events({
         editMode.set(false);
         clickedItem.set(null);
     },
-    'click .js-update-label'(e) {
+    async 'click .js-update-label'(e) {
         e.preventDefault();
+        const orgId =  Session.get('currentOrgId');
         const uuid = $(e.currentTarget).data('id');
-        const clusters = $(`.js-cluster-select[data-id=${uuid}]`).val();
-        const clusterIds = clusters.map((cluster) => {
+        const newClusterList = $(`.js-cluster-select[data-id=${uuid}]`).val();
+        const currentClusterList = Clusters.find({ org_id: Session.get('currentOrgId'), 'groups.uuid': {$in: [uuid]}}, {fields: {cluster_id: 1}}).fetch();
+        const currentClusterIds = currentClusterList.map( (cluster) => cluster.cluster_id);
+        const newClusterIds = newClusterList.map((cluster) => {
             return state.get(cluster);
         });
-        console.log(clusters);
-        console.log(clusterIds);
+
+        const clustersToAdd = _.difference(newClusterIds, currentClusterIds);
+        if(clustersToAdd.length > 0) {
+            try {
+                updating.set(true);
+                await addClustersToGroup(orgId, uuid, clustersToAdd);
+                updating.set(false);
+            } catch (error) {
+                toastr.error(error.error, 'Error adding cluster group items');
+                $(e.target).closest('.js-cluster-select').selectpicker('refresh');
+                // $('.js-cluster-select').selectpicker('val', clusters);
+                console.error(error);
+                return false;
+            }
+        }
+
+        const clustersToDelete = _.difference(currentClusterIds, newClusterIds);
+        if(clustersToDelete.length > 0) {
+            try {
+                await removeClustersFromGroup(orgId, uuid, clustersToDelete);
+            } catch (error) {
+                toastr.error(error.error, 'Error removing cluster group items');
+                $(e.target).closest('.js-cluster-select').selectpicker('refresh');
+                // $('.js-cluster-select').selectpicker('val', clusters);
+                console.error(error);
+                return false;
+            }
+        }
+        editMode.set(false);
+        clickedItem.set(null);
         return;
     }
+});
+
+const addClustersToGroup = (orgId, uuid, clusterIds) => {
+    return new Promise((resolve, reject) => {
+        Meteor.call('groupClusters', orgId, uuid, clusterIds, (error, results) => {
+            error ? reject(error) : resolve(results);
+        });
+    }); 
+};
+
+const removeClustersFromGroup = (orgId, uuid, clusterIds) => {
+    return new Promise((resolve, reject) => {
+        Meteor.call('unGroupClusters', orgId, uuid, clusterIds, (error, results) => {
+            error ? reject(error) : resolve(results);
+        });
+    }); 
+};
+
+Template.group_delete_modal.events({
+    'click .js-delete-label-confirm'(e, template) {
+        const $el = $(e.currentTarget);
+        const $modal = $el.closest('.js-delete-label-modal');
+        const uuid = template.data.group.uuid;
+        $modal.modal('hide');
+        Meteor.call('removeGroup', Session.get('currentOrgId'), uuid,  (error)=>{
+            if(error) {
+                toastr.error(error.error, 'Error removing the cluster group');
+                editMode.set(false);
+                clickedItem.set(null);
+            }
+        });
+        return false;
+    },
+    'click .js-cancel-delete-label'(e) {
+        e.preventDefault();
+        const $modal = $('.js-delete-label-modal');
+        $modal.modal('hide');
+    },  
 });

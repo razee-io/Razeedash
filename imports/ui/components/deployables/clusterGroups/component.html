@@ -10,13 +10,17 @@
 <template name="cluster_group_list">
     <form class="needs-validation" novalidate>
         <div class="pl-0 container-fluid">
+
+            {{#unless loaded}}
+                {{> loading}}
+            {{/unless}}
+
             {{#if groups}}
             <div class="d-none d-lg-block row-header">
                 <div class="row">
                     <div class="col-lg-2">Name</div>
-                    <!-- <div class="col-lg-1">Owner</div> -->
-                    <div class="col-lg-5">Clusters</div>
-                    <div class="col-lg-3">Action</div>
+                    <div class="col-lg-6">Clusters</div>
+                    <div class="col-lg-3"></div>
                 </div>
             </div>
             {{/if}}
@@ -29,19 +33,18 @@
                 <div class="row group-item" data-name={{group.name}} data-id="{{group.uuid}}">
                     <div class="col-lg-2">
                         <div class="d-block d-lg-none row-header-sm">Name</div>
-                        <div>{{group.name}}</div>
+                        <div class="btn btn-link js-group-details" data-id="{{group.uuid}}">{{group.name}}</div>
+                        <!-- <a href="{{pathFor 'channel.details' id=group.uuid tabId='groups'}}">{{group.name}}</a> -->
                     </div>
-                    <!-- 
-                    <div class="col-lg-1">
-                      <div class="d-block d-lg-none row-header-sm">Owner</div>
-                      <div>{{owner group.owner}} </div>
-                    </div> 
-                    -->
-                    <div class="col-lg-5">                                   
+                    <div class="col-lg-6">                                   
                     {{#if editMode group.uuid}}
-                        {{> clusters_select currentClusters=(getCurrentClusters group) group=group }}
+                        {{#if updating}}
+                            {{>loading}}
+                        {{else}}
+                            {{> clusters_select currentClusters=(getCurrentClusters group) group=group }}
+                        {{/if}}
                     {{else}}
-                        {{> clusters_in_group group=group }}
+                        {{> clusters_in_group limit=3 group=group }}
                     {{/if}}
                     </div>
                     {{#if editMode group.uuid}}
@@ -53,26 +56,7 @@
                     {{else}}
                     <div class="col-lg-3 action-col">
                         <div class="d-block d-lg-none row-header-sm">Action</div>
-                        <button class="btn btn-link js-label-remove {{buttonStatus}} pl-0" data-name="{{group.name}}" alt="remove this cluster group from RazeeDash"> Delete </button>
-                        <div class="modal js-delete-label-modal action-col" tabindex="-1" role="dialog">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Remove "{{group.name}}"</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to remove the <strong>"{{group.name}}"</strong> cluster group?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                        <button type="button" class="btn btn-link js-cancel-delete-label">Cancel</button>
-                                        <button type="button" class="btn btn-primary js-delete-label-confirm">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
+                        {{> cluster_group_actions group=group }}
                     </div>
                     {{/if}}
                 </div>
@@ -84,13 +68,7 @@
                         <input type="text" name="groupName" class="form-control" required autofocus/>
                         <div class="invalid-feedback"> Please enter a unique name </div>
                     </div>
-<!-- 
-                    <div class="col-lg-1">
-                        <div class="d-block d-lg-none row-header-sm">Owner</div>
-                        <input type="text" name="groupOwner" value="{{owner currentUser._id}}" class="form-control" disabled/>
-                    </div> 
-                -->
-                    <div class="col-lg-5">                                   
+                    <div class="col-lg-6">                                   
                         {{> clusters_select }}
                     </div>
                     <div class="col-lg-3 action-col">
@@ -109,9 +87,6 @@
     {{/unless}}
 </template>
 
-    <!-- <span class="js-cluster-group-items"> -->
-    <!-- </span> -->
-    <!-- <div class="js-cluster-group-items">{{ clustersInGroup }}</div> -->
 <template name="clusters_in_group">
     <div class="cluster-list"> 
     {{#each cluster in clustersInGroup}}
@@ -120,8 +95,13 @@
             <span aria-hidden="true">&times;</span>
           </button> -->
         <!-- </a> -->
-          <span class="pr-2">{{cluster}}</span>
+          <!-- <span class="badge badge-primary p-1">{{cluster}}</span> -->
+          <span class="btn pl-0">{{cluster}}</span>
+          <!-- <a href="#" class="badge badge-primary">{{cluster}}</a> -->
     {{/each}}
+    {{#unless clustersInGroup}}
+        <span class="btn badge badge-primary">Add clusters</span>
+    {{/unless}}
     </div>
 </template>
 
@@ -139,19 +119,47 @@
 </template>
 
 <template name="clusters_select">
-    <!-- {{#if groups}} -->
     <select class="selectpicker js-cluster-select" data-id="{{group.uuid}}" multiple data-live-search="true" title="Add clusters" data-style="bg-light">
         {{#each cluster in clusters}}
            <option {{selectStatus cluster}} data-id="{{cluster.cluster_id}}" data-name="{{getClusterName cluster}}">{{getClusterName cluster}}</option>
-          <!-- {{> select_option cluster=cluster}} -->
         {{/each}}
     </select>
     <div class="invalid-feedback"> Please choose a cluster group</div>
-    <!-- {{else}} -->
-        <!-- {{> NoGroups}} -->
-    <!-- {{/if}} -->
 </template>
 
-<template name="select_option">
-    <option {{selectStatus}}>{{getClusterName cluster}}</option>
+<template name="cluster_group_actions">
+    <div class="btn-group drop-left ">
+        <button type="button" class="btn js-actions-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{> icon_vertical_dots }}
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item js-group-details" data-id="{{group.uuid}}" type="button">Details</button>
+            <button class="dropdown-item js-set-edit-mode" type="button">Update clusters</button>
+            <button class="dropdown-item js-label-remove" data-name="{{group.name}}" data-id="{{group.uuid}}" type="button">Remove</button>
+        </div>
+        {{> group_delete_modal group=group}}
+    </div>
+</template>
+
+<!-- <button class="btn btn-link js-label-remove {{buttonStatus}} pl-0" data-name="{{group.name}}" alt="remove this cluster group from RazeeDash"> Delete </button> -->
+<template name="group_delete_modal">
+    <div class="modal js-delete-label-modal action-col" data-id="{{group.uuid}}" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Remove "{{group.name}}"</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to remove the <strong>"{{group.name}}"</strong> cluster group?</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-link js-cancel-delete-label">Cancel</button>
+                    <button type="button" class="btn btn-primary js-delete-label-confirm">Delete</button>
+                    </div>
+                </div>
+            </div>
+    </div>
 </template>

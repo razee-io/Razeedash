@@ -122,7 +122,11 @@ orgedRoutes.route('/deployables/:tabId/:id', {
         if ( !params.tabId ) {
             FlowRouter.setParams( { tabId: 'channels' });
         }
-        BlazeLayout.render('Base_layout', { main: 'channel_single', tabId: params.tabId, channelId: params.id });
+        if(params.tabId === 'groups') {
+            BlazeLayout.render('Base_layout', { main: 'group_single', tabId: params.tabId, groupId: params.id });
+        } else {
+            BlazeLayout.render('Base_layout', { main: 'channel_single', tabId: params.tabId, channelId: params.id });
+        }
     }
 });
 
@@ -160,7 +164,7 @@ orgedRoutes.route('/deployables/:tabId/:id/versions/:versionId', {
 
 orgedRoutes.route('/deployables/:tabId', {
     name: 'deployables',
-    title: 'Channels',
+    title: ':tabId',
     parent: 'welcome',
     action: function(params) {
         if ( !params.tabId ) {

@@ -3,10 +3,10 @@
     {{#if channel}}
     <div class="row">
       <div class="col-sm-6 ">
-        {{> channel_versions_recent channel=channel versions=channel.versions}}
+        {{> channel_details channel=channel}}
       </div>
       <div class="col-sm-6 ">
-        {{> channel_details channel=channel}}
+        {{> channel_versions_recent channel=channel versions=channel.versions}}
       </div>
     </div>
     <div class="row">

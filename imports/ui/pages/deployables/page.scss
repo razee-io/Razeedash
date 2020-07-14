@@ -39,6 +39,9 @@ $grey-hover: #dae0e5;
     width: 100% !important;
 }
 
+.resource-item {
+    cursor: pointer;
+}
 .group-item, .resource-item {
     line-height: 2.5;
     margin-bottom: 4px;

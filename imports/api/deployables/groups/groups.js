@@ -15,7 +15,7 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
+// import { Meteor } from 'meteor/meteor';
 
 export const Groups = new Mongo.Collection('groups');
 
@@ -25,6 +25,6 @@ Groups.deny({
     remove() { return true; },
 });
 
-if ( Meteor.isServer ) {
-    Groups._ensureIndex( { 'org_id': 1, 'name': 1 } );
-}
+// if ( Meteor.isServer ) {
+//     Groups._ensureIndex( { 'org_id': 1, 'name': 1 } );
+// }

@@ -1,4 +1,5 @@
 <template name="group_single">
+{{#if Template.subscriptionsReady}}
   <div class="card border-light m-2">
     {{#if group}}
     <div class="row">
@@ -12,6 +13,7 @@
       </div>
     </div>
     {{else}}
+     {{#if showNoGroupMessage}}
       <div class="col-sm-12 ">
         <div class="card">
         {{> portletHeader title='Not found' }}
@@ -20,8 +22,10 @@
           </div>
         </div>
       </div>
+      {{/if}}
     {{/if}}
   </div>
+  {{/if}}
 </template>
 
 <template name="group_details">
@@ -29,34 +33,40 @@
     {{> portletHeader title='Cluster group' }}
     <div class="card-body">
       <div class="row pb-2">
-        <div class="col-lg-2">Name</div>
+        <div class="col-lg-1">Name</div>
         <div class="col">{{group.name}}</div>
       </div>
       <div class="row pb-2">
-        <div class="col-lg-2">Clusters</div>
-        <!-- <div class="col">{{> clusters_in_group group=group }}</div> -->
-        <div class="col">{{> all_clusters_in_group group=group }}</div>
-        <!-- <div class="col">
-            {{> clusters_select currentClusters=(getCurrentClusters group) group=group }}
-        </div> -->
+        <div class="col-lg-1">Clusters</div>
+        {{#if editMode}}
+            {{#if updating}}
+                {{>loading}}
+            {{else}}
+            <div class="col-lg-7">
+                {{> clusters_select currentClusters=(getCurrentClusters group) group=group }}
+            </div>
+            <div class="col-lg-3 action-col">
+                <div class="d-block d-lg-none row-header-sm">Action</div>
+                {{> cluster_group_single_buttons group=group operation="update"}}
+            </div>
+            {{/if}}
+        {{else}}
+            <div class="col">{{> all_clusters_in_group group=group }}</div>
+        {{/if}}
       </div>
       <div class="row pb-2">
-        <div class="col-lg-2">ID</div>
+        <div class="col-lg-1">ID</div>
         <div class="col">
           {{group.uuid}} 
-          <span class="btn btn-small copy-button clipboard-icon p-0" data-clipboard-text="{{group.uuid}}" data-toggle="tooltip" data-placement="top" title="Copied" >
-            <i class="fa fa-clone" title="Copy to clipboard"></i>
+          <span class="btn btn-link copy-button clipboard-icon p-0 pl-1" data-clipboard-text="{{group.uuid}}" data-toggle="tooltip" data-placement="top" title="Copied" >
+            <i class="fa fa-clone"></i>
           </span>
         </div>
       </div>
       <div class="row pb-2">
-        <div class="col-lg-2">Created</div>
+        <div class="col-lg-1">Created</div>
         <div class="col">{{localeDate group.created}}</div>
       </div>
-      <!-- <div class="row mt-3">
-        <div class="col js-resource-remove"><a href="">Delete group</a></div>
-        <div class="col js-resource-remove"><a href="">Edit group</a></div>
-      </div> -->
     </div>
     <div class="card-footer bg-white">
       <div class="footer-buttons">
@@ -64,41 +74,41 @@
             <button class="btn btn-link pl-0 js-group-remove float-right" alt="delete this cluster group from Razee">Delete group</button>	
       </div>
     </div>
-    {{> group_delete_modal group=group }}
+    {{> group_delete_modal group=group redirectOnDelete=true}}
 
   </div>
 </template>
 
+
+<template name="cluster_group_single_buttons">
+    <button class="btn btn-primary rounded-0 js-save-btn" data-operation="{{operation}}" data-id="{{group.uuid}}">Save</button>
+    <button class="btn btn-warning rounded-0 js-cancel-btn" data-operation="{{operation}}">Cancel</button> 
+</template>
 
 <template name="all_clusters_in_group">
     <div class="cluster-list"> 
     {{#each cluster in clustersInGroup}}
         <a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">{{cluster.found_name}}{{#if showComma @index clustersInGroup.length}},{{/if}}</a>
     {{/each}}
-    <!-- {{#unless clustersInGroup}}
-        <span class="btn badge badge-warning">Add clusters</span>
-    {{/unless}} -->
     </div>
 </template>
 
 <template name="group_subscription_list">
     <div class="card mt-2">
-
         <h4 class="card-header text-muted">Subscriptions</h4> 
-
         <div class="card-body">
             <form class="needs-validation" novalidate>
-                
                 <div class="pl-0 pb-4 container-fluid">
+                    {{#if subscriptions}}
                     <div class="d-none d-lg-block row-header">
                         <div class="row">
                             <div class="col-lg-2">Name</div>
                             <div class="col-lg-2">Owner</div>
                             <div class="col-lg-2">Channel</div>
                             <div class="col-lg-2">Version</div>
-                            <!-- <div class="col-lg-2"></div> -->
                         </div>
                     </div>
+                    {{/if}}
                     {{#unless subscriptions}}
                         {{#unless showNewRow}}
                             <div class="row"> 
@@ -115,14 +125,6 @@
                 </div>
             </form>
         </div>
-        <!-- <div class="card-footer bg-white">
-            {{#unless showNewRow}}
-            <div class="footer-buttons">
-                <button class="btn btn-link js-create-subscription pl-0 text-decoration-none {{buttonStatus}}" type="submit">Add subscription {{> icon_plus}}</button>
-            </div>
-            {{/unless}}
-        </div> -->
-
     </div>
 </template>
 

@@ -1,6 +1,5 @@
 
 import './component.html';
-import './component.scss';
 import './helpModal.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
@@ -74,13 +73,6 @@ Template.Subscriptions.helpers({
     },
     editMode(name) {
         return name == clickedItem.get() ? true : false;
-    },
-    buttonStatus() {
-        if(editMode.get()) {
-            return 'disabled';
-        } else {
-            return 'enabled';
-        }
     },
     selectStatus() {
         return editMode.get() ? 'enabled' : 'disabled';

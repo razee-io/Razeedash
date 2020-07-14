@@ -1,12 +1,13 @@
 
-import '../../components/deployables/channels';
+import './channels';
+import './channel';
 import './versions';
 import './version';
-import '../../components/deployables/clusterGroups';
+import './clusterGroups';
+import './clusterGroup';
 import '../../components/icons';
-import './channel/index.js';
-import './clusterGroup/index.js';
 import './page.html';
+import './page.scss';
 import './apiHelp.html';
 import { Template } from 'meteor/templating';	
 import { Session } from 'meteor/session';

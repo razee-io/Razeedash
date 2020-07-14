@@ -37,7 +37,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return await client.mutate({
             mutation: gql`
               mutation EditChannel($orgId: String!, $uuid: String!, $name: String!) {
@@ -64,7 +64,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation AddChannel($orgId: String!, $name: String!) {
@@ -88,7 +88,7 @@ Meteor.methods({
         
         logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${resourceId}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
             mutation RemoveChannel($orgId: String!, $uuid: String!) {
@@ -117,7 +117,7 @@ Meteor.methods({
       
         logUserAction(Meteor.userId(), 'addChannelVersion', `Add channel version ${orgId}:${channelUuid}:${name}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
             mutation addChannelVersion($orgId: String!, $channelUuid: String!, $name: String!, $type: String!, $content: String, $description: String) {
@@ -148,7 +148,7 @@ Meteor.methods({
     
         logUserAction(Meteor.userId(), 'getChannelVersion', `Get channel version ${orgId}:${channelUuid}:${versionUuid}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.query({
             query: gql`
               query getChannelVersion($orgId: String!, $channelUuid: String!, $versionUuid: String!) {

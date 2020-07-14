@@ -1,6 +1,5 @@
 <template name="cluster_groups">
     <div class="card border-light m-2">
-
         <div class="card-body">
             {{> cluster_group_list }}
         </div>
@@ -18,23 +17,22 @@
             {{#if groups}}
             <div class="d-none d-lg-block row-header">
                 <div class="row">
-                    <div class="col-lg-2">Name</div>
-                    <div class="col-lg-6">Clusters</div>
-                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3">Name</div>
+                    <div class="col-lg-8">Clusters</div>
+                    <div class="col-lg-1"></div>
                 </div>
             </div>
             {{/if}}
 
             {{#if showNoGroupsMessage}}
-              {{> no_groups }}
+                {{> no_groups }}
             {{/if}}
 
             {{#each group in groups}}
                 <div class="row group-item" data-name={{group.name}} data-id="{{group.uuid}}">
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                         <div class="d-block d-lg-none row-header-sm">Name</div>
-                        <div class="btn btn-link js-group-details" data-id="{{group.uuid}}">{{group.name}}</div>
-                        <!-- <a href="{{pathFor 'channel.details' id=group.uuid tabId='groups'}}">{{group.name}}</a> -->
+                        <div class="btn pl-0 btn-link js-group-details" data-id="{{group.uuid}}">{{group.name}}</div>
                     </div>
                     <div class="col-lg-6">                                   
                     {{#if editMode group.uuid}}
@@ -50,11 +48,10 @@
                     {{#if editMode group.uuid}}
                         <div class="col-lg-3 action-col">
                             <div class="d-block d-lg-none row-header-sm">Action</div>
-                            <button class="btn btn-primary rounded-0 js-update-label" data-id="{{group.uuid}}">Save</button>
-                            <button class="btn btn-warning rounded-0 js-cancel-add-label">Cancel</button>
+                            {{> cluster_group_buttons group=group operation="update"}}
                         </div>
                     {{else}}
-                    <div class="col-lg-3 action-col">
+                    <div class="col-lg-1 action-col">
                         <div class="d-block d-lg-none row-header-sm">Action</div>
                         {{> cluster_group_actions group=group }}
                     </div>
@@ -62,8 +59,11 @@
                 </div>
             {{/each}}
             {{#if showNewGroupRow }}
+              {{#if updating}}
+                    {{>loading}}
+              {{else}}
                 <div class="row group-item-new js-new-group-row">
-                    <div class="col-lg-2">                                   
+                    <div class="col-lg-3">                                   
                         <div class="d-block d-lg-none row-header-sm">Name</div>
                         <input type="text" name="groupName" class="form-control" required autofocus/>
                         <div class="invalid-feedback"> Please enter a unique name </div>
@@ -73,10 +73,10 @@
                     </div>
                     <div class="col-lg-3 action-col">
                         <div class="d-block d-lg-none row-header-sm">Action</div>
-                        <button class="btn btn-primary rounded-0 js-add-label">Save</button>
-                        <button class="btn btn-warning rounded-0 js-cancel-add-label">Cancel</button>
+                        {{> cluster_group_buttons group=group operation="add"}}
                     </div>
                 </div>
+                {{/if}}
             {{/if}}
         </div>
     </form>
@@ -87,20 +87,18 @@
     {{/unless}}
 </template>
 
+<template name="cluster_group_buttons">
+    <button class="btn btn-primary rounded-0 js-save-btn" data-operation="{{operation}}" data-id="{{group.uuid}}">Save</button>
+    <button class="btn btn-warning rounded-0 js-cancel-btn" data-operation="{{operation}}">Cancel</button> 
+</template>
+
 <template name="clusters_in_group">
     <div class="cluster-list"> 
     {{#each cluster in clustersInGroup}}
-        <!-- <a href="#" class="badge badge-primary">
-          <button type="button" class="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> -->
-        <!-- </a> -->
-          <!-- <span class="badge badge-primary p-1">{{cluster}}</span> -->
-          <span class="btn pl-0">{{cluster}}</span>
-          <!-- <a href="#" class="badge badge-primary">{{cluster}}</a> -->
+        <span class="btn pl-0">{{cluster}}</span>
     {{/each}}
     {{#unless clustersInGroup}}
-        <span class="btn badge badge-primary">Add clusters</span>
+        <span class="btn btn-link pl-0">Add clusters</span>
     {{/unless}}
     </div>
 </template>
@@ -134,14 +132,14 @@
         </button>
         <div class="dropdown-menu">
             <button class="dropdown-item js-group-details" data-id="{{group.uuid}}" type="button">Details</button>
-            <button class="dropdown-item js-set-edit-mode" type="button">Update clusters</button>
-            <button class="dropdown-item js-label-remove" data-name="{{group.name}}" data-id="{{group.uuid}}" type="button">Remove</button>
+            <button class="dropdown-item js-set-edit-mode" type="button">Update</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item js-label-remove" data-name="{{group.name}}" data-id="{{group.uuid}}" type="button">Delete</button>
         </div>
         {{> group_delete_modal group=group}}
     </div>
 </template>
 
-<!-- <button class="btn btn-link js-label-remove {{buttonStatus}} pl-0" data-name="{{group.name}}" alt="remove this cluster group from RazeeDash"> Delete </button> -->
 <template name="group_delete_modal">
     <div class="modal js-delete-label-modal action-col" data-id="{{group.uuid}}" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

@@ -25,7 +25,7 @@ const InMemoryCache = require('apollo-cache-inmemory').InMemoryCache;
 
 const getQueryClient = async () => {
 
-    const token = Meteor.user().apiKey ? Meteor.user().apiKey : Meteor.call('generateApikey');
+    const token = Meteor.user().apiKey ? Meteor.user().apiKey : Meteor.call('getApiKey');
 
     // strip any trailing / from RAZEEDASH_API_URL
     const regex = /\/*$/gi;

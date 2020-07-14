@@ -1,6 +1,5 @@
 
 import './component.html';
-import './component.scss';
 import './helpModal.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';

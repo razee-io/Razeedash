@@ -200,9 +200,6 @@ Template.nav.onCreated(function() {
             Meteor.call('updateResourceStats', Session.get('currentOrgId'));
         }
         this.subscribe('userData');
-        if(Meteor.user() && !Meteor.user().apiKey) {
-            Meteor.call('generateApikey');
-        }
     });
     Tracker.autorun(function() {
         currentRoute.set(FlowRouter.getRouteName());

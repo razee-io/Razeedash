@@ -1,64 +1,51 @@
 
 import './page.html';
-import './page.scss';
-import '../../../components/deployables/subscriptions';
-import '../../../components/deployables/subscriptions/groupSelect';
+import '../subscriptions';
+import '../subscriptions/groupSelect';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Groups } from '/imports/api/deployables/groups/groups';
 import { Clusters } from '/imports/api/cluster/clusters/clusters.js';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
 import { Subscriptions } from '/imports/api/deployables/subscriptions/subscriptions.js';
-// import Clipboard from 'clipboard';
-
+import Clipboard from 'clipboard';
+import { updateClusterGroup, clusterName } from '../utils.js';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
-// import toastr from 'toastr';
+import toastr from 'toastr';
 
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { ReactiveDict } from 'meteor/reactive-dict';
 
 let editMode = new ReactiveVar(false);
+let updating = new ReactiveVar(null);
+const state = new ReactiveDict();
 
-function clusterName(cluster) {
-    let name = '';
-    if(cluster) {
-        if(cluster.registration && cluster.registration.name) {
-            name = cluster.registration.name;
-        } else if(cluster.metadata && cluster.metadata.name) {
-            name = cluster.metadata.name;
-        } else {
-            name = cluster.cluster_id;
-        }
-    }
-    return name; 
-}
-
+let groupHandle;
 Template.group_single.onCreated(function() {
     this.autorun(()=>{
-        // const groupId = Template.currentData().groupId();
-        // const groupId = FlowRouter.current().params.id;
-
-        // const groupName = Template.currentData() ? Template.currentData().group: '';
         Meteor.subscribe('channels', Session.get('currentOrgId'));
-        Meteor.subscribe('groups', Session.get('currentOrgId'));
+        groupHandle = Meteor.subscribe('groups', Session.get('currentOrgId'));
         // Meteor.subscribe('subscriptions.byClusterGroup', Session.get('currentOrgId'), groupId);
         Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
         editMode.set(false);
+        const clusters = Clusters.find({ org_id: Session.get('currentOrgId')}).fetch();
+        clusters.forEach(cluster => {
+            state.set(clusterName(cluster), cluster.cluster_id);
+        });
     });
-    // $(function() {
-    //     $('[data-toggle="tooltip"]').tooltip();
-    // });
 });
 
 Template.group_single.onRendered( () => {
-    // const $modal = $('.js-add-group-modal');
-    // $modal.modal('hide');
-    // const clipboard = new Clipboard('.copy-button');
-    // clipboard.on('success', function(e) {
-    //     $(e.trigger).tooltip('show');
-    //     e.clearSelection();
-    // });
+    const clipboard = new Clipboard('.copy-button');
+    clipboard.on('success', function(e) {
+        $(e.trigger).tooltip('show');
+        e.clearSelection();
+        setTimeout(function() {
+            $(e.trigger).tooltip('dispose');
+        }, 800);
+    });
 });
 
 Template.group_details.helpers({
@@ -69,8 +56,13 @@ Template.group_details.helpers({
         let clusterNames = clusters.map(cluster => {
             return clusterName(cluster);
         });
-        // console.log(clusterNames);
         return clusterNames;
+    },
+    editMode() {
+        return editMode.get();
+    },
+    updating() {
+        return updating.get();
     }
 });
 
@@ -83,6 +75,11 @@ Template.group_details.events({
         $('.js-actions-dropdown').dropdown('hide');
         return false;
     },
+    'click .js-set-edit-mode, keypress .js-set-edit-mode'(e){
+        e.preventDefault();
+        editMode.set(true);
+        return false;
+    },
 });
 
 Template.group_single.helpers({
@@ -91,12 +88,13 @@ Template.group_single.helpers({
         const group = Groups.findOne({'org_id': Session.get('currentOrgId'), 'uuid': groupId });
         return group;
     },
+    showNoGroupMessage() {
+        const groupId = FlowRouter.current().params.id;
+        const group = Groups.findOne({'org_id': Session.get('currentOrgId'), 'uuid': groupId });
+        return groupHandle && groupHandle.ready() && !group;
+    },
 });
 
-
-Template.all_clusters_in_group.events({ 
-   
-});
 Template.all_clusters_in_group.helpers({
     clustersInGroup() {
         const inst = Template.instance();
@@ -112,13 +110,13 @@ Template.all_clusters_in_group.helpers({
     }
 });
 
-
 Template.group_subscription_list.onCreated(function() {
     this.autorun(()=>{
         const groupName = Template.currentData() ? Template.currentData().group.name : '';
         Meteor.subscribe('subscriptions.byClusterGroup', Session.get('currentOrgId'), groupName);
     });
 });
+
 Template.subscription_row.events({
     'click'() {
         const id = Template.instance().data.subscription.channel_uuid;
@@ -162,5 +160,27 @@ Template.group_subscription_list.helpers({
         const channelId = FlowRouter.current().params.id;
         let versions = DeployableVersions.find({'org_id': Session.get('currentOrgId'), 'channel_id': channelId}).fetch();
         return versions;
+    },
+});
+
+Template.cluster_group_single_buttons.events({
+    'click .js-cancel-btn[data-operation=update]'(e) {
+        e.preventDefault();
+        editMode.set(false);
+    },
+    async 'click .js-save-btn[data-operation=update]'(e, template) {
+        e.preventDefault();
+        const uuid = template.data.group.uuid;
+        const newClusterList = $(`.js-cluster-select[data-id=${uuid}]`).val();
+        const newClusterIds = newClusterList.map((clusterName) => state.get(clusterName));
+        
+        updating.set(true);
+        let err = await updateClusterGroup(Session.get('currentOrgId'), uuid, newClusterIds);
+        if(err) {
+            toastr.error(err.error, 'Error updating cluster group items');
+        }
+        editMode.set(false);
+        updating.set(false);
+        return;
     },
 });

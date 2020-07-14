@@ -1,35 +1,16 @@
 <template name="channel_versions_all">
-  <!-- <div class="card details-card"> -->
-    <!-- {{> portletHeader title='All versions' }} -->
-    <!-- <div class="card-body ">
-      {{#each version in versions}}
-        <div class="row">
-          <div class="col"> Version: <a href="">{{version.name}}</a></div> 
-        </div>
-        <div class="row pb-2">
-          <div class="col"> {{localeDate version.created}} </div>
-        </div>
-      {{/each}}
-    </div> -->
-  <!-- </div> -->
   {{#if Template.subscriptionsReady}}
-  <!-- <div class="card border-light m-2"> -->
   <div class="card border-light m-2">
-
       <h4 class="card-header text-muted">All versions</h4>
-
       <div class="card-body pl-0">
           <form id="all-versions-table" class="needs-validation" novalidate>
-              
               <div class="container-fluid">
-                  <!-- on small screens this header row will be hidden  -->
                   {{#if versions}}
                   <div class="d-none d-lg-block row-header">
                       <div class="row">
                           <div class="col-lg-2">Version</div>
                           <div class="col-lg-2">Added</div>
-                          <div class="col-lg-2">Subscribed clusters</div>
-                          <div class="col-lg-2">Description</div>
+                          <div class="col-lg-8">Description</div>
                       </div>
                   </div>
                   {{/if}}
@@ -46,11 +27,7 @@
                                   <div class="d-block d-lg-none row-header-sm">Added</div>
                                   <div>{{localeDate version.created}}</div>
                               </div>
-                              <div class="col-lg-2">
-                                  <div class="d-block d-lg-none row-header-sm">Subscribed clusters</div>
-                                  <div>3</div>
-                              </div>
-                              <div class="col-lg-2">
+                              <div class="col-lg-8">
                                   <div class="d-block d-lg-none row-header-sm">Description</div>
                                   <div>{{version.description}}</div>
                               </div>

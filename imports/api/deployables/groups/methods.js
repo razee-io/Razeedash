@@ -35,7 +35,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'addGroup', `Add group ${orgId}:${name}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
               mutation AddGroup($orgId: String!, $name: String!) {
@@ -59,7 +59,7 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'removeGroup', `Remove group ${orgId}:${uuid}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
             mutation RemoveGroup($orgId: String!, $uuid: String!) {

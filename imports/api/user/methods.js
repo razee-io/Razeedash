@@ -25,6 +25,17 @@ Meteor.methods({
         Meteor.users.update(this.userId, { $set: { apiKey: newKey } });
         return newKey;
     },
+    getApiKey() {
+        const user = Meteor.users.findOne(this.userId);
+        if(!user.apiKey) {
+            const newKey = Random.hexString(32);
+            log.info('Generate API key for new graphql user', { userid: this.userId });
+            Meteor.users.update(this.userId, { $set: { apiKey: newKey } });
+            return newKey;
+        } else {
+            return user.apiKey;
+        }
+    },
     setToken(newAccessToken) {
         Meteor.users.update(this.userId,  { $set: { 'services.bitbucket.accessToken': newAccessToken } });
     }

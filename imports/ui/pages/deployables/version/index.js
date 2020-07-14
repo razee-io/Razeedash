@@ -1,19 +1,27 @@
 
 import './page.html';
-import './page.scss';
-import '../../../components/deployables/versionDetails';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-// import { Channels } from '/imports/api/deployables/channels/channels';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
-// import { Subscriptions } from '/imports/api/deployables/subscriptions/subscriptions.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from 'meteor/session';
-// import toastr from 'toastr';
 import { ReactiveVar } from 'meteor/reactive-var';
 import ace from 'ace-builds/src-min-noconflict/ace';
 // eslint-disable-next-line
 import yamlMode from 'ace-builds/src-min-noconflict/mode-yaml';
+
+import Clipboard from 'clipboard';
+
+Template.version_details.onRendered( () => {
+    const clipboard = new Clipboard('.copy-button');
+    clipboard.on('success', function(e) {
+        $(e.trigger).tooltip('show');
+        e.clearSelection();
+        setTimeout(function() {
+            $(e.trigger).tooltip('dispose');
+        }, 800);
+    });
+});
 
 Template.channel_version.onCreated(function() {
     const self = this;

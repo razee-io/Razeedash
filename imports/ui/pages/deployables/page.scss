@@ -1,39 +1,60 @@
 $grey:#ced4da;
+$grey-hover: #dae0e5;
 
 .details-card {
-  height: 280px;
-  overflow-y: hidden;
-}
-.footer-buttons {
-  position: relative;
-  bottom: 5px;
-}
-.channel-id {
-  width: 290px;
-  display: inline-block;
-}
-.clipboard-icon {
-  width: 10px;
+    height: 280px;
 }
 
-.resource-edit {
+.edit-button, .copy-button {
+    position: relative;
+    bottom: 2px;
+    border: none;
+}
+
+.yaml-upload-error {
+    display: none;
+    color: red;
+}
+
+.help-icon {
+    position: relative;
+    bottom: 1px;
+}
+
+.clipboard-icon {
+    width: 10px;
+}
+
+.version-dropdown:hover{
+  cursor: pointer;
+  background-color: $grey-hover;
+}
+
+.group-edit {
     min-height: 37px;
     cursor: pointer;
 }
-#resource-table .container-fluid {
-    padding-left: 0px;
+
+.dropdown.bootstrap-select {
+    width: 100% !important;
 }
-.resource-item {
-    cursor: pointer;
+
+.group-item, .resource-item {
     line-height: 2.5;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     &:hover {
         background-color: rgba(0,0,0,.075);
     }
 }
+
 .resource-item-edit {
     margin-bottom: 2px;
 }
+
+.group-item.disabled {
+  pointer-events: none;
+}
+
 .row-header {
     line-height: 2.1;
     border-bottom: solid 1px $grey;
@@ -41,32 +62,35 @@ $grey:#ced4da;
     font-weight: 600;
     margin-bottom: 8px;
 }
+
 .row-header-sm {
   border: none;
   font-weight: 600;
 }
 
+.footer-buttons {
+    position: relative;
+    bottom: 5px;
+}
+
 @media (max-width: 991px) {
-    .resource-item {
+    .group-item, .resource-item {
         line-height: 3.5;
         &:hover {
             background-color: inherit;
         }
     }
-    .resource-item-new {
+    .group-item-new, .resource-item-new, .resource-item-edit {
         line-height: 3.5;
     }
     .action-col {
         border-bottom: solid 1px $grey;
         padding-bottom: 10px;
     }
-    .resource-item-edit {
-        line-height: 3.5;
-    }
     .form-control {
         height: 39px;
     }
-    .resource-edit {
+    .group-edit {
         display: block;
         width: 100%;
         height: 39px;

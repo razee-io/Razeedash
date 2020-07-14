@@ -8,7 +8,7 @@
         <div class="card-body">
             <form id="resource-table" class="needs-validation" novalidate>
                 
-                <div class="container-fluid">
+                <div class="container-fluid pl-0">
                     <!-- on small screens this header row will be hidden  -->
                     {{#if channels}}
                     <div class="d-none d-lg-block row-header">
@@ -42,22 +42,6 @@
                                     <div class="d-block d-lg-none row-header-sm">Subscriptions</div>
                                     <div>{{subscriptions channel.uuid}}</div>
                                 </div>
-                                <!-- <div class="col-lg-4">
-                                    <div class="d-block d-lg-none row-header-sm">ID</div>
-                                    <div class="channel-id">{{channel.uuid}}</div>
-                                    <span class="btn btn-small copy-button clipboard-icon " data-clipboard-text="{{channel.uuid}}" data-toggle="tooltip" data-placement="top" title="Copied" >
-                                      <i class="fa fa-clone " title="Copy to clipboard"></i>
-                                    </span>
-                                </div> -->
-                                <!-- <div class="col-lg-4 action-col">
-                                    <div class="d-block d-lg-none row-header-sm">Action</div>
-                                    {{#if editMode channel.uuid}}
-                                        <button class="btn btn-primary rounded-0 js-update-resource" type="submit">Save</button>
-                                        <button class="btn btn-warning rounded-0 js-cancel-edit-resource">Cancel</button>
-                                    {{else}}
-                                        {{> ChannelActions channel=channel}}
-                                    {{/if}}
-                                </div> -->
                             </div>
                     {{/each}}
                     {{#if showNewAppRow }}

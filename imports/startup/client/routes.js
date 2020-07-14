@@ -84,20 +84,6 @@ orgedRoutes.route('/org', {
     }
 });
 
-
-// orgedRoutes.route('/groups', {
-//     name: 'groups',
-//     title: 'Groups',
-//     parent: 'welcome',
-//     action: function(params) {
-//         // if ( !params.tabId ) {
-//         //     FlowRouter.setParams( { tabId: 'channels' });
-//         // }
-//         BlazeLayout.render('Base_layout', { main: 'Groups' });
-//     }
-// });
-
-
 orgedRoutes.route('/deployables', {
     name: 'deployables',
     title: 'Channels',

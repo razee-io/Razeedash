@@ -1,14 +1,11 @@
 
 import './page.html';
-import './page.scss';
-import '../../../components/deployables/subscriptions';
-import '../../../components/deployables/subscriptions/groupSelect';
+import '../subscriptions';
+import '../subscriptions/groupSelect';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Channels } from '/imports/api/deployables/channels/channels';
-// import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
-// import { Subscriptions } from '/imports/api/deployables/subscriptions/subscriptions.js';
-// import Clipboard from 'clipboard';
+import Clipboard from 'clipboard';
 import ace from 'ace-builds/src-min-noconflict/ace';
 
 // eslint-disable-next-line
@@ -110,7 +107,6 @@ Template.channel_versions_recent.events({
             return false;	
         }	
 
-        // addChannelVersion(orgId: String!, channelUuid: String!, name: String!, type: String!, content: String, file: Upload, description: String): AddChannelVersionReply!
         Meteor.call('addChannelVersion', Session.get('currentOrgId'), channelId, versionName, 'application/yaml', yamlString, description, (error) => {	
             if(error) {	            
                 toastr.error(`Error adding a resource. ${error.error}`);	               
@@ -126,27 +122,24 @@ Template.channel_versions_recent.events({
 
 Template.channel_single.onCreated(function() {
     this.autorun(()=>{
-        // const channelId = Template.currentData().channelId();
         const channelId = FlowRouter.current().params.id;
-
-        // console.log(Template.currentData.channelId);
-        // const channelId = Template.currentData() ? Template.currentData().channelId(): '';
         Meteor.subscribe('channels', Session.get('currentOrgId'));
         Meteor.subscribe('subscriptions.byChannel', Session.get('currentOrgId'), channelId);
         Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
         editMode.set(false);
     });
-    // $(function() {
-    //     $('[data-toggle="tooltip"]').tooltip();
-    // });
 });
 
-Template.channel_single.onRendered( () => {
-    // const clipboard = new Clipboard('.copy-button');
-    // clipboard.on('success', function(e) {
-    //     $(e.trigger).tooltip('show');
-    //     e.clearSelection();
-    // });
+  
+Template.channel_details.onRendered( () => {
+    const clipboard = new Clipboard('.copy-button');
+    clipboard.on('success', function(e) {
+        $(e.trigger).tooltip('show');
+        e.clearSelection();
+        setTimeout(function() {
+            $(e.trigger).tooltip('dispose');
+        }, 800);
+    });
 });
 
 Template.channel_details.helpers({
@@ -158,10 +151,8 @@ Template.channel_details.helpers({
 Template.channel_single.helpers({
     channel() {
         const channelId = FlowRouter.current().params.id;
-        // const chans = Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': Template.currentData().channelId() });
         const chans = Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': channelId });
         return chans;
-        // return Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': Template.currentData().channelId() });
     },
 });
 
@@ -184,7 +175,6 @@ Template.channel_edit_form.events({
         const existingAppNames = currentNames.map( (item) => item.name );
         if(_.includes(existingAppNames, updatedName)) {
             $('#js-channel-input').addClass('is-invalid').focus();
-            // $(e.target).closest('.resource-item-edit').find('input[name="resourceName"]').addClass('is-invalid').focus();
             return false;
         }
     

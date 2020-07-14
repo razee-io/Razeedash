@@ -1,11 +1,8 @@
 
 import './page.html';
-import './page.scss';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-// import { Channels } from '/imports/api/deployables/channels/channels';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions';
-// import { Subscriptions } from '/imports/api/deployables/subscriptions/subscriptions.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from 'meteor/session';
 
@@ -27,8 +24,6 @@ Template.channel_versions_all.helpers({
         const channelId = FlowRouter.current().params.id;
         const versions = DeployableVersions.find({'org_id': Session.get('currentOrgId'), 'channel_id': channelId}).fetch();
         const noVersions = (versions && versions.length > 0) ? false : true;
-        console.log(noVersions);
-        
         return versionsHandle && versionsHandle.ready() && noVersions;
     }
 });

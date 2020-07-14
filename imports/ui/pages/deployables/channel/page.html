@@ -1,4 +1,5 @@
 <template name="channel_single">
+    {{#if Template.subscriptionsReady}}
     <div class="card border-light m-2">
         {{#if channel}}
             <div class="row">
@@ -15,16 +16,14 @@
                 </div>
             </div>
         {{else}}
-            <div class="col-sm-12 ">
-                <div class="card">
-                    {{> portletHeader title='Not found' }}
-                    <div class="card-body">
-                        This channel was not found. View your list of channels <a href="{{pathFor 'deployables'}}">here</a>. 
-                    </div>
+            {{#if showNoChannelMessage}}
+                <div class="col-sm-12 ">
+                    {{>no_channel}}
                 </div>
-            </div>
+            {{/if}}
         {{/if}}
     </div>
+    {{/if}}
 </template>
 
 <template name="channel_versions_recent">
@@ -179,6 +178,15 @@
         </div>
     </div>
   </div>
+</template>
+
+<template name="no_channel">
+    <div class="card">
+        {{> portletHeader title='Not found' }}
+        <div class="card-body">
+            This channel was not found. View your list of channels <a href="{{pathFor 'deployables'}}">here</a>. 
+        </div>
+    </div>
 </template>
 
 <template name="no_versions">

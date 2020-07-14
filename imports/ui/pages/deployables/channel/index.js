@@ -120,10 +120,11 @@ Template.channel_versions_recent.events({
     }
 });
 
+let channelHandle;
 Template.channel_single.onCreated(function() {
     this.autorun(()=>{
         const channelId = FlowRouter.current().params.id;
-        Meteor.subscribe('channels', Session.get('currentOrgId'));
+        channelHandle = Meteor.subscribe('channels', Session.get('currentOrgId'));
         Meteor.subscribe('subscriptions.byChannel', Session.get('currentOrgId'), channelId);
         Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
         editMode.set(false);
@@ -154,6 +155,11 @@ Template.channel_single.helpers({
         const chans = Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': channelId });
         return chans;
     },
+    showNoChannelMessage() {
+        const channelId = FlowRouter.current().params.id;
+        const channel = Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': channelId });
+        return channelHandle && channelHandle.ready() && !channel;
+    }
 });
 
 Template.channel_edit_form.events({

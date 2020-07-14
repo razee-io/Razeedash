@@ -29,12 +29,6 @@ Meteor.methods({
         const clusterCount = Clusters.find({org_id: orgId}).count();
         const resourceCount = Resources.find({org_id: orgId, deleted: false}).count();
         const deployablesCount = Subscriptions.find({org_id: orgId}).count();
-        console.log(clusterCount);
-        console.log(resourceCount);
-        console.log(deployablesCount);
-        
-        console.log(orgId);
-        
         Stats.update({ org_id: orgId }, { $set: { deploymentCount: resourceCount, clusterCount: clusterCount, deployablesCount: deployablesCount  } } );
     },
 });

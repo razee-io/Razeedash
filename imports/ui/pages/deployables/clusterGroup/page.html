@@ -47,11 +47,7 @@
                     {{> cluster_group_single_buttons group=group operation="update"}}
                 </div>
             {{else}}
-                {{#if updating}}
-                    {{> loading}}
-                {{else}}
-                    <div class="col">{{> all_clusters_in_group group=group }}</div>
-                {{/if}}
+                <div class="col">{{> all_clusters_in_group group=group }}</div>
             {{/if}}
       </div>
       <div class="row pb-2">
@@ -87,9 +83,13 @@
 
 <template name="all_clusters_in_group">
     <div class="cluster-list"> 
-    {{#each cluster in clustersInGroup}}
-        <a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">{{cluster.found_name}}{{#if showComma @index clustersInGroup.length}},{{/if}}</a>
-    {{/each}}
+    {{#if dataIsReady}}
+        {{#each cluster in clustersInGroup}}
+            <a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">{{cluster.found_name}}{{#if showComma @index clustersInGroup.length}},{{/if}}</a>
+        {{/each}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
     </div>
 </template>
 

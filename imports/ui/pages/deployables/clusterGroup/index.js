@@ -47,13 +47,6 @@ Template.group_single.onRendered( () => {
     });
 });
 
-let clustersHandle;
-Template.group_details.onCreated(function() {
-    this.autorun(()=>{
-        clustersHandle = this.subscribe('clusters.org', Session.get('currentOrgId'));
-    });
-});
-
 Template.group_details.helpers({
     getCurrentClusters(group) {
         // console.log(group);
@@ -67,10 +60,6 @@ Template.group_details.helpers({
     editMode() {
         return editMode.get();
     },
-    updating() {
-        const clustersReady = clustersHandle && clustersHandle.ready() ;
-        return !clustersReady || updating.get();
-    }
 });
 
 Template.group_details.events({
@@ -102,6 +91,12 @@ Template.group_single.helpers({
     },
 });
 
+let clustersHandle;
+Template.all_clusters_in_group.onCreated(function() {
+    this.autorun(()=>{
+        clustersHandle = this.subscribe('clusters.org', Session.get('currentOrgId'));
+    });
+});
 Template.all_clusters_in_group.helpers({
     clustersInGroup() {
         const inst = Template.instance();
@@ -114,6 +109,10 @@ Template.all_clusters_in_group.helpers({
     },
     showComma(index, len) {
         return (index < len - 1);
+    },
+    dataIsReady() {
+        console.log(clustersHandle.ready());
+        return clustersHandle && clustersHandle.ready();
     }
 });
 

@@ -16,8 +16,8 @@
 
                             <dt>Cluster groups(required)</dt>
                             <dd>Add one or more groups. 
-                            Any cluster that includes these labels by using 
-                            <a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> will get the 
+                            Any cluster that has
+                            <a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> installed will get the 
                             resource applied to that cluster
                             </dd>
 
@@ -34,6 +34,10 @@ kubectl apply -f https://github.com/razee-io/RazeeDeploy-delta/releases/latest/d
 kubectl apply -f https://github.com/razee-io/ClusterSubscription/releases/latest/download/resource.yaml
                             </pre>
                           </div>
+                          <div> Each cluster also needs a <code>razee-identity</code> ConfigMap and Secret. If your cluster doesn't already have one then you can 
+                            see how to generate one from the details tab of a <span class="btn btn-link js-clusters-page p-0">Cluster</span>.
+                          </div>
+ 
                         </div>
                     </div>
                     <div class="modal-footer">

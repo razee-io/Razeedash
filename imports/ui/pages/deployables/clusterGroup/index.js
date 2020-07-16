@@ -25,10 +25,9 @@ const state = new ReactiveDict();
 let groupHandle;
 Template.group_single.onCreated(function() {
     this.autorun(()=>{
-        Meteor.subscribe('channels', Session.get('currentOrgId'));
-        groupHandle = Meteor.subscribe('groups', Session.get('currentOrgId'));
-        // Meteor.subscribe('subscriptions.byClusterGroup', Session.get('currentOrgId'), groupId);
-        Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
+        this.subscribe('channels', Session.get('currentOrgId'));
+        groupHandle = this.subscribe('groups', Session.get('currentOrgId'));
+        this.subscribe('deployableVersions', Session.get('currentOrgId'));
         editMode.set(false);
         const clusters = Clusters.find({ org_id: Session.get('currentOrgId')}).fetch();
         clusters.forEach(cluster => {
@@ -48,6 +47,13 @@ Template.group_single.onRendered( () => {
     });
 });
 
+let clustersHandle;
+Template.group_details.onCreated(function() {
+    this.autorun(()=>{
+        clustersHandle = this.subscribe('clusters.org', Session.get('currentOrgId'));
+    });
+});
+
 Template.group_details.helpers({
     getCurrentClusters(group) {
         // console.log(group);
@@ -62,7 +68,8 @@ Template.group_details.helpers({
         return editMode.get();
     },
     updating() {
-        return updating.get();
+        const clustersReady = clustersHandle && clustersHandle.ready() ;
+        return !clustersReady || updating.get();
     }
 });
 
@@ -179,7 +186,6 @@ Template.cluster_group_single_buttons.events({
         if(err) {
             toastr.error(err.error, 'Error updating cluster group items');
         }
-        editMode.set(false);
         updating.set(false);
         return;
     },

@@ -42,10 +42,17 @@
 
 .clusterInfo {
     align-items:center;
-    background:#f3f3f3;
     justify-content: flex-start;
 
     .fieldValue{
         width:100%;
     }
 }
+
+.bd-clipboard {
+    position: relative;
+    float: right;
+    .highlight {
+      margin-top: 0;
+    }
+  }

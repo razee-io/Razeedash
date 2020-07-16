@@ -274,3 +274,13 @@ Template.Subscriptions.events({
         return false;
     },
 });
+
+Template.subscriptions_help_modal.events({
+    'click .js-clusters-page'(e) {
+        e.preventDefault();
+        var $modal = $('.js-subscription-help-modal');
+        $modal.modal('hide');
+        const params = { baseOrgName: Session.get('currentOrgName'), };
+        FlowRouter.go('clusters.search', params );
+    },
+});

@@ -111,7 +111,8 @@ Template.clusters_in_group.events({
 
 Template.cluster_group_list.helpers({
     updating() {
-        return updating.get();
+        const groupsReady = groupsHandle && groupsHandle.ready();
+        return !groupsReady || updating.get();
     },
     loaded() {
         return groupsHandle && groupsHandle.ready();
@@ -220,7 +221,7 @@ Template.cluster_group_buttons.events({
         if(err) {
             toastr.error(err.error, 'Error updating cluster group items');
         }
-        editMode.set(false);
+        // editMode.set(false);
         clickedItem.set(null);
         updating.set(false);
         return;

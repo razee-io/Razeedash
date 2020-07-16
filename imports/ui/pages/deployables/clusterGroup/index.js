@@ -19,7 +19,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 let editMode = new ReactiveVar(false);
-let updating = new ReactiveVar(null);
 const state = new ReactiveDict();
 
 let groupHandle;
@@ -180,12 +179,11 @@ Template.cluster_group_single_buttons.events({
         const newClusterList = $(`.js-cluster-select[data-id=${uuid}]`).val();
         const newClusterIds = newClusterList.map((clusterName) => state.get(clusterName));
         
-        updating.set(true);
         let err = await updateClusterGroup(Session.get('currentOrgId'), uuid, newClusterIds);
         if(err) {
             toastr.error(err.error, 'Error updating cluster group items');
         }
-        updating.set(false);
+        editMode.set(false);
         return;
     },
 });

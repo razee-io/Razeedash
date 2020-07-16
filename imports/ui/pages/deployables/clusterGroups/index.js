@@ -80,6 +80,12 @@ Template.cluster_group_list.onCreated(function() {
     });
 });
 
+let clustersHandle;
+Template.clusters_in_group.onCreated(function() {
+    this.autorun(()=>{
+        clustersHandle = Meteor.subscribe('clusters.org', Session.get('currentOrgId'));
+    });
+});
 Template.clusters_in_group.helpers({
     clustersInGroup() {
         const inst = Template.instance();
@@ -101,6 +107,9 @@ Template.clusters_in_group.helpers({
             return clusterNames;
         }
     },
+    dataIsReady() {
+        return clustersHandle && clustersHandle.ready();
+    }
 });
 
 Template.clusters_in_group.events({
@@ -221,7 +230,7 @@ Template.cluster_group_buttons.events({
         if(err) {
             toastr.error(err.error, 'Error updating cluster group items');
         }
-        // editMode.set(false);
+        editMode.set(false);
         clickedItem.set(null);
         updating.set(false);
         return;

@@ -94,12 +94,16 @@
 
 <template name="clusters_in_group">
     <div class="cluster-list"> 
-    {{#each cluster in clustersInGroup}}
-        <span class="btn pl-0">{{cluster}}</span>
-    {{/each}}
-    {{#unless clustersInGroup}}
-        <span class="btn btn-link pl-0">Add clusters</span>
-    {{/unless}}
+    {{#if dataIsReady}}
+        {{#each cluster in clustersInGroup}}
+            <span class="btn pl-0">{{cluster}}</span>
+        {{/each}}
+        {{#unless clustersInGroup}}
+            <span class="btn btn-link pl-0">Add clusters</span>
+        {{/unless}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
     </div>
 </template>
 

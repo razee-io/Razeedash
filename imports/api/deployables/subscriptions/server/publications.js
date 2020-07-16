@@ -41,5 +41,5 @@ Meteor.publish('subscriptions.byClusterGroup', function(orgId, name) {
 
 Meteor.publish('users.byIds', function(userIds) {
     check( userIds, Array);
-    return Meteor.users.find({ _id: {$in: userIds} }, { fields: { 'profile.name': true } });
+    return Meteor.users.find({ _id: {$in: userIds} }, { fields: { 'profile.name': true } }, {pollingIntervalMs: 1000});
 });

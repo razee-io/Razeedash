@@ -24,8 +24,3 @@ Meteor.publish('groups', function(org_id) {
     requireOrgAccess(org_id);
     return Groups.find({ org_id: org_id }, {pollingIntervalMs: 1000});
 });
-
-Meteor.publish('users.byIds', function(userIds) {
-    check( userIds, Array);
-    return Meteor.users.find({ _id: {$in: userIds} }, { fields: { 'profile.name': true } });
-});

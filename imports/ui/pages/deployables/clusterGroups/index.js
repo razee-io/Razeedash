@@ -120,8 +120,7 @@ Template.clusters_in_group.events({
 
 Template.cluster_group_list.helpers({
     updating() {
-        const groupsReady = groupsHandle && groupsHandle.ready();
-        return !groupsReady || updating.get();
+        return updating.get();
     },
     loaded() {
         return groupsHandle && groupsHandle.ready();

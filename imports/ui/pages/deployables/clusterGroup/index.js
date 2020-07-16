@@ -19,6 +19,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 let editMode = new ReactiveVar(false);
+let updating = new ReactiveVar(null);
 const state = new ReactiveDict();
 
 let groupHandle;
@@ -48,7 +49,6 @@ Template.group_single.onRendered( () => {
 
 Template.group_details.helpers({
     getCurrentClusters(group) {
-        // console.log(group);
         const uuid = group.uuid;
         const clusters = Clusters.find({ org_id: Session.get('currentOrgId'), 'groups.uuid': {$in: [uuid]}}).fetch();
         let clusterNames = clusters.map(cluster => {
@@ -59,6 +59,9 @@ Template.group_details.helpers({
     editMode() {
         return editMode.get();
     },
+    updating() {
+        return updating.get();
+    }
 });
 
 Template.group_details.events({
@@ -110,7 +113,6 @@ Template.all_clusters_in_group.helpers({
         return (index < len - 1);
     },
     dataIsReady() {
-        console.log(clustersHandle.ready());
         return clustersHandle && clustersHandle.ready();
     }
 });

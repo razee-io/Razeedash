@@ -38,7 +38,10 @@
       </div>
       <div class="row pb-2">
         <div class="col-lg-1">Clusters</div>
-            {{#if editMode}}
+        {{#if editMode}}
+            {{#if updating}}
+                {{>loading}}
+            {{else}}
                 <div class="col-lg-7">
                     {{> clusters_select currentClusters=(getCurrentClusters group) group=group }}
                 </div>
@@ -46,9 +49,10 @@
                     <div class="d-block d-lg-none row-header-sm">Action</div>
                     {{> cluster_group_single_buttons group=group operation="update"}}
                 </div>
-            {{else}}
-                <div class="col">{{> all_clusters_in_group group=group }}</div>
             {{/if}}
+        {{else}}
+            <div class="col">{{> all_clusters_in_group group=group }}</div>
+        {{/if}}
       </div>
       <div class="row pb-2">
         <div class="col-lg-1">ID</div>

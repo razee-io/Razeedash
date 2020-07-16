@@ -94,22 +94,18 @@
 
 <template name="clusters_in_group">
     <div class="cluster-list"> 
-    {{#if dataIsReady}}
         {{#each cluster in clustersInGroup}}
             <span class="btn pl-0">{{cluster}}</span>
         {{/each}}
         {{#unless clustersInGroup}}
             <span class="btn btn-link pl-0">Add clusters</span>
         {{/unless}}
-    {{else}}
-        {{> loading}}
-    {{/if}}
     </div>
 </template>
 
 <template name="no_groups">
-  <div class="row"> 
-    <div class="col">
+    <div class="row"> 
+        <div class="col">
       <h3>No cluster groups yet</h3>
     </div>
   </div>  

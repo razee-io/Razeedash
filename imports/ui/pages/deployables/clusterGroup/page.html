@@ -87,13 +87,9 @@
 
 <template name="all_clusters_in_group">
     <div class="cluster-list"> 
-    {{#if dataIsReady}}
         {{#each cluster in clustersInGroup}}
             <a href="{{pathFor 'cluster.tab' id=cluster.cluster_id tabId='resources'}}">{{cluster.found_name}}{{#if showComma @index clustersInGroup.length}},{{/if}}</a>
         {{/each}}
-    {{else}}
-        {{> loading}}
-    {{/if}}
     </div>
 </template>
 

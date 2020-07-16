@@ -80,12 +80,6 @@ Template.cluster_group_list.onCreated(function() {
     });
 });
 
-let clustersHandle;
-Template.clusters_in_group.onCreated(function() {
-    this.autorun(()=>{
-        clustersHandle = Meteor.subscribe('clusters.org', Session.get('currentOrgId'));
-    });
-});
 Template.clusters_in_group.helpers({
     clustersInGroup() {
         const inst = Template.instance();
@@ -107,9 +101,6 @@ Template.clusters_in_group.helpers({
             return clusterNames;
         }
     },
-    dataIsReady() {
-        return clustersHandle && clustersHandle.ready();
-    }
 });
 
 Template.clusters_in_group.events({
@@ -327,10 +318,11 @@ Template.group_delete_modal.events({
         const uuid = template.data.group.uuid;
         $modal.modal('hide');
         Meteor.call('removeGroup', Session.get('currentOrgId'), uuid,  (error)=>{
+            updating.set(false);
+            editMode.set(false);
+            clickedItem.set(null);
             if(error) {
                 toastr.error(error.error, 'Error removing the cluster group');
-                editMode.set(false);
-                clickedItem.set(null);
             } else {
                 if(template.data.redirectOnDelete) {
                     FlowRouter.redirect(`/${Session.get('currentOrgName')}/deployables/groups`);

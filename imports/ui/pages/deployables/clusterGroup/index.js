@@ -93,12 +93,6 @@ Template.group_single.helpers({
     },
 });
 
-let clustersHandle;
-Template.all_clusters_in_group.onCreated(function() {
-    this.autorun(()=>{
-        clustersHandle = this.subscribe('clusters.org', Session.get('currentOrgId'));
-    });
-});
 Template.all_clusters_in_group.helpers({
     clustersInGroup() {
         const inst = Template.instance();
@@ -111,9 +105,6 @@ Template.all_clusters_in_group.helpers({
     },
     showComma(index, len) {
         return (index < len - 1);
-    },
-    dataIsReady() {
-        return clustersHandle && clustersHandle.ready();
     }
 });
 
@@ -181,10 +172,12 @@ Template.cluster_group_single_buttons.events({
         const newClusterList = $(`.js-cluster-select[data-id=${uuid}]`).val();
         const newClusterIds = newClusterList.map((clusterName) => state.get(clusterName));
         
+        updating.set(true);
         let err = await updateClusterGroup(Session.get('currentOrgId'), uuid, newClusterIds);
         if(err) {
             toastr.error(err.error, 'Error updating cluster group items');
         }
+        updating.set(false);
         editMode.set(false);
         return;
     },

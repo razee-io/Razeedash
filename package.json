@@ -48,7 +48,7 @@
         "debounce": "^1.2.0",
         "font-awesome": "^4.7.0",
         "graphql": "^15.1.0",
-        "graphql-tag": "^2.10.3",
+        "graphql-tag": "^2.10.4",
         "jquery": "^3.5.0",
         "jwt-decode": "^2.2.0",
         "keypair": "^1.0.1",

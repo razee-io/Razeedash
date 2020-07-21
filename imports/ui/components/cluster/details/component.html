@@ -83,6 +83,11 @@
             <i class="fa fa-clone" title="Copy to clipboard"></i>
         </span>
     </div>
+    <div>
+        If you registred this cluster using the Install Razee Agent command from the <a href="{{pathFor 'org' baseOrgName=org.name}}">Manage Org</a> page 
+        then it should already have a razee-identity ConfigMap and Secret.  If needed you can manually create the ConfigMap and Secret with these commands.
+
+    </div>
     <div class="highlight">
         <pre><code class="language-html" data-lang="html">
 {{kubeCommands}}

@@ -26,6 +26,7 @@ import selectpicker from 'bootstrap-select';
 Template.clusters_select.onDestroyed( function() {
     $('.js-cluster-select').selectpicker('destroy');
 });
+
 Template.clusters_select.onRendered( function() {
     $('.js-cluster-select').selectpicker({
         'actionsBox': true,
@@ -52,6 +53,7 @@ Template.clusters_select.onCreated(function() {
         editMode.set(true);
     });
 });
+
 Template.clusters_select.helpers({
     clusters() {
         const clusters = Clusters.find({ org_id: Session.get('currentOrgId')}).fetch();
@@ -78,35 +80,6 @@ Template.cluster_group_list.onCreated(function() {
         groupsHandle = Meteor.subscribe('groups', Session.get('currentOrgId'));
         editMode.set(false);
     });
-});
-
-Template.clusters_in_group.helpers({
-    clustersInGroup() {
-        const inst = Template.instance();
-        const uuid = inst.data.group.uuid;
-        const maxDisplayItems = inst.data.limit;
-        const clusters = Clusters.find({ org_id: Session.get('currentOrgId'), 'groups.uuid': {$in: [uuid]}}).fetch();
-        let clusterNames = clusters.map(cluster => {
-            return clusterName(cluster);
-        });
-        if(maxDisplayItems) {
-            let results = clusterNames.slice(0,maxDisplayItems);
-            if(clusterNames.length > maxDisplayItems) {
-                const len = clusterNames.length;
-                const remaining = len - maxDisplayItems;
-                results.push(`+${remaining} more`); 
-            }
-            return results;
-        } else {
-            return clusterNames;
-        }
-    },
-});
-
-Template.clusters_in_group.events({
-    'click'() {
-        clickedItem.set(Template.instance().data.group);
-    }
 });
 
 Template.cluster_group_list.helpers({
@@ -166,10 +139,61 @@ Template.cluster_group_list.helpers({
     },
 });
 
-Template.cluster_group_actions.events({
-    'click .js-set-edit-mode, keypress .js-set-edit-mode'() {
-        clickedItem.set(Template.instance().data.group);
+Template.cluster_group_list.events({
+    'click .js-group-details, keypress .js-group-details'(e) {
+        const id = $(e.target).data('id');
+        const params = { 
+            baseOrgName: Session.get('currentOrgName'),
+            tabId: 'groups',
+            id: id
+        };
+        const $modal = $('.js-add-group-modal');
+        $modal.modal('hide');
+        FlowRouter.go('channel.details', params );
     },
+
+    'click .js-create-label'(e) {
+        if(editMode.get()) {
+            return;  //disables the button while rows are being edited
+        }
+        e.preventDefault();
+        
+        showNewGroupRow.set(true);
+        $(e.target).closest('.group-item-new').find('input[name="groupName"]').focus();
+        editMode.set(true);
+    },
+});
+
+Template.clusters_in_group.helpers({
+    clustersInGroup() {
+        const inst = Template.instance();
+        const uuid = inst.data.group.uuid;
+        const maxDisplayItems = inst.data.limit;
+        const clusters = Clusters.find({ org_id: Session.get('currentOrgId'), 'groups.uuid': {$in: [uuid]}}).fetch();
+        let clusterNames = clusters.map(cluster => {
+            return clusterName(cluster);
+        });
+        if(maxDisplayItems) {
+            let results = clusterNames.slice(0,maxDisplayItems);
+            if(clusterNames.length > maxDisplayItems) {
+                const len = clusterNames.length;
+                const remaining = len - maxDisplayItems;
+                results.push(`+${remaining} more`); 
+            }
+            return results;
+        } else {
+            return clusterNames;
+        }
+    },
+});
+
+Template.clusters_in_group.events({
+    'click'() {
+        clickedItem.set(Template.instance().data.group);
+    }
+});
+
+Template.cluster_group_actions.events({
     'click .js-group-details, keypress .js-group-details'(e, template) {
         const uuid = template.data.group.uuid;
         const params = { 
@@ -286,30 +310,6 @@ Template.cluster_group_buttons.events({
     },
 });
 
-Template.cluster_group_list.events({
-    'click .js-group-details, keypress .js-group-details'(e) {
-        const id = $(e.target).data('id');
-        const params = { 
-            baseOrgName: Session.get('currentOrgName'),
-            tabId: 'groups',
-            id: id
-        };
-        const $modal = $('.js-add-group-modal');
-        $modal.modal('hide');
-        FlowRouter.go('channel.details', params );
-    },
-
-    'click .js-create-label'(e) {
-        if(editMode.get()) {
-            return;  //disables the button while rows are being edited
-        }
-        e.preventDefault();
-        
-        showNewGroupRow.set(true);
-        $(e.target).closest('.group-item-new').find('input[name="groupName"]').focus();
-        editMode.set(true);
-    },
-});
 
 Template.group_delete_modal.events({
     'click .js-delete-label-confirm'(e, template) {

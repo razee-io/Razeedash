@@ -65,7 +65,7 @@
                 <div class="row group-item-new js-new-group-row">
                     <div class="col-lg-3">                                   
                         <div class="d-block d-lg-none row-header-sm">Name</div>
-                        <input type="text" name="groupName" class="form-control" required autofocus/>
+                        <input type="text" name="groupName" class="form-control" placeholder="ex: dev-clusters, prod-clusters, etc" required autofocus/>
                         <div class="invalid-feedback"> Please enter a unique name </div>
                     </div>
                     <div class="col-lg-6">                                   
@@ -106,7 +106,13 @@
 <template name="no_groups">
     <div class="row"> 
         <div class="col">
-      <h3>No cluster groups yet</h3>
+      <h3>No cluster groups have been defined</h3>
+    </div>
+  </div>  
+  <div class="row mt-2"> 
+    <div class="col">
+      Cluster groups provide a target for a subscripton to apply its Kubernetes resources.
+      When you define a subscription inside a channel you can tell the subscription to point to one or more cluster groups.
     </div>
   </div>  
   <div class="row mt-2"> 
@@ -132,7 +138,6 @@
         </button>
         <div class="dropdown-menu">
             <button class="dropdown-item js-group-details" data-id="{{group.uuid}}" type="button">Details</button>
-            <button class="dropdown-item js-set-edit-mode" type="button">Update</button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item js-label-remove" data-name="{{group.name}}" data-id="{{group.uuid}}" type="button">Delete</button>
         </div>

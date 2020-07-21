@@ -28,7 +28,11 @@
 
 <template name="channel_versions_recent">
     <div class="card details-card">
-        {{> portletHeader title='Recent versions' }}
+        {{> api_example }}
+        <div class="card-header cardHeader d-flex">
+            <h5 class="text-muted my-0">Recent versions</h5> 
+            <button class="btn p-0 ml-1 help-icon js-api-help">{{> icon_help}}</button>
+        </div>
         <div class="card-body ">
             {{#each version in versions}}
                 <div class="row">
@@ -197,7 +201,7 @@
     </div>  
     <div class="row mt-2"> 
         <div class="col">
-            Upload your first version for this channel by clicking the Add version link.
+            Upload your first version by clicking the Add version link.
         </div>
     </div>  
 </template>

@@ -12,33 +12,18 @@
                         <p>Add a subscription</p>
                         <dl>
                             <dt>Name(required)</dt>
-                            <dd>Add a name for the subscription</dd>
+                            <dd>Add a name for the subscription.</dd>
 
                             <dt>Cluster groups(required)</dt>
                             <dd>Add one or more groups. 
                             Any cluster that has
                             <a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> installed will get the 
-                            resource applied to that cluster
+                            resource applied to that cluster. If you registered a cluster using Razee then ClusterSubscription should already be on that cluster.
                             </dd>
 
                             <dt>Version(required)</dt>
-                            <dd>Select a version to associate with the subscription</dd>
-
+                            <dd>Select a version to associate with the subscription.</dd>
                         </dl>
-                        <div class="mt-3"><a href="https://github.com/razee-io/ClusterSubscription" target="_blank">ClusterSubscription</a> can be used on any cluster that you want
-                          to subscribe to an uploaded resource.  Your cluster(s) can subscribe by installing ClusterSubscription on your cluster
-                          <div>
-                            <pre class="bg-light">
-
-kubectl apply -f https://github.com/razee-io/RazeeDeploy-delta/releases/latest/download/resource.yaml
-kubectl apply -f https://github.com/razee-io/ClusterSubscription/releases/latest/download/resource.yaml
-                            </pre>
-                          </div>
-                          <div> Each cluster also needs a <code>razee-identity</code> ConfigMap and Secret. If your cluster doesn't already have one then you can 
-                            see how to generate one from the details tab of a <span class="btn btn-link js-clusters-page p-0">Cluster</span>.
-                          </div>
- 
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>

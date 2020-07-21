@@ -1,27 +1,34 @@
 
 import './page.html';
+import './apiHelp.html';
 import '../subscriptions';
 import '../subscriptions/groupSelect';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Channels } from '/imports/api/deployables/channels/channels';
-import Clipboard from 'clipboard';
-import ace from 'ace-builds/src-min-noconflict/ace';
-
-// eslint-disable-next-line
-import yamlMode from 'ace-builds/src-min-noconflict/mode-yaml';
-
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import toastr from 'toastr';
-
-import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
+import Clipboard from 'clipboard';
+import _ from 'lodash';
+import ace from 'ace-builds/src-min-noconflict/ace';
+import toastr from 'toastr';
+// eslint-disable-next-line
+import yamlMode from 'ace-builds/src-min-noconflict/mode-yaml';
 
 let editMode = new ReactiveVar(false);
 let clickedItem = new ReactiveVar(null);
 let loading = new ReactiveVar(null);
 const yaml = new ReactiveVar();
+
+Template.api_example.helpers({
+    orgId() {
+        return Session.get('currentOrgId');
+    },
+    channelId() {
+        return FlowRouter.current().params.id;
+    }
+});
 
 Template.channel_versions_recent.onRendered(function() {
     const template = Template.instance();
@@ -40,6 +47,12 @@ Template.channel_versions_recent.helpers({
     },
 });
 Template.channel_versions_recent.events({
+    'click .js-api-help'(e) {
+        e.preventDefault();
+        var $modal = $('.js-api-help-modal');
+        $modal.modal('show');
+        return false;
+    },
     'click .js-version-details'(e) {
         e.preventDefault();
         const versionId = $(e.target).data('id');

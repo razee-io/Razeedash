@@ -110,17 +110,6 @@ Template.SusbscriptionActions.events({
 
 Template.Subscriptions.events({
     'click .js-groups-link'(e){
-        // console.log('clicked js-groups-link');
-        // console.log(e.target);
-        // prevent the modal from displaying when adding/editing a row and using the enter key
-        // if(showNewRow.get() || editMode.get()) {
-        //     return false;
-        // }
-        // if($(e.currentTarget).hasClass('js-groups-link')) {
-        //   return false;
-        // }
-        // console.log(e.currentTarget);
-        // var $el = $(e.currentTarget).hasClass('js-groups-link');
         e.preventDefault();
         var $modal = $('.js-add-group-modal');
         $modal.modal('show');
@@ -272,15 +261,5 @@ Template.Subscriptions.events({
         clickedItem.set(clickedRow);
         editMode.set(true);
         return false;
-    },
-});
-
-Template.subscriptions_help_modal.events({
-    'click .js-clusters-page'(e) {
-        e.preventDefault();
-        var $modal = $('.js-subscription-help-modal');
-        $modal.modal('hide');
-        const params = { baseOrgName: Session.get('currentOrgName'), };
-        FlowRouter.go('clusters.search', params );
     },
 });

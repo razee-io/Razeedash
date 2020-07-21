@@ -1,0 +1,43 @@
+<template name="api_example">
+    <div class="modal js-api-help-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Version upload example</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Add a version using the Razee API</p>
+                    <pre class="mb-0 bg-light">
+<code>  curl --url {{apiUrl}}graphql \
+     --header 'content-type: multipart/form-data' \</code>
+{{#if currentUser.apiKey}}<code>     --header 'x-api-key: </code>{{currentUser.apiKey}}<code>' \</code>
+{{else}}<code>     --header "x-api-key: </code><a href="" class="js-generate-key">Generate api key</a><code>" \</code>
+{{/if}}<code>     --form 'operations={
+    "query": "mutation addChannelVersion($orgId:String!, $channelUuid:String!, $name:String!, $type:String!, $content:String, $file:Upload, $description:String) {\n  addChannelVersion(orgId:$orgId,channelUuid:$channelUuid, name:$name, type:$type, content:$content, file:$file, description:$description){\n    success\n    versionUuid\n  }\n}",
+    "variables": {
+        "orgId": "{{orgId}}",
+        "channelUuid": "{{channelId}}",
+        "name": "${VERSION}",
+        "type": "application/yaml",
+        "file": null,
+        "content": null,
+        "description": null
+    },
+    "operationName": "addChannelVersion"
+    }' \
+    --form 'map={"localfile":["variables.file"]}' \
+    --form localfile=@resource.yaml</code>
+                          
+                            </pre>
+                              <div><code>VERSION</code> is a unique verison representing your resource, e.g., <code>0.0.1</code></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -15,6 +15,7 @@
 */
 
 import './component.html';
+import './component.scss';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';

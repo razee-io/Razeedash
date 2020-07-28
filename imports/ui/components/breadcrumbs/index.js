@@ -17,6 +17,8 @@
 import './breadcrumbs.html';
 import './breadcrumbs.scss';
 import { Clusters } from '/imports/api/cluster/clusters/clusters';
+import { Channels } from '/imports/api/deployables/channels/channels';
+import { Groups } from '/imports/api/deployables/groups/groups';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -56,7 +58,7 @@ var setTitleToLastCrumb = (crumbs)=>{
 Template.breadcrumbs.helpers({
     getBreadcrumbs(){
         let breadcrumbs = [];
-        const ignoredCrumbs = ['welcome', 'org', 'root', 'profile', 'deployables'];
+        const ignoredCrumbs = ['welcome', 'org', 'root', 'profile', 'channels', 'groups' ];
         try {
             breadcrumbs = Breadcrumb.getAll();
         }catch(e){
@@ -73,6 +75,30 @@ Template.breadcrumbs.helpers({
         return (crumbs.length > 0);
     },
     getDisplayName(crumb){
+        if(crumb.routeName === 'channel.details') {
+            let displayName;
+            const id = crumb.params.id;
+            if(crumb.params.tabId === 'groups') {
+                try{
+                    const name = Groups.findOne({'org_id': Session.get('currentOrgId'), 'uuid': id}, { fields: { 'name': 1 }});
+                    if(name) {
+                        displayName = name.name;
+                    }
+                }catch(e){
+                    console.error(e);
+                } 
+            } else {
+                try{
+                    const name = Channels.findOne({'org_id': Session.get('currentOrgId'), 'uuid': id}, { fields: { 'name': 1 }});
+                    if(name) {
+                        displayName = name.name;
+                    }
+                }catch(e){
+                    console.error(e);
+                } 
+            }
+            return displayName;
+        }
         if(crumb.routeName === 'resource.cluster') {
             var name = '';
             try{
@@ -94,7 +120,13 @@ Template.breadcrumbs.helpers({
             var id = crumb.params.id || crumb.params.clusterId;
             const cluster = Clusters.findOne({ cluster_id: id});
             if(cluster){
-                return cluster.metadata.name || id;
+                let clusterName = id;
+                if(cluster.registration && cluster.registration.name) {
+                    clusterName = cluster.registration.name;
+                } else if(cluster.metadata && cluster.metadata.name) {
+                    clusterName = cluster.metadata.name;
+                }
+                return clusterName;
             } else {
                 return id;
             }

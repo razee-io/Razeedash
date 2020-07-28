@@ -45,6 +45,15 @@ Template.OrgSingle.onRendered( () => {
     new Clipboard('.copy-button');
 });
 
+Template.OrgSingle.events({
+    'click .js-add-cluster'(e){
+        e.preventDefault();
+        const $modal = $('.js-add-cluster-modal');
+        $modal.modal('show');
+        return false;
+    }
+});
+
 Template.OrgSingle.helpers({
     creatorId(){
         var org = Template.OrgSingle.__helpers.get('org').call(Template.instance());

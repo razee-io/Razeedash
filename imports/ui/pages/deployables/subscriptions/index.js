@@ -1,26 +1,29 @@
 
-import './page.html';
-import './page.scss';
+import './component.html';
 import './helpModal.html';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Subscriptions } from '/imports/api/deployables/subscriptions/subscriptions.js';
+import { Groups } from '/imports/api/deployables/groups/groups.js';
 import { Channels } from '/imports/api/deployables/channels/channels.js';
 import { DeployableVersions } from '/imports/api/deployables/channels/deployableVersions.js';
 import _ from 'lodash';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
 import toastr from 'toastr';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 let editMode = new ReactiveVar(false);
-let showNewGroupRow = new ReactiveVar(false);
+let showNewRow = new ReactiveVar(false);
 let clickedItem = new ReactiveVar(null);
 
 Template.Subscriptions.onCreated(function() {
-    this.selectedChannel = new ReactiveVar(null);
     this.autorun(()=>{
-        Meteor.subscribe('subscriptions', Session.get('currentOrgId'));
+        const channelId = FlowRouter.current().params.id;
+        Meteor.subscribe('subscriptions.byChannel', Session.get('currentOrgId'), channelId);
         Meteor.subscribe('channels', Session.get('currentOrgId'));
+        Meteor.subscribe('deployableVersions', Session.get('currentOrgId'));
+        Meteor.subscribe('groups', Session.get('currentOrgId'));
         editMode.set(false);
     });
 });
@@ -47,10 +50,15 @@ Template.Subscriptions.helpers({
         return editMode.get() ? 'disabled' : '';
     },
     tags(subscription) {
-        return tagsStrToArr(subscription.tags);
+        if(subscription.groups) {
+            return tagsStrToArr(subscription.groups);
+        }
     },
-    showNewGroupRow() {
-        return showNewGroupRow.get();
+    showNewRow() {
+        return showNewRow.get();
+    },
+    groups(){
+        return Groups.find({'org_id': Session.get('currentOrgId')}).fetch();
     },
     subscriptions(){
         const groups = Subscriptions.find({'org_id': Session.get('currentOrgId')}).fetch();
@@ -66,13 +74,6 @@ Template.Subscriptions.helpers({
     editMode(name) {
         return name == clickedItem.get() ? true : false;
     },
-    buttonStatus() {
-        if(editMode.get()) {
-            return 'disabled';
-        } else {
-            return 'enabled';
-        }
-    },
     selectStatus() {
         return editMode.get() ? 'enabled' : 'disabled';
     },
@@ -82,13 +83,6 @@ Template.Subscriptions.helpers({
     channels(){
         return Channels.find({'org_id': Session.get('currentOrgId')}).fetch();
     },
-    selectedChannel() {
-        return Template.instance().selectedChannel.get();
-    },
-    currentChannel(channel, id) {
-        const subscriptions = Subscriptions.find({'org_id': Session.get('currentOrgId'), 'uuid': id}).fetch();
-        return (channel.name === subscriptions[0].channel) ? 'selected': '';
-    },
     currentVersion(version, id) {
         const subscriptions = Subscriptions.find({'org_id': Session.get('currentOrgId'), 'uuid': id}).fetch();
         if(subscriptions && subscriptions[0]) {
@@ -97,103 +91,94 @@ Template.Subscriptions.helpers({
             return '';
         }
     },
-    getVersions(channel) {
-        if(!channel) {
-            const channels = Template.Subscriptions.__helpers.get('channels').call();
-            if(channels && channels.length > 0) {
-                Template.instance().selectedChannel.set(channels[0].name);
-            }
-        }
-        let versions = DeployableVersions.find({'org_id': Session.get('currentOrgId'), 'channel_name': channel}).fetch();
+    getVersions() {
+        const channelId = FlowRouter.current().params.id;
+        let versions = DeployableVersions.find({'org_id': Session.get('currentOrgId'), 'channel_id': channelId}).fetch();
         return versions;
     },
-    owner(id) {
-        const user = Meteor.users.findOne({ _id: id });
-        if (!user) {
-            return '';
-        }
-        return user.profile.name;
+});
+
+Template.SusbscriptionActions.events({
+    'click .js-subscription-remove, keypress .js-subscription-remove'(e){
+        e.preventDefault();
+        const id = $(e.target).data('id') + '';
+        var $modal = $(`.js-delete-group-modal#${id}`);
+        $modal.modal('show');
+        return false;
     },
 });
 
 Template.Subscriptions.events({
-    'change select.resource-dropdown'(event, instance) {
-        const currentTarget = event.currentTarget;
-        const channelName = currentTarget.options[currentTarget.selectedIndex].label;
-        instance.selectedChannel.set(channelName);
-    },
-    'click .js-add-group'(e, instance) {
+    'click .js-groups-link'(e){
         e.preventDefault();
-        const groupName = $(e.target).closest('.group-item-new').find('input[name="groupName"]').val();
-        const groupTags = $(e.target).closest('.group-item-new').find('input[name="groupTags"]').val().split(/[ ,]+/).filter(String);
-        const resourceId = $(e.target).closest('.group-item-new').find('.resource-dropdown').val();
-        const resourceName = instance.selectedChannel.get();
-        const resourceVersion = $(e.target).closest('.group-item-new').find('.version-dropdown').val();
-        const resourceVersionName = $(e.target).closest('.group-item-new').find('.version-dropdown option:selected').text();
+        var $modal = $('.js-add-group-modal');
+        $modal.modal('show');
+        return false;
+    },
+    'click .js-add-subscription'(e) {
+        e.preventDefault();
+        const channelId = FlowRouter.current().params.id;
+        const subscriptionName = $(e.target).closest('.js-new-subscription').find('input[name="subscriptionName"]').val();
+        const clusterGroups = $(e.target).closest('.js-new-subscription').find('select.js-group-select').val();
+        const resourceVersion = $(e.target).closest('.js-new-subscription').find('.version-dropdown').val();
 
-        if(!groupName|| groupName.length == 0) {
-            $(e.target).closest('.group-item-new').find('input[name="groupName"]').addClass('is-invalid').focus();
+        if(!subscriptionName|| subscriptionName.length == 0) {
+            $(e.target).closest('.js-new-subscription').find('input[name="subscriptionName"]').addClass('is-invalid').focus();
             return false;
         }
-        if(!groupTags|| groupTags.length == 0) {
-            $(e.target).closest('.group-item-new').find('input[name="groupTags"]').addClass('is-invalid').focus();
-            return false;
-        }
-        if(!resourceName) {
-            $(e.target).closest('.group-item-new').find('.resource-dropdown').addClass('is-invalid').focus();
+        if(!clusterGroups|| clusterGroups.length == 0) {
+            $(e.target).closest('.js-new-subscription').find('.select.js-group-select').addClass('is-invalid').focus();
             return false;
         }
         if(!resourceVersion) {
-            $(e.target).closest('.group-item-new').find('.version-dropdown').addClass('is-invalid').focus();
+            $(e.target).closest('.js-new-subscription').find('.version-dropdown').addClass('is-invalid').focus();
             return false;
         }
         
-        const gropus = Template.Subscriptions.__helpers.get('subscriptions').call();
-        const existingGroups = gropus.map( (item) => item.name );
-        if(_.includes(existingGroups, groupName)) {
-            $(e.target).closest('.group-item-new').find('input[name="groupName"]').addClass('is-invalid').focus();
+        const subs = Template.Subscriptions.__helpers.get('subscriptions').call();
+        const existingSubs = subs.map( (item) => item.name );
+        if(_.includes(existingSubs, subscriptionName)) {
+            $(e.target).closest('.js-new-subscription').find('input[name="subscriptionName"]').addClass('is-invalid').focus();
             return false;
         }
 
-        Meteor.call('addSubscription', Session.get('currentOrgId'), groupName, groupTags, resourceId, resourceName, resourceVersion, resourceVersionName, (error)=>{
+        Meteor.call('addSubscription', Session.get('currentOrgId'), subscriptionName, clusterGroups, channelId, resourceVersion, (error)=>{
             if(error) {
                 toastr.error(error.error, 'Error adding a subscription');
             }
             Meteor.call('updateResourceStats', Session.get('currentOrgId'));
         });
-        showNewGroupRow.set(false);
+        showNewRow.set(false);
         editMode.set(false);
-        Template.instance().selectedChannel.set(null);
         return false;
     },
-
     'click .js-select-verision-btn, keypress .js-select-version-btn'(e){
         e.preventDefault();
         // prevent the delete modal from displaying when adding/editing a row and using the enter key
-        if(showNewGroupRow.get() || editMode.get()) {
+        if(showNewRow.get() || editMode.get()) {
             return false;
         }
         clickedItem.set(null);
         return false;
     },
-    'click .js-create-group'(e) {
+    'click .js-create-subscription'(e) {
         if(editMode.get()) {
             return;  //disables the button while rows are being edited
         }
         e.preventDefault();
-        showNewGroupRow.set(true);
-        $(e.target).closest('.group-item-new').find('input[name="groupName"]').focus();
+        showNewRow.set(true);
+        $(e.target).closest('.js-new-subscription').find('input[name="subscriptionName"]').focus();
         editMode.set(true);
     },
-    'click .js-delete-group-confirm'(e) {
+    'click .js-delete-subscription-confirm'(e) {
         const $el = $(e.currentTarget);
         const $modal = $el.closest('.modal');
         const $container = $modal.closest('.group-item');
-        const groupName= $container.data('name') + '';
+        const subscriptionName= $container.data('name') + '';
         const uuid = $container.data('id') + '';
         $modal.modal('hide');
-        if(groupName) {
-            Meteor.call('removeSubscription', Session.get('currentOrgId'), groupName, uuid, (error)=>{
+        if(subscriptionName) {
+            Meteor.call('removeSubscription', Session.get('currentOrgId'), subscriptionName, uuid, (error)=>{
                 if(error) {
                     toastr.error(error.error, 'Error removing the subscription');
                 }
@@ -202,10 +187,10 @@ Template.Subscriptions.events({
         }
         return false;
     },
-    'click .js-group-remove, keypress .js-group-remove'(e){
+    'click .js-subscription-remove, keypress .js-subscription-remove'(e){
         e.preventDefault();
         // prevent the delete modal from displaying when adding/editing a row and using the enter key
-        if(showNewGroupRow.get() || editMode.get()) {
+        if(showNewRow.get() || editMode.get()) {
             return false;
         }
         clickedItem.set(null);
@@ -214,73 +199,67 @@ Template.Subscriptions.events({
         $modal.modal('show');
         return false;
     },
-    'click .js-group-help'(e){
+    'click .js-subscription-help'(e){
         e.preventDefault();
         clickedItem.set(null);
-        var $modal = $('.js-group-help-modal');
+        var $modal = $('.js-subscription-help-modal');
         $modal.modal('show');
         return false;
     },
-    'click .js-cancel-add-group'(e) {
+    'click .js-cancel-add-subscription'(e) {
         e.preventDefault();
-        showNewGroupRow.set(false);
-        Template.instance().selectedChannel.set(null);
+        showNewRow.set(false);
         editMode.set(false);
     },
-    'click .js-cancel-edit-group'(e) {
+    'click .js-cancel-edit-subscription'(e) {
         e.preventDefault();
         editMode.set(false);
-        Template.instance().selectedChannel.set(null);
         clickedItem.set(null);
     },
-    'click .js-update-group'(e) {
+    'click .js-update-subscription'(e) {
         e.preventDefault();
-        const groupId = $(e.target).closest('.group-item-edit').data('id');
-        const updatedName = $(e.target).closest('.group-item-edit').find('input[name="groupName"]').val();
-        const updatedTags = $(e.target).closest('.group-item-edit').find('input[name="groupTags"]').val().split(/[ ,]+/).filter(String);
-        const resourceId = $(e.target).closest('.group-item-edit').find('.resource-dropdown').val();
-        const resourceName = $(e.target).closest('.group-item-edit').find('.resource-dropdown option:selected').text();
-        const resourceVersion = $(e.target).closest('.group-item-edit').find('.version-dropdown').val();
-        const resourceVersionName = $(e.target).closest('.group-item-edit').find('.version-dropdown option:selected').text();
+        const channelId = FlowRouter.current().params.id;
+        const subscriptionId = $(e.target).closest('.js-subscription-edit').data('id');
+        const updatedName = $(e.target).closest('.js-subscription-edit').find('input[name="subscriptionName"]').val();
+        const updatedGroups = $(e.target).closest('.js-subscription-edit').find('select.js-group-select').val();
+        const resourceVersion = $(e.target).closest('.js-subscription-edit').find('.version-dropdown').val();
 
         if(!updatedName || updatedName.length == 0) {
-            $(e.target).closest('.group-item-edit').find('input[name="groupName"]').addClass('is-invalid').focus();
+            $(e.target).closest('.js-subscription-edit').find('input[name="subscriptionName"]').addClass('is-invalid').focus();
             return false;
         }
 
-        const groups = Template.Subscriptions.__helpers.get('subscriptions').call();
-        const existingGroupNames = groups.map( (item) => item.name );
-        if(clickedItem.get() !== updatedName && _.includes(existingGroupNames, updatedName)) {
-            $(e.target).closest('.group-item-edit').find('input[name="groupName"]').addClass('is-invalid').focus();
+        if(!updatedGroups || updatedGroups.length == 0) {
+            $(e.target).closest('.js-subscription-edit').find('.js-group-select').addClass('is-invalid').focus();
             return false;
         }
 
-        if(!resourceName) {
-            $(e.target).closest('.group-item-edit').find('.resource-dropdown').addClass('is-invalid').focus();
+        const subs = Template.Subscriptions.__helpers.get('subscriptions').call();
+        const existingSubs = subs.map( (item) => item.name );
+        if(clickedItem.get() !== updatedName && _.includes(existingSubs, updatedName)) {
+            $(e.target).closest('.js-subscription-edit').find('input[name="subscriptionName"]').addClass('is-invalid').focus();
             return false;
         }
+
         if(!resourceVersion) {
-            $(e.target).closest('.group-item-edit').find('.version-dropdown').addClass('is-invalid').focus();
+            $(e.target).closest('.js-subscription-edit').find('.version-dropdown').addClass('is-invalid').focus();
             return false;
         }
         
-        Meteor.call('updateSubscription', Session.get('currentOrgId'), groupId, updatedName, updatedTags, resourceId, resourceName, resourceVersion, resourceVersionName, (error) => {
+        Meteor.call('updateSubscription', Session.get('currentOrgId'), subscriptionId, updatedName, updatedGroups, channelId, resourceVersion, (error) => {
             if(error) {
                 toastr.error(error.error, 'Error updating the subscription');
             }
         });
 
-        Template.instance().selectedChannel.set(null);
         clickedItem.set(null);
         editMode.set(false);
     },
-    'click .group-edit, keypress .group-edit'(e) {
+    'click .js-set-edit-mode, keypress .js-set-edit-mode'(e) {
         e.preventDefault();
         const clickedRow = $(e.target).closest('.group-item').data('name');
-        const channelName = $(e.target).closest('.group-item').data('channel');
         clickedItem.set(clickedRow);
         editMode.set(true);
-        Template.instance().selectedChannel.set(channelName);
         return false;
     },
 });

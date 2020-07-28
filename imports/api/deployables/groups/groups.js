@@ -14,45 +14,17 @@
 * limitations under the License.
 */
 
-.clusterVersionInfo {
-    margin-top: -10px;
-    overflow-y: scroll;
-}
+import { Mongo } from 'meteor/mongo';
+// import { Meteor } from 'meteor/meteor';
 
-.removeWebhookBtn{
-    color:red;
-    font-size:160%;
-    cursor:pointer;
-    line-height:100%;
+export const Groups = new Mongo.Collection('groups');
 
-    &:hover{
-        color:#c00;
-    }
-}
+Groups.deny({
+    insert() { return true; },
+    update() { return true; },
+    remove() { return true; },
+});
 
-.showWebhookLogDetailsBtn{
-    background: #eee;
-}
-.webhookLogErrorIcon{
-    color:#d00;
-}
-.webhookLogSuccessIcon{
-    color:#0a0;
-}
-
-.clusterInfo {
-    align-items:center;
-    justify-content: flex-start;
-
-    .fieldValue{
-        width:100%;
-    }
-}
-
-.bd-clipboard {
-    position: relative;
-    float: right;
-    .highlight {
-      margin-top: 0;
-    }
-  }
+// if ( Meteor.isServer ) {
+//     Groups._ensureIndex( { 'org_id': 1, 'name': 1 } );
+// }

@@ -1,0 +1,168 @@
+<template name="cluster_groups">
+    <div class="card border-light m-2">
+        <div class="card-body">
+            {{> cluster_group_list }}
+        </div>
+    </div>
+</template>
+
+<template name="cluster_group_list">
+    <form class="needs-validation" novalidate>
+        <div class="pl-0 container-fluid">
+
+            {{#unless loaded}}
+                {{> loading}}
+            {{/unless}}
+
+            {{#if groups}}
+            <div class="d-none d-lg-block row-header">
+                <div class="row">
+                    <div class="col-lg-3">Name</div>
+                    <div class="col-lg-8">Clusters</div>
+                    <div class="col-lg-1"></div>
+                </div>
+            </div>
+            {{/if}}
+
+            {{#if showNoGroupsMessage}}
+                {{> no_groups }}
+            {{/if}}
+
+            {{#each group in groups}}
+                <div class="row group-item" data-name={{group.name}} data-id="{{group.uuid}}">
+                    <div class="col-lg-3">
+                        <div class="d-block d-lg-none row-header-sm">Name</div>
+                        <div class="btn pl-0 btn-link js-group-details" data-id="{{group.uuid}}">{{group.name}}</div>
+                    </div>
+                    <div class="col-lg-6">                                   
+                    {{#if editMode group.uuid}}
+                        {{#if updating}}
+                            {{>loading}}
+                        {{else}}
+                            {{> clusters_select currentClusters=(getCurrentClusters group) group=group }}
+                        {{/if}}
+                    {{else}}
+                        {{> clusters_in_group limit=3 group=group }}
+                    {{/if}}
+                    </div>
+                    {{#if editMode group.uuid}}
+                        <div class="col-lg-3 action-col">
+                            <div class="d-block d-lg-none row-header-sm">Action</div>
+                            {{> cluster_group_buttons group=group operation="update"}}
+                        </div>
+                    {{else}}
+                    <div class="col-lg-1 action-col">
+                        <div class="d-block d-lg-none row-header-sm">Action</div>
+                        {{> cluster_group_actions group=group }}
+                    </div>
+                    {{/if}}
+                </div>
+            {{/each}}
+            {{#if showNewGroupRow }}
+              {{#if updating}}
+                    {{>loading}}
+              {{else}}
+                <div class="row group-item-new js-new-group-row">
+                    <div class="col-lg-3">                                   
+                        <div class="d-block d-lg-none row-header-sm">Name</div>
+                        <input type="text" name="groupName" class="form-control" placeholder="ex: dev-clusters, prod-clusters, etc" required autofocus/>
+                        <div class="invalid-feedback"> Please enter a unique name </div>
+                    </div>
+                    <div class="col-lg-6">                                   
+                        {{> clusters_select }}
+                    </div>
+                    <div class="col-lg-3 action-col">
+                        <div class="d-block d-lg-none row-header-sm">Action</div>
+                        {{> cluster_group_buttons group=group operation="add"}}
+                    </div>
+                </div>
+                {{/if}}
+            {{/if}}
+        </div>
+    </form>
+    {{#unless showNewGroupRow}}
+        <div>
+            <button class="mt-2 btn btn-link js-create-label pl-0 {{buttonStatus}}" type="submit">Add {{> icon_plus }}</button>
+        </div>
+    {{/unless}}
+</template>
+
+<template name="cluster_group_buttons">
+    <button class="btn btn-primary rounded-0 js-save-btn" data-operation="{{operation}}" data-id="{{group.uuid}}">Save</button>
+    <button class="btn btn-warning rounded-0 js-cancel-btn" data-operation="{{operation}}">Cancel</button> 
+</template>
+
+<template name="clusters_in_group">
+    <div class="cluster-list"> 
+        {{#each cluster in clustersInGroup}}
+            <span class="btn pl-0">{{cluster}}</span>
+        {{/each}}
+        {{#unless clustersInGroup}}
+            <span class="btn btn-link pl-0">Add clusters</span>
+        {{/unless}}
+    </div>
+</template>
+
+<template name="no_groups">
+    <div class="row"> 
+        <div class="col">
+      <h3>No cluster groups have been defined</h3>
+    </div>
+  </div>  
+  <div class="row mt-2"> 
+    <div class="col">
+      Cluster groups provide a target for a subscripton to apply its Kubernetes resources.
+      When you define a subscription inside a channel you can tell the subscription to point to one or more cluster groups.
+    </div>
+  </div>  
+  <div class="row mt-2"> 
+    <div class="col">
+      Create your first cluster group by clicking the Add link.
+    </div>
+  </div>  
+</template>
+
+<template name="clusters_select">
+    <select class="selectpicker js-cluster-select" data-id="{{group.uuid}}" multiple data-live-search="true" title="Add clusters" data-style="bg-light">
+        {{#each cluster in clusters}}
+           <option {{selectStatus cluster}} data-id="{{cluster.cluster_id}}" data-name="{{getClusterName cluster}}">{{getClusterName cluster}}</option>
+        {{/each}}
+    </select>
+    <div class="invalid-feedback"> Please choose a cluster group</div>
+</template>
+
+<template name="cluster_group_actions">
+    <div class="btn-group drop-left ">
+        <button type="button" class="btn js-actions-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{> icon_vertical_dots }}
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item js-group-details" data-id="{{group.uuid}}" type="button">Details</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item js-label-remove" data-name="{{group.name}}" data-id="{{group.uuid}}" type="button">Delete</button>
+        </div>
+        {{> group_delete_modal group=group}}
+    </div>
+</template>
+
+<template name="group_delete_modal">
+    <div class="modal js-delete-label-modal action-col" data-id="{{group.uuid}}" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Remove "{{group.name}}"</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to remove the <strong>"{{group.name}}"</strong> cluster group?</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-link js-cancel-delete-label">Cancel</button>
+                    <button type="button" class="btn btn-primary js-delete-label-confirm">Delete</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+</template>

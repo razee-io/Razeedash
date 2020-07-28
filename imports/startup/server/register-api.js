@@ -44,3 +44,6 @@ import '../../api/deployables/channels/methods.js';
 
 import '../../api/deployables/subscriptions/server/publications.js';
 import '../../api/deployables/subscriptions/methods.js';
+
+import '../../api/deployables/groups/server/publications.js';
+import '../../api/deployables/groups/methods.js';

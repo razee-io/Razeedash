@@ -86,10 +86,77 @@ orgedRoutes.route('/org', {
 
 orgedRoutes.route('/deployables', {
     name: 'deployables',
-    title: 'Deployables',
+    title: 'Channels',
     parent: 'welcome',
-    action: function() {
-        BlazeLayout.render('Base_layout', { main: 'page_deployables', });
+    triggersEnter: [function() {
+        const params = { 
+            tabId: 'channels',
+            baseOrgName: Session.get('currentOrgName'),
+        };
+        FlowRouter.go('deployables', params );
+    }],
+});
+
+orgedRoutes.route('/deployables/:tabId/:id', {
+    name: 'channel.details',
+    title: 'Details',
+    parent: 'deployables',
+    action: function(params) {
+        if ( !params.id) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        if ( !params.tabId ) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        if(params.tabId === 'groups') {
+            BlazeLayout.render('Base_layout', { main: 'group_single', tabId: params.tabId, groupId: params.id });
+        } else {
+            BlazeLayout.render('Base_layout', { main: 'channel_single', tabId: params.tabId, channelId: params.id });
+        }
+    }
+});
+
+
+orgedRoutes.route('/deployables/:tabId/:id/versions', {
+    name: 'channel.versions',
+    title: 'Versions',
+    parent: 'channel.details',
+    action: function(params) {
+        if ( !params.id) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        if ( !params.tabId ) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        BlazeLayout.render('Base_layout', { main: 'channel_versions_all', tabId: params.tabId, channelId: params.id });
+    }
+});
+
+
+orgedRoutes.route('/deployables/:tabId/:id/versions/:versionId', {
+    name: 'channel.version.details',
+    title: 'Details',
+    parent: 'channel.details',
+    action: function(params) {
+        if ( !params.id) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        if ( !params.tabId ) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        BlazeLayout.render('Base_layout', { main: 'channel_version', tabId: params.tabId, channelId: params.id, versionId: params.versionId });
+    }
+});
+
+orgedRoutes.route('/deployables/:tabId', {
+    name: 'deployables',
+    title: ':tabId',
+    parent: 'welcome',
+    action: function(params) {
+        if ( !params.tabId ) {
+            FlowRouter.setParams( { tabId: 'channels' });
+        }
+        BlazeLayout.render('Base_layout', { main: 'page_deployables', tabId: params.tabId });
     }
 });
 

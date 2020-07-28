@@ -44,7 +44,7 @@ Meteor.publish('clusters.zombie', function(orgId) {
 Meteor.publish('clusters.org', function(orgId) {
     check( orgId, String );
     requireOrgAccess(orgId);
-    return Clusters.find({ org_id: orgId });
+    return Clusters.find({ org_id: orgId }, {pollingIntervalMs: 1000});
 });
 
 Meteor.publish('clusters.id', function(orgId, clusterId) {

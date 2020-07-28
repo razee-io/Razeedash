@@ -37,11 +37,11 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'updateChannel', `Update channel ${orgId}:${appId}:${channelName}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return await client.mutate({
             mutation: gql`
-              mutation EditChannel($org_id: String!, $uuid: String!, $name: String!) {
-                editChannel(org_id: $org_id, uuid: $uuid, name: $name) { 
+              mutation EditChannel($orgId: String!, $uuid: String!, $name: String!) {
+                editChannel(orgId: $orgId, uuid: $uuid, name: $name) { 
                     uuid
                     name
                     success
@@ -49,7 +49,7 @@ Meteor.methods({
               }
             `,
             variables: {
-                'org_id': orgId,
+                'orgId': orgId,
                 'uuid': appId,
                 'name': channelName
             }
@@ -64,48 +64,107 @@ Meteor.methods({
 
         logUserAction(Meteor.userId(), 'addChannel', `Add channel ${orgId}:${channelName}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-              mutation AddChannel($org_id: String!, $name: String!) {
-                addChannel(org_id: $org_id, name: $name) { 
+              mutation AddChannel($orgId: String!, $name: String!) {
+                addChannel(orgId: $orgId, name: $name) { 
                     uuid
                   }
               }
             `,
             variables: {
-                'org_id': orgId,
+                'orgId': orgId,
                 'name': channelName
             }
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
     },
-    async removeChannel(orgId, channelName, resourceId ){
+    async removeChannel(orgId, resourceId ){
         requireOrgAccess(orgId);
         check( orgId, String );
-        check( channelName, String );
         check( resourceId, String );
         
-        logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${channelName}:${resourceId}`);
+        logUserAction(Meteor.userId(), 'removeChannel', `Remove channel ${orgId}:${resourceId}`);
 
-        let client = await getQueryClient();
+        const client = await getQueryClient();
         return client.mutate({
             mutation: gql`
-            mutation RemoveChannel($org_id: String!, $uuid: String!) {
-              removeChannel(org_id: $org_id, uuid: $uuid) { 
+            mutation RemoveChannel($orgId: String!, $uuid: String!) {
+              removeChannel(orgId: $orgId, uuid: $uuid) { 
                   uuid
                   success
                 }
             }
           `,
             variables: {
-                'org_id': orgId,
+                'orgId': orgId,
                 'uuid': resourceId
             }
         }).catch( (err) => {
             throw new Meteor.Error(err.message);
         });
     },
+    async addChannelVersion(orgId, channelUuid, name, type, content, description){
+        requireOrgAccess(orgId);
+        check( orgId, String );
+        check( channelUuid, String );
+        check( name, String );
+        check( type, String );
+        check( content, String );
+        check( description, String );
+      
+        logUserAction(Meteor.userId(), 'addChannelVersion', `Add channel version ${orgId}:${channelUuid}:${name}`);
 
+        const client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+            mutation addChannelVersion($orgId: String!, $channelUuid: String!, $name: String!, $type: String!, $content: String, $description: String) {
+              addChannelVersion(orgId: $orgId, channelUuid: $channelUuid, name: $name, type: $type, content: $content, description: $description) { 
+                  versionUuid
+                  success
+              }
+            }
+        `,
+            variables: {
+                'orgId': orgId,
+                'channelUuid': channelUuid,
+                'name': name,
+                'type': type,
+                'content': content,
+                'description': description
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
+
+    },
+    async getChannelVersion(orgId, channelUuid, versionUuid){
+        requireOrgAccess(orgId);
+        check( orgId, String );
+        check( channelUuid, String );
+        check( versionUuid, String );
+    
+        logUserAction(Meteor.userId(), 'getChannelVersion', `Get channel version ${orgId}:${channelUuid}:${versionUuid}`);
+
+        const client = await getQueryClient();
+        return client.query({
+            query: gql`
+              query getChannelVersion($orgId: String!, $channelUuid: String!, $versionUuid: String!) {
+                getChannelVersion(orgId: $orgId, channelUuid: $channelUuid, versionUuid: $versionUuid) { 
+                    type
+                    content
+                }
+              }
+            `,
+            variables: {
+                'orgId': orgId,
+                'channelUuid': channelUuid,
+                'versionUuid': versionUuid
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
+    },
 });

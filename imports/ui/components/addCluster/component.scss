@@ -14,45 +14,10 @@
 * limitations under the License.
 */
 
-.clusterVersionInfo {
-    margin-top: -10px;
-    overflow-y: scroll;
-}
-
-.removeWebhookBtn{
-    color:red;
-    font-size:160%;
-    cursor:pointer;
-    line-height:100%;
-
-    &:hover{
-        color:#c00;
+#add-cluster-modal {
+    .copy-button {
+        position: absolute;
+        bottom: 0;
+        right: 10px;
     }
 }
-
-.showWebhookLogDetailsBtn{
-    background: #eee;
-}
-.webhookLogErrorIcon{
-    color:#d00;
-}
-.webhookLogSuccessIcon{
-    color:#0a0;
-}
-
-.clusterInfo {
-    align-items:center;
-    justify-content: flex-start;
-
-    .fieldValue{
-        width:100%;
-    }
-}
-
-.bd-clipboard {
-    position: relative;
-    float: right;
-    .highlight {
-      margin-top: 0;
-    }
-  }

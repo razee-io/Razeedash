@@ -14,45 +14,13 @@
 * limitations under the License.
 */
 
-.clusterVersionInfo {
-    margin-top: -10px;
-    overflow-y: scroll;
-}
+import { check } from 'meteor/check';
+import { Meteor } from 'meteor/meteor';
+import { Groups } from '../groups';
+import { requireOrgAccess } from '/imports/api/org/utils.js';
 
-.removeWebhookBtn{
-    color:red;
-    font-size:160%;
-    cursor:pointer;
-    line-height:100%;
-
-    &:hover{
-        color:#c00;
-    }
-}
-
-.showWebhookLogDetailsBtn{
-    background: #eee;
-}
-.webhookLogErrorIcon{
-    color:#d00;
-}
-.webhookLogSuccessIcon{
-    color:#0a0;
-}
-
-.clusterInfo {
-    align-items:center;
-    justify-content: flex-start;
-
-    .fieldValue{
-        width:100%;
-    }
-}
-
-.bd-clipboard {
-    position: relative;
-    float: right;
-    .highlight {
-      margin-top: 0;
-    }
-  }
+Meteor.publish('groups', function(org_id) {
+    check( org_id, String );
+    requireOrgAccess(org_id);
+    return Groups.find({ org_id: org_id }, {pollingIntervalMs: 1000});
+});

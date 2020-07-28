@@ -15,12 +15,22 @@
 */
 
 import _ from 'lodash';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { Clusters } from './clusters.js';
 import moment from 'moment';
 import { requireOrgAccess } from '/imports/api/org/utils.js';
+import { logUserAction } from '../../userLog/utils.js';
+
+const { getQueryClient } = require('/imports/api/lib/graphql.js');
+const gql = require('graphql-tag');
+
+// https://docs.meteor.com/api/check.html
+const NonEmptyString = Match.Where((x) => {
+    check(x, String);
+    return x.length > 0;
+});
 
 Meteor.methods({
     addWebhookToCluster(cluster_id, url){
@@ -91,5 +101,29 @@ Meteor.methods({
         requireOrgAccess(orgId);
 
         Clusters.remove({ cluster_id: clusterId });
-    }
+    },
+    async registerCluster(orgId, clusterName ){
+        requireOrgAccess(orgId);
+        check( orgId, String );
+        check( clusterName, NonEmptyString);
+
+        logUserAction(Meteor.userId(), 'registerCluster', `Register cluster ${orgId}:${clusterName}`);
+
+        const client = await getQueryClient();
+        return client.mutate({
+            mutation: gql`
+              mutation RegisterCluster($orgId: String!, $registration: JSON!) {
+                registerCluster(orgId: $orgId, registration: $registration) { 
+                    url
+                  }
+              }
+            `,
+            variables: {
+                'orgId': orgId,
+                'registration': { 'name': clusterName }
+            }
+        }).catch( (err) => {
+            throw new Meteor.Error(err.message);
+        });
+    },
 });

@@ -1,0 +1,23 @@
+<template name="group_select">
+    {{#if groups}}
+    <select id="mysel" class="selectpicker js-group-select" multiple title="Select cluster groups" data-style="bg-light">
+        {{#each group in groups}}
+          {{> group_option group=group subscription=subscription}}
+        {{/each}}
+    </select>
+    <div class="invalid-feedback"> Please choose a cluster group</div>
+    {{else}}
+    <div class="dropdown">
+        <button class="btn dropdown-toggle js-groups-link" 
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">Add a cluster group
+        </button>
+      </div>
+    {{/if}}
+</template>
+
+<template name="group_option">
+    <option {{selectStatus}}>{{group.name}}</option>
+</template>

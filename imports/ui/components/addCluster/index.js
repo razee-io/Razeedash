@@ -28,8 +28,15 @@ const kubeCommand = new ReactiveVar();
 const errorState = new ReactiveVar();
 
 Template.addCluster.onRendered( () => {
-    new Clipboard('.copy-button', {
+    const clipboard = new Clipboard('.copy-button', {
         container: document.getElementById('add-cluster-modal')
+    });
+    clipboard.on('success', function(e) {
+        $(e.trigger).tooltip('show');
+        e.clearSelection();
+        setTimeout(function() {
+            $(e.trigger).tooltip('dispose');
+        }, 800);
     });
 });
 
@@ -56,7 +63,7 @@ Template.addCluster.events({
                 return false;
             } else {
                 Meteor.setTimeout(function(){
-                    kubeCommand.set(response.data.registerCluster.url);
+                    kubeCommand.set(`kubectl apply -f ${response.data.registerCluster.url}`);
                 }, 100);
                 return false;
             }

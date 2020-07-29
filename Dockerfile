@@ -18,8 +18,6 @@ RUN apk update \
 	&& mkdir -p /app \
   && npm config set unsafe-perm true \
 	&& npm install -g npm \
-	&& npm install -g node-gyp@latest \
-	&& node-gyp install \
     && $METEORD_DIR/build_app.sh \
     && $METEORD_DIR/rebuild_npm_modules.sh \
 	&& apk del --purge ${BUILD_PACKAGES} \

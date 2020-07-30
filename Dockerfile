@@ -28,7 +28,7 @@ RUN mkdir -p /home/node/app
 RUN ls -la /home/node/.build/bundle
 RUN cp -r /home/node/.build/bundle/* /home/node/app/
 # RUN node-gyp install
-# RUN /home/node/private/scripts/build_app.sh
+RUN /home/node/private/scripts/build_app.sh
 
 RUN ls -la
 

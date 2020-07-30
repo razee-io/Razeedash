@@ -67,4 +67,4 @@ COPY --chown=node --from=buildImg /home/node/ /home/node/
 RUN find .
 
 EXPOSE 3000
-CMD ["node", "main.js"]
+CMD ["node", "/home/node/app/main.js"]

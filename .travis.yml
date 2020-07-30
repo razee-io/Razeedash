@@ -9,7 +9,7 @@ before_install:
   # project unique tools
   - curl https://install.meteor.com | /bin/sh
   - export PATH="$HOME/.meteor:$PATH"
-  - if [[ `npm -v` != 6* ]]; then npm i -g npm@latest; fi
+  # - if [[ `npm -v` != 6* ]]; then npm i -g npm@latest; fi
 
 install:
   - meteor npm i
@@ -19,9 +19,9 @@ script:
   - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --low; else npx audit-ci --low || true; fi || travis_terminate 1
   - npm run lint || travis_terminate 1
   - npm test || travis_terminate 1
-  - meteor build --directory .build --architecture=os.linux.x86_64 --server-only
+  # - meteor build --directory .build --architecture=os.linux.x86_64 --server-only
   - export HASH=`git log --pretty=format:'%h' -n 1`
-  - docker build --build-arg BUILD_ID=${TRAVIS_BUILD_NUMBER} --build-arg LAST_COMMIT_ID=${HASH} --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
+  - docker build --pull --rm -t "quay.io/razee/razeedash:${TRAVIS_COMMIT}" .
   - if [ -n "${TRAVIS_TAG}" ]; then docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
   #- if [ "${TRAVIS_BRANCH}" = "master" ]; then export TRAVIS_TAG="master"; docker tag quay.io/razee/razeedash:${TRAVIS_COMMIT} quay.io/razee/razeedash:${TRAVIS_TAG}; fi
   - docker images

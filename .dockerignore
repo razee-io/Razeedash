@@ -1,4 +1,12 @@
-*
-!.build
-!private/scripts
-build-tools/
+##############
+# Build generated files
+
+
+##############
+# Repo files
+build/
+kubernetes/
+.*
+*.md
+
+!.meteor/

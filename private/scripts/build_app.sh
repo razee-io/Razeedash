@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ###
 # Copyright 2019 IBM Corp. All Rights Reserved.
@@ -31,11 +31,9 @@ elif [[ $BUNDLE_URL ]]; then
   cd /tmp/bundle/programs/server/
   npm install
   cd /tmp/bundle/
-elif [ -d /app ]; then
-  cd /app
-  cd /app/programs/server/
+elif [ -d ./app ]; then
+  cd ./app/programs/server/
   npm install
-  cd /app
 else
   echo "=> You don't have an meteor app to run in this image."
   exit 1

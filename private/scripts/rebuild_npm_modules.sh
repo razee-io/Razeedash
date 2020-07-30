@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ###
 # Copyright 2019 IBM Corp. All Rights Reserved.

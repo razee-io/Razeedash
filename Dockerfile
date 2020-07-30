@@ -45,7 +45,7 @@ RUN mkdir -p /home/node/node_modules
 
 # COPY --chown=node --from=uBuildImg /home/node/private/scripts/rebuild_npm_modules.sh /tmp/rebuild_npm_modules.sh
 COPY --chown=node --from=uBuildImg /home/node/.build/bundle /home/node/app
-COPY --chown=node --from=uBuildImg /home/node/node_modules/ /home/node_modules/
+COPY --chown=node --from=uBuildImg /home/node/node_modules/ /home/node/node_modules/
 
 RUN ls -la
 
@@ -59,6 +59,7 @@ RUN ls -l
 # Build the production image
 FROM node:12-alpine
 LABEL maintainer="Michael McKay <mckaymic@us.ibm.com>"
+ENV NODE_ENV=production
 
 WORKDIR /home/node
 USER node

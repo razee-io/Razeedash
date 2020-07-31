@@ -33,7 +33,7 @@ elif [[ $BUNDLE_URL ]]; then
   cd /tmp/bundle/
 elif [ -d ./app ]; then
   cd ./app/programs/server/
-  npm install
+  meteor npm install
 else
   echo "=> You don't have an meteor app to run in this image."
   exit 1

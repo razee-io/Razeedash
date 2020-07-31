@@ -15,7 +15,6 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const ExternalApplications = new Mongo.Collection('externalApplications');
 
@@ -24,7 +23,3 @@ ExternalApplications.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-if ( Meteor.isServer ) {
-    ExternalApplications._ensureIndex( { 'org_id': 'text' } );
-}

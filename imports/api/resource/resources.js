@@ -15,7 +15,6 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const Resources = new Mongo.Collection('resources');
 
@@ -24,19 +23,3 @@ Resources.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-try {
-    if ( Meteor.isServer ) {
-        Resources._ensureIndex( { 
-            'cluster_id': 'text', 
-            'cluster_name': 'text',
-            'searchableData.name': 'text', 
-            'searchableData.namespace': 'text', 
-            'searchableData.kind': 'text',
-            'selfLink': 'text'
-        },
-        {name: 'cluster_id_text_searchableData.name_text_searchableData.namespace_text' } );
-    }
-} catch (error) {
-    console.log(error);
-}

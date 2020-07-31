@@ -15,7 +15,6 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const Clusters = new Mongo.Collection('clusters');
 
@@ -24,7 +23,3 @@ Clusters.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-if ( Meteor.isServer ) {
-    Clusters._ensureIndex({created:1});
-}

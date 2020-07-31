@@ -15,7 +15,6 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const Channels = new Mongo.Collection('channels');
 
@@ -24,7 +23,3 @@ Channels.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-if ( Meteor.isServer ) {
-    Channels._ensureIndex( { 'org_id': 1 } );
-}

@@ -24,7 +24,3 @@ Groups.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-// if ( Meteor.isServer ) {
-//     Groups._ensureIndex( { 'org_id': 1, 'name': 1 } );
-// }

@@ -16,7 +16,6 @@ RUN apk update \
 	&& apk add ${BUILD_PACKAGES} \
 	&& mkdir -p /root \
 	&& mkdir -p /app \
-    && npm config set unsafe-perm true \
     && $METEORD_DIR/build_app.sh \
 	&& apk del --purge ${BUILD_PACKAGES} \
     && $METEORD_DIR/clean-final.sh

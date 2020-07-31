@@ -15,7 +15,6 @@
  */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const ResourceYamlHist = new Mongo.Collection('resourceYamlHist');
 
@@ -24,7 +23,3 @@ ResourceYamlHist.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-if ( Meteor.isServer ) {
-    ResourceYamlHist._ensureIndex( { org_id: 1, cluster_id: 1, resourceSelfLink: 1, updated: 1 } );
-}

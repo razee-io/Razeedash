@@ -15,7 +15,6 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const DeployableVersions = new Mongo.Collection('deployableVersions');
 
@@ -24,7 +23,3 @@ DeployableVersions.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-if ( Meteor.isServer ) {
-    DeployableVersions._ensureIndex( { 'org_id': 1} );
-}

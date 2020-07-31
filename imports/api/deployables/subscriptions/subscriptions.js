@@ -15,7 +15,6 @@
 */
 
 import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
 
 export const Subscriptions = new Mongo.Collection('subscriptions');
 
@@ -24,7 +23,3 @@ Subscriptions.deny({
     update() { return true; },
     remove() { return true; },
 });
-
-if ( Meteor.isServer ) {
-    Subscriptions._ensureIndex( { 'org_id': 1 } );
-}

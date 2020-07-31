@@ -18,8 +18,7 @@
 
 set -e
 
-npm uninstall -g node-gyp
-npm cache clear --force
+npm cache clear
 
 rm -rf $METEORD_DIR/bin /usr/share/doc /usr/share/man /tmp/* /var/cache/apk/* \
 		/usr/share/man /tmp/* /var/cache/apk/* /root/.npm /root/.node-gyp #/usr/lib/node_modules/npm

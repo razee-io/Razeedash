@@ -3,14 +3,14 @@ FROM ubuntu as uBuildImg
 # Install prerequisites
 ENV DEBIAN_FRONTEND="noninteractive"
 RUN apt-get -qq update
-RUN apt-get -qq install curl vim
+RUN apt-get -qq install curl
 
 # Install nodejs v12
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get -qq install nodejs
 RUN node --version
 
-RUN npm install -g node-gyp
+# RUN npm install -g node-gyp
 
 # Install meteor
 RUN curl --silent https://install.meteor.com | /bin/sh

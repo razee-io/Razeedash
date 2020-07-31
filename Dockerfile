@@ -22,6 +22,7 @@ ENV METEOR_ALLOW_SUPERUSER=true
 RUN meteor --version
 
 COPY . .
+RUN npm config set unsafe-perm true
 RUN meteor npm install
 RUN meteor build --directory /home/node/.build/ --architecture=os.linux.x86_64 --server-only
 RUN mkdir -p /home/node/app

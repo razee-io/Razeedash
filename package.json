@@ -11,7 +11,11 @@
             }
         }
     },
+    "resolutions": {
+        "elliptic": "^6.5.3"
+    },
     "scripts": {
+        "preinstall": "npx npm-force-resolutions",
         "start": "meteor run",
         "debug": "meteor run --inspect",
         "lint": "run-s eslint yamllint jsonlint dockerlint markdownlint",

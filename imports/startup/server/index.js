@@ -67,13 +67,16 @@ const migrateUserOrgs = () => {
         let userOrgs;
         if(userDoc.github && userDoc.github.orgs) {
             userOrgs = userDoc.github.orgs;
-        } else {
+        } else if(userDoc.bitbucket && userDoc.bitbucket.teams) {
             userOrgs = userDoc.bitbucket.teams;
         }
-        try{
-            Meteor.users.update({'_id': userDoc._id}, { $set: { 'orgs': userOrgs} });
-        } catch (error){
-            log.error(error);
+
+        if(userOrgs) {
+            try{
+                Meteor.users.update({'_id': userDoc._id}, { $set: { 'orgs': userOrgs} });
+            } catch (error){
+                log.error(error);
+            }
         }
     });
 };

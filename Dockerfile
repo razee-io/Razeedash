@@ -49,4 +49,4 @@ RUN mkdir -p /home/node/app
 COPY --chown=node --from=buildImg /home/node /home/node
 
 EXPOSE "${PORT}"
-CMD ["node", "app/main.js"]
+CMD ["node", "/home/node/app/main.js"]

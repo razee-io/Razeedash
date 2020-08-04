@@ -37,85 +37,85 @@ items:
             fsGroup: 999
             runAsUser: 999
           containers:
-          - env:
-            - name: MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  name: razeedash-secret
-                  key: mongo_url
-            - name: MONGO_OPTIONS
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: mongo_options
-                  optional: true
-            - name: OAUTH_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: razeedash-secret
-                  key: oauth_secret_key
-                  optional: true
-            - name: BITBUCKET_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: bitbucket_url
-                  optional: true
-            - name: BITBUCKET_API
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: bitbucket_api
-                  optional: true
-            - name: MAIL_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: mail_url
-                  optional: true
-            - name: ROOT_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: root_url
-            - name: RAZEEDASH_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: razeedash_api_url
-            - name: LOGIN_TYPE
-              valueFrom:
-                configMapKeyRef:
-                  name: razeedash-config
-                  key: login_type
-                  optional: true
-            - name: app_name
-              value: Razeedash
-            image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"
-            workingDir: /app
-            imagePullPolicy: Always
-            name: razeedash
-            ports:
-            - containerPort: 3000
-              protocol: TCP
-            livenessProbe:
-              httpGet:
-                path: /login
-                port: 3000
-              initialDelaySeconds: 3
-              periodSeconds: 20
-              timeoutSeconds: 5
-              failureThreshold: 2
-            readinessProbe:
-              httpGet:
-                path: /login
-                port: 3000
-              initialDelaySeconds: 3
-              periodSeconds: 20
-            resources:
-              requests:
-                cpu: 100m
-                memory: 80Mi
-              limits:
-                cpu: 500m
-                memory: 256Mi
+            - env:
+                - name: MONGO_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: razeedash-secret
+                      key: mongo_url
+                - name: MONGO_OPTIONS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: mongo_options
+                      optional: true
+                - name: OAUTH_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: razeedash-secret
+                      key: oauth_secret_key
+                      optional: true
+                - name: BITBUCKET_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: bitbucket_url
+                      optional: true
+                - name: BITBUCKET_API
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: bitbucket_api
+                      optional: true
+                - name: MAIL_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: mail_url
+                      optional: true
+                - name: ROOT_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: root_url
+                - name: RAZEEDASH_API_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: razeedash_api_url
+                - name: LOGIN_TYPE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: razeedash-config
+                      key: login_type
+                      optional: true
+                - name: app_name
+                  value: Razeedash
+              image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"
+              workingDir: /app
+              imagePullPolicy: Always
+              name: razeedash
+              ports:
+                - containerPort: 3000
+                  protocol: TCP
+              livenessProbe:
+                httpGet:
+                  path: /login
+                  port: 3000
+                initialDelaySeconds: 3
+                periodSeconds: 20
+                timeoutSeconds: 5
+                failureThreshold: 2
+              readinessProbe:
+                httpGet:
+                  path: /login
+                  port: 3000
+                initialDelaySeconds: 3
+                periodSeconds: 20
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 80Mi
+                limits:
+                  cpu: 500m
+                  memory: 256Mi

@@ -37,7 +37,7 @@
     "license": "Apache-2.0",
     "description": "Dashboard for razee resources",
     "dependencies": {
-        "@babel/runtime": "^7.10.5",
+        "@babel/runtime": "^7.11.1",
         "ace-builds": "^1.4.11",
         "apollo-boost": "^0.4.7",
         "apollo-cache-inmemory": "^1.6.5",

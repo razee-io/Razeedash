@@ -36,6 +36,10 @@ items:
           securityContext:
             fsGroup: 999
             runAsUser: 999
+          volumes:
+            - name: razeedash-secret-vol
+              secret:
+                secretName: razeedash-secret
           containers:
             - env:
                 - name: MONGO_URL
@@ -94,6 +98,9 @@ items:
               image: "quay.io/razee/razeedash:{{TRAVIS_TAG}}"
               workingDir: /app
               imagePullPolicy: Always
+              volumeMounts:
+              - mountPath: /var/run/secrets/razeeio/razeedash-secret          
+                name: razeedash-secret-vol
               name: razeedash
               ports:
                 - containerPort: 3000

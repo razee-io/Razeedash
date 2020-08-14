@@ -151,8 +151,8 @@ Meteor.methods({
         const client = await getQueryClient();
         return client.query({
             query: gql`
-              query getChannelVersion($orgId: String!, $channelUuid: String!, $versionUuid: String!) {
-                getChannelVersion(orgId: $orgId, channelUuid: $channelUuid, versionUuid: $versionUuid) { 
+              query channelVersion($orgId: String!, $channelUuid: String!, $versionUuid: String!) {
+                channelVersion(orgId: $orgId, channelUuid: $channelUuid, versionUuid: $versionUuid) { 
                     type
                     content
                 }

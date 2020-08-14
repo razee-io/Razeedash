@@ -33,7 +33,7 @@ Template.channel_version.onCreated(function() {
             self.versionContent.set(err.error);
         }
         else {
-            self.versionContent.set(response.data.getChannelVersion.content);
+            self.versionContent.set(response.data.channelVersion.content);
         } 
     });
 });

@@ -1,5 +1,11 @@
 # local development with minikube
 
+1. Open a terminal and start redis. For example,
+
+    ```bash
+    docker run -d -p 6379:6379 redis
+    ```
+
 1. clone and run [razeedash](https://github.com/razee-io/Razeedash.git)
 
     ```bash
@@ -9,7 +15,7 @@
     meteor
     ```
 
-1. clone and run [razeedash-api](https://github.com/razee-io/Razeedash-api.git)
+1. In a separate terminal window or tab, clone and run [razeedash-api](https://github.com/razee-io/Razeedash-api.git)
 
     ```bash
     git clone https://github.com/razee-io/Razeedash-api.git
@@ -42,23 +48,6 @@
     🏄  Done! kubectl is now configured to use "minikube"
     ```
 
-1. Configure minikube
-
-    - Make sure your KUBECONFIG is pointing to your minikube cluster
-    - `kubectl create namespace razee`
-    - kubectl apply this yaml:
-
-    ```yaml
-    kind: Service
-    apiVersion: v1
-    metadata:
-        name: minikube-host
-        namespace: razee
-    spec:
-        type: ExternalName
-        externalName: minikube-host
-    ```
-
 1. Access the [welcome screen](http://localhost:3000) of your RazeeDash instance.
 
 1. Register RazeeDash as an `OAuth` application in GitHub.
@@ -77,47 +66,71 @@
     3. In the **Organization access** section, find your organization and click **Grant**.
     4. Click **Authorize github_user_name**. The RazeeDash console opens and shows the name of the organization that you granted access to.
 
-1. Install Watch Keeper in your cluster.
+1. Install the RazeeDeploy components in your cluster.
 
     1. From the RazeeDash console, click the **Register** button that you can find next to your GitHub organization.
     2. Click the **Manage** button.
-    3. In a new terminal session connect to your cluster and copy the **Install Razee Agent** `kubectl` command.
-    4. run the command in your cluster to create the Watch Keeper component. change the port from 3000 to 3333 and then use the orgApiKey that was generated for you
+    3. Click the **Register cluster** button, give your cluster a name and click the **Register** button
+    4. Copy the kubectl apply command to your clipboard
+    5. In a new terminal session make sure your kube context is set to your minikube cluster. Paste the `kubectl apply` command from your clipboard into your terminal.
 
        for example:
 
        ```bash
-       kubectl apply -f "http://localhost:3333/api/install/razeedeploy-job?orgKey=<use_the_value_shown_in_razeedash>"
+       kubectl apply -f "http://localhost:3333/api/install/razeedeploy-job?orgKey=orgApiKey-abc123-abc12-aaaa-aaaa-a34de71952b7&clusterId=abcdefg-bbbb-4940-946d-33911220ceb0"
        ```
 
        Example output:
 
        ```bash
-       configmap/watch-keeper-config created
-       secret/watch-keeper-secret created
-       clusterrole.rbac.authorization.k8s.io/cluster-reader created
-       serviceaccount/watch-keeper-sa created
-       clusterrolebinding.rbac.authorization.k8s.io/watch-keeper-rb created
-       networkpolicy.networking.k8s.io/watch-keeper-deny-ingress created
-       deployment.apps/watch-keeper created
-       Error from server (AlreadyExists): namespaces "razee" already exists
+       namespace/razeedeploy created
+       serviceaccount/razeedeploy-sa created
+       clusterrole.rbac.authorization.k8s.io/razeedeploy-admin-cr created
+       clusterrolebinding.rbac.authorization.k8s.io/razeedeploy-rb created
+       job.batch/razeedeploy-job created
        ```
 
-    5. Wait for Watch Keeper to finish.
+    6. Wait for the deployments to finish.
 
        ```bash
-       kubectl get deployment -n razee | grep watch-keeper
+       kubectl get pods -n razeedeploy
        ```
 
        Example output:
 
        ```bash
-       watch-keeper                  1/1     1            1           2m5s
+       NAME                                                  READY   STATUS      RESTARTS   AGE
+        clustersubscription-b4fb68b57-7btzr                   1/1     Running     0          79s
+        encryptedresource-controller-b47bd9c47-8bd25          1/1     Running     0          74s
+        featureflagsetld-controller-5d6f6dc848-4w5zv          1/1     Running     0          74s
+        managedset-controller-866dd854f6-nvszf                1/1     Running     0          73s
+        mustachetemplate-controller-5575b8688c-vdghw          1/1     Running     0          75s
+        razeedeploy-job-hgqmn                                 0/1     Completed   0          89s
+        remoteresource-controller-5546b89ff-nr7bs             1/1     Running     0          78s
+        remoteresources3-controller-7559b4c648-9cqql          1/1     Running     0          78s
+        remoteresources3decrypt-controller-579b65c97c-xtb79   1/1     Running     0          76s
+        watch-keeper-586cdc58cd-vt7nr                         1/1     Running     0          79s
        ```
+
+1. Configure minikube
+
+    - Make sure your KUBECONFIG is pointing to your minikube cluster
+    - kubectl apply this yaml:
+
+    ```yaml
+    kind: Service
+    apiVersion: v1
+    metadata:
+        name: minikube-host
+        namespace: razeedeploy
+    spec:
+        type: ExternalName
+        externalName: minikube-host
+    ```
 
 1. update the watch-keeper-config to point to your local razeedash api (change the value of `RAZEEDASH_URL`):
 
-    `kubectl edit -n razee cm/watch-keeper-config`
+    `kubectl edit -n razeedeploy cm/watch-keeper-config`
 
     ```yaml
     apiVersion: v1
@@ -128,7 +141,7 @@
     metadata:
         creationTimestamp: "2019-06-05T15:55:39Z"
         name: watch-keeper-config
-        namespace: razee
+        namespace: razeedeploy
         resourceVersion: "4564"
         selfLink: /api/v1/namespaces/razee/configmaps/watch-keeper-config
         uid: 5d447e9c-87aa-11e9-a98b-6ae9411411a9
@@ -137,10 +150,10 @@
 1. restart watch-keeper so the config-map changes will be put in place
 
     ```bash
-    kubectl delete pod -n razee $(k get pods -n razee | grep watch-keeper | awk '{ print $1}')
+    kubectl delete pod -n razeedeploy $(k get pods -n razeedeploy | grep watch-keeper | awk '{ print $1}')
     ```
 
-1. From the RazeeDash console click the `RazeeDash` link in the header to open the RazeeDash details page and verify that you can see deployment information for your Watch Keeper pod.
+1. From your RazeeDash UI click the `Clusters` link in the header to and search for the cluster name that you previously created
 
 ## Useful tools
 

@@ -68,48 +68,7 @@
 
 1. Install the RazeeDeploy components in your cluster.
 
-    1. From the RazeeDash console, click the **Register** button that you can find next to your GitHub organization.
-    2. Click the **Manage** button.
-    3. Click the **Register cluster** button, give your cluster a name and click the **Register** button
-    4. Copy the kubectl apply command to your clipboard
-    5. In a new terminal session make sure your kube context is set to your minikube cluster. Paste the `kubectl apply` command from your clipboard into your terminal.
-
-       for example:
-
-       ```bash
-       kubectl apply -f "http://localhost:3333/api/install/razeedeploy-job?orgKey=orgApiKey-abc123-abc12-aaaa-aaaa-a34de71952b7&clusterId=abcdefg-bbbb-4940-946d-33911220ceb0"
-       ```
-
-       Example output:
-
-       ```bash
-       namespace/razeedeploy created
-       serviceaccount/razeedeploy-sa created
-       clusterrole.rbac.authorization.k8s.io/razeedeploy-admin-cr created
-       clusterrolebinding.rbac.authorization.k8s.io/razeedeploy-rb created
-       job.batch/razeedeploy-job created
-       ```
-
-    6. Wait for the deployments to finish.
-
-       ```bash
-       kubectl get pods -n razeedeploy
-       ```
-
-       Example output:
-
-       ```bash
-       NAME                                                  READY   STATUS      RESTARTS   AGE
-        clustersubscription-b4fb68b57-7btzr                   1/1     Running     0          79s
-        encryptedresource-controller-b47bd9c47-8bd25          1/1     Running     0          74s
-        featureflagsetld-controller-5d6f6dc848-4w5zv          1/1     Running     0          74s
-        managedset-controller-866dd854f6-nvszf                1/1     Running     0          73s
-        mustachetemplate-controller-5575b8688c-vdghw          1/1     Running     0          75s
-        razeedeploy-job-hgqmn                                 0/1     Completed   0          89s
-        remoteresource-controller-5546b89ff-nr7bs             1/1     Running     0          78s
-        remoteresources3-controller-7559b4c648-9cqql          1/1     Running     0          78s
-        remoteresources3decrypt-controller-579b65c97c-xtb79   1/1     Running     0          76s
-        watch-keeper-586cdc58cd-vt7nr                         1/1     Running     0          79s
+            watch-keeper-586cdc58cd-vt7nr                         1/1     Running     0          79s
        ```
 
 1. Configure minikube

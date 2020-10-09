@@ -112,6 +112,14 @@
     kubectl delete pod -n razeedeploy $(k get pods -n razeedeploy | grep watch-keeper | awk '{ print $1}')
     ```
 
+1. update the razee-identity config map to point to your local razeedash api (change the value of RAZEE_API to be `RAZEE_API: http://minikube-host:3333`):
+
+1. restart clustersubscription the config-map changes will be put in place
+
+    ```bash
+    kubectl delete pod -n razeedeploy $(k get pods -n razeedeploy | grep clustersubscription | awk '{ print $1}')
+    ```
+
 1. From your RazeeDash UI click the `Clusters` link in the header to and search for the cluster name that you previously created
 
 ## Useful tools

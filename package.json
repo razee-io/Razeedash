@@ -63,7 +63,7 @@
         "plotly.js-dist": "^1.57.1",
         "popper.js": "^1.16.1",
         "react": "^16.14.0",
-        "react-diff-view": "^2.4.6",
+        "react-diff-view": "^2.4.7",
         "react-dom": "^16.14.0",
         "react-popper": "^2.2.4",
         "reactstrap": "^8.7.1",

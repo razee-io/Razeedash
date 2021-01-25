@@ -66,7 +66,7 @@
         "react-diff-view": "^2.4.6",
         "react-dom": "^16.14.0",
         "react-popper": "^2.2.4",
-        "reactstrap": "^8.7.1",
+        "reactstrap": "^8.9.0",
         "shelljs": "^0.8.4",
         "simpl-schema": "^1.10.2",
         "toastr": "^2.1.4",

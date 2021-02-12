@@ -10,6 +10,7 @@ before_install:
   - curl https://install.meteor.com | /bin/sh
   - export PATH="$HOME/.meteor:$PATH"
   - if [[ `npm -v` != 6* ]]; then npm i -g npm@latest; fi
+  - echo "${DOCKERHUB_TOKEN}" | docker login -u "icdevops" --password-stdin;
 
 install:
   - meteor npm i

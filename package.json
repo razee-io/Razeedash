@@ -76,7 +76,7 @@
     },
     "devDependencies": {
         "babel-plugin-istanbul": "^6.0.0",
-        "chai": "^4.2.0",
+        "chai": "^4.3.4",
         "cross-env": "^7.0.2",
         "dockerlint": "^0.3.9",
         "eslint": "^7.12.1",

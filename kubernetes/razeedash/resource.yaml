@@ -42,6 +42,8 @@ items:
                 secretName: razeedash-secret
           containers:
             - env:
+                - name: NODE_EXTRA_CA_CERTS
+                  value: /var/run/secrets/razeeio/razeedash-secret/cacerts.pem
                 - name: MONGO_URL
                   valueFrom:
                     secretKeyRef:

@@ -12,6 +12,7 @@
         }
     },
     "scripts": {
+        "preinstall": "npx npm-force-resolutions",
         "start": "meteor run",
         "debug": "meteor run --inspect",
         "lint": "run-s eslint yamllint jsonlint dockerlint markdownlint shellcheck",
@@ -57,7 +58,7 @@
         "jwt-decode": "^3.1.2",
         "keypair": "^1.0.1",
         "lodash": "^4.17.20",
-        "meteor-node-stubs": "^1.0.1",
+        "meteor-node-stubs": "^1.0.3",
         "moment": "^2.29.1",
         "moment-duration-format": "^2.3.2",
         "mustache": "^4.0.0",

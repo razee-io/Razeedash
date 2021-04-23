@@ -51,6 +51,7 @@
         "core-js": "^3.6.4",
         "cross-fetch": "^3.0.6",
         "debounce": "^1.2.0",
+        "diff": "^5.0.0",
         "font-awesome": "^4.7.0",
         "graphql": "^15.4.0",
         "graphql-tag": "^2.11.0",

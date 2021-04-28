@@ -1,5 +1,5 @@
 import React from 'react';
-import { diffLines, formatLines } from 'unidiff';
+import {diffLines} from 'jdiff';
 import { parseDiff, Diff, Hunk } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 
@@ -14,9 +14,9 @@ export class StrDiff extends React.Component {
             newStr = JSON.stringify(newStr, null, 2);
         }
 
-        var diffText = formatLines(diffLines(oldStr, newStr), { context: 3 });
+        var diffText =  Diff.diffLines((oldStr, newStr), { context: 3 });
         var files = parseDiff(diffText);
-
+        console.log('tasneem.....!!!!!' + oldStr, newStr);
         return (
             <div>
                 {files.map(({oldRevision, newRevision, type, hunks})=>{

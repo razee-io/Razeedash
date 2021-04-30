@@ -16,7 +16,6 @@ export class StrDiff extends React.Component {
 
         var diffText =  Diff.diffLines((oldStr, newStr), { context: 3 });
         var files = parseDiff(diffText);
-        console.log('tasneem.....!!!!!' + oldStr, newStr);
         return (
             <div>
                 {files.map(({oldRevision, newRevision, type, hunks})=>{

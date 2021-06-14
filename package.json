@@ -59,7 +59,7 @@
         "meteor-node-stubs": "^1.0.1",
         "moment": "^2.29.1",
         "moment-duration-format": "^2.3.2",
-        "mustache": "^4.0.0",
+        "mustache": "^4.2.0",
         "plotly.js-dist": "^1.57.1",
         "popper.js": "^1.16.1",
         "react": "^16.14.0",

@@ -57,7 +57,7 @@
         "keypair": "^1.0.1",
         "lodash": "^4.17.20",
         "meteor-node-stubs": "^1.0.1",
-        "moment": "^2.29.1",
+        "moment": "^2.29.2",
         "moment-duration-format": "^2.3.2",
         "mustache": "^4.0.0",
         "plotly.js-dist": "^1.57.1",

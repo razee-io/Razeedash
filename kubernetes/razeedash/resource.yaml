@@ -17,6 +17,7 @@ items:
         razee.io/commit-sha: "{{TRAVIS_COMMIT}}"
       labels:
         razee/watch-resource: "lite"
+        app.kubernetes.io/owner: "ibm-armada-razee"
       name: razeedash
     spec:
       replicas: 1
